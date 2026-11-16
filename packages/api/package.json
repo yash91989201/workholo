@@ -16,6 +16,7 @@
     "@orpc/zod": "catalog:",
     "@workholo/auth": "workspace:*",
     "@workholo/db": "workspace:*",
+    "drizzle-orm": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
