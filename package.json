@@ -1,0 +1,70 @@
+{
+  "name": "workholo",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*"
+    ],
+    "catalog": {
+      "zod": "^4.6.7",
+      "@types/bun": "^1.4.4",
+      "varlock": "1.25.0",
+      "@orpc/server": "^1.16.2",
+      "@orpc/openapi": "^1.16.2",
+      "@orpc/zod": "^1.16.2",
+      "better-auth": "1.7.22",
+      "lucide-react": "^1.72.0",
+      "next-themes": "^0.4.6",
+      "sonner": "^2.0.8",
+      "@orpc/tanstack-query": "^1.16.2",
+      "@orpc/client": "^1.16.2",
+      "@tanstack/react-query": "^5.107.1",
+      "@tanstack/react-form": "^1.33.5",
+      "@types/react-dom": "^19.3.0",
+      "tailwindcss": "^4.3.5",
+      "@better-auth/expo": "1.7.22",
+      "drizzle-orm": "1.0.0-rc.5"
+    }
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "nx run-many -t dev",
+    "build": "nx run-many -t build",
+    "check-types": "nx run-many -t check-types",
+    "dev:native": "nx run-many -t dev --projects=native",
+    "dev:web": "nx run-many -t dev --projects=web",
+    "dev:server": "nx run-many -t dev --projects=server",
+    "db:push": "nx run-many -t db:push --projects=@workholo/db",
+    "db:studio": "nx run-many -t db:studio --projects=@workholo/db",
+    "db:generate": "nx run-many -t db:generate --projects=@workholo/db",
+    "db:migrate": "nx run-many -t db:migrate --projects=@workholo/db",
+    "db:start": "docker compose up -d postgres",
+    "db:watch": "docker compose up postgres",
+    "db:stop": "docker compose stop postgres",
+    "db:down": "docker compose down postgres",
+    "docker:build": "docker compose build",
+    "docker:up": "docker compose up -d --build",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "env:generate": "varlock codegen --path ./apps/web/ && varlock codegen --path ./apps/server/ && varlock codegen --path ./apps/native/ && varlock codegen --path ./packages/db/",
+    "postinstall": "varlock codegen --path ./apps/web/ && varlock codegen --path ./apps/server/ && varlock codegen --path ./apps/native/ && varlock codegen --path ./packages/db/",
+    "auth:generate": "cd apps/server && bun run auth:generate",
+    "check": "ultracite check",
+    "fix": "ultracite fix"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.15",
+    "@types/bun": "catalog:",
+    "@workholo/config": "workspace:*",
+    "lefthook": "latest",
+    "nx": "^24.0.6",
+    "typescript": "^6.0.3",
+    "ultracite": "8.0.0",
+    "varlock": "catalog:"
+  },
+  "packageManager": "bun@1.4.4"
+}

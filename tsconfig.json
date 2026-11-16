@@ -1,0 +1,3 @@
+{
+  "extends": "@workholo/config/tsconfig.base.json"
+}
