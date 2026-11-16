@@ -123,6 +123,7 @@ services:
       CONSOLE_ORIGIN: http://localhost:3002
       AGENT_ORIGIN: http://localhost:3003
       PLATFORM_ORIGIN: http://localhost:3004
+      PORT: 3000
       DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-password}@postgres:5432/workholo
     healthcheck:
       test:
