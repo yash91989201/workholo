@@ -7,7 +7,10 @@ import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { appRouter } from "@workholo/api/routers/index";
 import { Elysia } from "elysia";
 import { initLogger } from "evlog";
-import { createAuthMiddleware, type BetterAuthInstance } from "evlog/better-auth";
+import {
+  type BetterAuthInstance,
+  createAuthMiddleware,
+} from "evlog/better-auth";
 import { evlog } from "evlog/elysia";
 import { createFsDrain } from "evlog/fs";
 
@@ -35,8 +38,14 @@ const apiHandler = new OpenAPIHandler(appRouter, {
   ],
 });
 
+const PORT = Number(process.env.PORT ?? 3000);
+
+const drain =
+  process.env.NODE_ENV === "production" ? undefined : createFsDrain();
+
 initLogger({
   env: { service: "workholo-server" },
+  drain,
 });
 
 const identifyUser = createAuthMiddleware(auth as BetterAuthInstance, {
@@ -45,18 +54,24 @@ const identifyUser = createAuthMiddleware(auth as BetterAuthInstance, {
 });
 
 new Elysia()
-  .use(evlog({ drain: process.env.NODE_ENV === "production" ? undefined : createFsDrain() }))
+  .use(evlog({ drain }))
   .derive(async ({ request, log }) => {
     await identifyUser(log, request.headers, new URL(request.url).pathname);
     return {};
   })
   .use(
     cors({
-      origin: [ENV.CORS_ORIGIN, ...desktopOrigins],
+      origin: [
+        ENV.CORS_ORIGIN,
+        ENV.CONSOLE_ORIGIN,
+        ENV.AGENT_ORIGIN,
+        ENV.PLATFORM_ORIGIN,
+        ...desktopOrigins,
+      ],
       methods: ["GET", "POST", "OPTIONS"],
       allowedHeaders: ["Content-Type", "Authorization"],
       credentials: true,
-    }),
+    })
   )
   .all("/api/auth/*", async (context) => {
     const { request, status } = context;
@@ -76,7 +91,7 @@ new Elysia()
     },
     {
       parse: "none",
-    },
+    }
   )
   .all(
     "/api-reference*",
@@ -89,9 +104,9 @@ new Elysia()
     },
     {
       parse: "none",
-    },
+    }
   )
   .get("/", () => "OK")
-  .listen(3000, () => {
-    console.log("Server is running on http://localhost:3000");
+  .listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
   });

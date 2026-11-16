@@ -1,23 +1,55 @@
 // AUTO-GENERATED FILE. DO NOT EDIT.
 import type { z } from "zod";
 import type {
-	AccountInsertSchema,
-	AccountModelSchema,
-	AccountUpdateSchema,
-	SessionInsertSchema,
-	SessionModelSchema,
-	SessionUpdateSchema,
-	UserInsertSchema,
-	UserModelSchema,
-	UserUpdateSchema,
-	VerificationInsertSchema,
-	VerificationModelSchema,
-	VerificationUpdateSchema,
+  AccountInsertSchema,
+  AccountModelSchema,
+  AccountUpdateSchema,
+  InvitationInsertSchema,
+  InvitationModelSchema,
+  InvitationUpdateSchema,
+  MemberInsertSchema,
+  MemberModelSchema,
+  MemberUpdateSchema,
+  OrganizationInsertSchema,
+  OrganizationModelSchema,
+  OrganizationUpdateSchema,
+  SessionInsertSchema,
+  SessionModelSchema,
+  SessionUpdateSchema,
+  UserInsertSchema,
+  UserModelSchema,
+  UserUpdateSchema,
+  VerificationInsertSchema,
+  VerificationModelSchema,
+  VerificationUpdateSchema,
 } from "./models/auth";
+import type {
+  CallInsertSchema,
+  CallModelSchema,
+  CallUpdateSchema,
+  RecordingInsertSchema,
+  RecordingModelSchema,
+  RecordingUpdateSchema,
+} from "./models/calls";
 
 export type AccountInsertType = z.infer<typeof AccountInsertSchema>;
 export type AccountModelType = z.infer<typeof AccountModelSchema>;
 export type AccountUpdateType = z.infer<typeof AccountUpdateSchema>;
+export type CallInsertType = z.infer<typeof CallInsertSchema>;
+export type CallModelType = z.infer<typeof CallModelSchema>;
+export type CallUpdateType = z.infer<typeof CallUpdateSchema>;
+export type InvitationInsertType = z.infer<typeof InvitationInsertSchema>;
+export type InvitationModelType = z.infer<typeof InvitationModelSchema>;
+export type InvitationUpdateType = z.infer<typeof InvitationUpdateSchema>;
+export type MemberInsertType = z.infer<typeof MemberInsertSchema>;
+export type MemberModelType = z.infer<typeof MemberModelSchema>;
+export type MemberUpdateType = z.infer<typeof MemberUpdateSchema>;
+export type OrganizationInsertType = z.infer<typeof OrganizationInsertSchema>;
+export type OrganizationModelType = z.infer<typeof OrganizationModelSchema>;
+export type OrganizationUpdateType = z.infer<typeof OrganizationUpdateSchema>;
+export type RecordingInsertType = z.infer<typeof RecordingInsertSchema>;
+export type RecordingModelType = z.infer<typeof RecordingModelSchema>;
+export type RecordingUpdateType = z.infer<typeof RecordingUpdateSchema>;
 export type SessionInsertType = z.infer<typeof SessionInsertSchema>;
 export type SessionModelType = z.infer<typeof SessionModelSchema>;
 export type SessionUpdateType = z.infer<typeof SessionUpdateSchema>;
