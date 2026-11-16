@@ -32,7 +32,9 @@ export function FormSelect({
       <Select
         items={items}
         onValueChange={(value) => {
-          if (value === null) return;
+          if (value === null) {
+            return;
+          }
           field.handleChange(value);
         }}
         value={field.state.value}

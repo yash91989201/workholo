@@ -55,7 +55,7 @@ const DrawerLayout = () => {
             />
           ),
           headerRight: () => (
-            <Link href="/modal" asChild>
+            <Link asChild href="/modal">
               <HeaderButton />
             </Link>
           ),

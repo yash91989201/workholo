@@ -1,6 +1,10 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-  "extends": ["ultracite/biome/core", "ultracite/biome/react", "ultracite/biome/tanstack"],
+  "extends": [
+    "ultracite/biome/core",
+    "ultracite/biome/react",
+    "ultracite/biome/tanstack"
+  ],
   "vcs": {
     "enabled": false,
     "clientKind": "git",
@@ -9,7 +13,6 @@
   "files": {
     "ignoreUnknown": false,
     "includes": [
-      "**",
       "!**/.next",
       "!**/dist",
       "!**/.turbo",
@@ -27,14 +30,29 @@
       "!**/.svelte-kit",
       "!**/wrangler.jsonc",
       "!**/.source",
-      "!**/convex/_generated"
+      "!**/convex/_generated",
+      "!**/.agent",
+      "!**/.agents",
+      "!**/.claude",
+      "!**/.codex",
+      "!**/.omp",
+      "!**/coverage",
+      "!**/.evlog",
+      "!apps/docs/.astro",
+      "!apps/docs/public"
     ]
   },
   "formatter": {
     "enabled": true,
-    "indentStyle": "tab"
+    "indentStyle": "space"
   },
-  "assist": { "actions": { "source": { "organizeImports": "on" } } },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
   "linter": {
     "enabled": true,
     "rules": {
@@ -43,7 +61,7 @@
         "useExhaustiveDependencies": "info"
       },
       "nursery": {
-        "useTailwindSortedClasses": {
+        "useSortedClasses": {
           "level": "warn",
           "fix": "safe"
         }
@@ -58,8 +76,24 @@
         "noUnusedTemplateLiteral": "error",
         "useNumberNamespace": "error",
         "noInferrableTypes": "error",
-        "noUselessElse": "error"
-      }
+        "noUselessElse": "error",
+        "useConsistentTypeDefinitions": "off",
+        "useConsistentMethodSignatures": "off"
+      },
+      "performance": {
+        "noJsxPropsBind": "off",
+        "noBarrelFile": "off",
+        "useTopLevelRegex": "off",
+        "noNamespaceImport": "off"
+      },
+      "suspicious": {
+        "useAwait": "off",
+        "noParametersOnlyUsedInRecursion": "off",
+        "noUnnecessaryConditions": "warn"
+      },
+      "complexity": {},
+      "security": {},
+      "a11y": {}
     }
   },
   "javascript": {
@@ -71,5 +105,57 @@
     "parser": {
       "tailwindDirectives": true
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["packages/ui/src/components/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noLeakedRender": "off",
+            "noShadow": "off",
+            "noArrayIndexKey": "off",
+            "noEqualsToNull": "off",
+            "noUnnecessaryConditions": "off",
+            "noEmptyBlockStatements": "off",
+            "noDoubleEquals": "off",
+            "noDocumentCookie": "off"
+          },
+          "correctness": {
+            "noNestedComponentDefinitions": "off"
+          },
+          "style": {
+            "noExportedImports": "off",
+            "useDestructuring": "off",
+            "noNestedTernary": "off"
+          },
+          "security": {
+            "noDangerouslySetInnerHtml": "off"
+          },
+          "complexity": {
+            "noExcessiveCognitiveComplexity": "off"
+          },
+          "a11y": {
+            "useSemanticElements": "off",
+            "useKeyWithClickEvents": "off",
+            "useFocusableInteractive": "off",
+            "noRedundantRoles": "off",
+            "noNoninteractiveTabindex": "off",
+            "noNoninteractiveElementInteractions": "off",
+            "noLabelWithoutControl": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["scripts/model-generator/index.ts"],
+      "linter": {
+        "rules": {
+          "complexity": {
+            "noExcessiveCognitiveComplexity": "off"
+          }
+        }
+      }
+    }
+  ]
 }

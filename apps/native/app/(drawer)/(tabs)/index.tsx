@@ -10,7 +10,9 @@ export default function Home() {
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.headerSection}>
           <Text style={styles.title}>Tab One</Text>
-          <Text style={styles.subtitle}>Explore the first section of your app</Text>
+          <Text style={styles.subtitle}>
+            Explore the first section of your app
+          </Text>
         </View>
       </ScrollView>
     </Container>

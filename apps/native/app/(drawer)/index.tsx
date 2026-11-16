@@ -6,12 +6,19 @@ import { Container } from "@/components/container";
 import { SignIn } from "@/components/sign-in";
 import { SignUp } from "@/components/sign-up";
 import { authClient } from "@/lib/auth-client";
-import { queryClient, orpc } from "@/utils/orpc";
+import { orpc, queryClient } from "@/utils/orpc";
 
 export default function Home() {
   const healthCheck = useQuery(orpc.healthCheck.queryOptions());
   const privateData = useQuery(orpc.privateData.queryOptions());
   const { data: session } = authClient.useSession();
+
+  let apiStatus = "API Disconnected";
+  if (healthCheck.isLoading) {
+    apiStatus = "Checking...";
+  } else if (healthCheck.data) {
+    apiStatus = "Connected to API";
+  }
 
   return (
     <Container>
@@ -22,17 +29,18 @@ export default function Home() {
             <View style={styles.sessionInfoCard}>
               <View style={styles.sessionUserRow}>
                 <Text style={styles.welcomeText}>
-                  Welcome, <Text style={styles.userNameText}>{session.user.name}</Text>
+                  Welcome,{" "}
+                  <Text style={styles.userNameText}>{session.user.name}</Text>
                 </Text>
               </View>
               <Text style={styles.emailText}>{session.user.email}</Text>
 
               <TouchableOpacity
-                style={styles.signOutButton}
                 onPress={() => {
                   authClient.signOut();
                   queryClient.invalidateQueries();
                 }}
+                style={styles.signOutButton}
               >
                 <Text style={styles.signOutButtonText}>Sign Out</Text>
               </TouchableOpacity>
@@ -44,23 +52,21 @@ export default function Home() {
               <View
                 style={[
                   styles.statusIndicatorDot,
-                  healthCheck.data ? styles.statusIndicatorGreen : styles.statusIndicatorRed,
+                  healthCheck.data
+                    ? styles.statusIndicatorGreen
+                    : styles.statusIndicatorRed,
                 ]}
               />
-              <Text style={styles.mutedText}>
-                {healthCheck.isLoading
-                  ? "Checking..."
-                  : healthCheck.data
-                    ? "Connected to API"
-                    : "API Disconnected"}
-              </Text>
+              <Text style={styles.mutedText}>{apiStatus}</Text>
             </View>
           </View>
           <View style={styles.privateDataCard}>
             <Text style={styles.cardTitle}>Private Data</Text>
             {privateData && (
               <View>
-                <Text style={styles.mutedText}>{privateData.data?.message}</Text>
+                <Text style={styles.mutedText}>
+                  {privateData.data?.message}
+                </Text>
               </View>
             )}
           </View>

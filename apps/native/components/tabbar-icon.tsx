@@ -8,5 +8,11 @@ export const TabBarIcon = (props: {
   color: TextStyle["color"];
 }) => {
   const { color, ...iconProps } = props;
-  return <FontAwesome size={24} style={[{ marginBottom: -3, color }]} {...iconProps} />;
+  return (
+    <FontAwesome
+      size={24}
+      style={[{ marginBottom: -3, color }]}
+      {...iconProps}
+    />
+  );
 };

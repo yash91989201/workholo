@@ -24,7 +24,7 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="home" color={color ?? theme.colors.foreground} />
+            <TabBarIcon color={color ?? theme.colors.foreground} name="home" />
           ),
         }}
       />
@@ -33,7 +33,10 @@ export default function TabLayout() {
         options={{
           title: "Explore",
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="compass" color={color ?? theme.colors.foreground} />
+            <TabBarIcon
+              color={color ?? theme.colors.foreground}
+              name="compass"
+            />
           ),
         }}
       />

@@ -1,27 +1,31 @@
 import "@/unistyles";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { forwardRef, type ComponentRef } from "react";
+import type { ComponentRef, Ref } from "react";
 import { Pressable } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 
-export const HeaderButton = forwardRef<ComponentRef<typeof Pressable>, { onPress?: () => void }>(
-  ({ onPress }, ref) => {
-    return (
-      <Pressable ref={ref} onPress={onPress} style={styles.button}>
-        {({ pressed }) => (
-          <FontAwesome
-            name="info-circle"
-            size={20}
-            color={styles.icon.color}
-            style={{
-              opacity: pressed ? 0.7 : 1,
-            }}
-          />
-        )}
-      </Pressable>
-    );
-  },
-);
+export function HeaderButton({
+  onPress,
+  ref,
+}: {
+  onPress?: () => void;
+  ref?: Ref<ComponentRef<typeof Pressable>>;
+}) {
+  return (
+    <Pressable onPress={onPress} ref={ref} style={styles.button}>
+      {({ pressed }) => (
+        <FontAwesome
+          color={styles.icon.color}
+          name="info-circle"
+          size={20}
+          style={{
+            opacity: pressed ? 0.7 : 1,
+          }}
+        />
+      )}
+    </Pressable>
+  );
+}
 
 const styles = StyleSheet.create((theme) => ({
   button: {
