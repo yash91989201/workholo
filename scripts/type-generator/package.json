@@ -1,0 +1,7 @@
+{
+  "name": "@workholo/typegen",
+  "private": true,
+  "scripts": {
+    "dev": "bun index.ts --watch"
+  }
+}

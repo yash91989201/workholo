@@ -1,0 +1,8 @@
+{
+  "name": "@workholo/modelgen",
+  "private": true,
+  "scripts": {
+    "dev": "bun index.ts --watch",
+    "test": "bun test"
+  }
+}

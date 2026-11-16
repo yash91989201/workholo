@@ -1,18 +1,17 @@
 import { createORPCClient } from "@orpc/client";
-import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 import type { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { HeadContent, Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import type { AppRouterClient } from "@workholo/api/routers/index";
 import { Toaster } from "@workholo/ui/components/sonner";
+import { TooltipProvider } from "@workholo/ui/components/tooltip";
 import { useState } from "react";
-
 import Header from "@/components/header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { link, orpc } from "@/utils/orpc";
-
-import "../index.css";
+import "@/index.css";
+import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 
 export interface RouterAppContext {
   orpc: typeof orpc;
@@ -42,7 +41,7 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 
 function RootComponent() {
   const [client] = useState<AppRouterClient>(() => createORPCClient(link));
-  const [orpcUtils] = useState(() => createTanstackQueryUtils(client));
+  const [_orpcUtils] = useState(() => createTanstackQueryUtils(client));
 
   return (
     <>
@@ -53,11 +52,14 @@ function RootComponent() {
         disableTransitionOnChange
         storageKey="vite-ui-theme"
       >
+        <TooltipProvider>
         <div className="grid grid-rows-[auto_1fr] h-svh">
           <Header />
           <Outlet />
         </div>
         <Toaster richColors />
+
+        </TooltipProvider>
       </ThemeProvider>
       <TanStackRouterDevtools position="bottom-left" />
       <ReactQueryDevtools position="bottom" buttonPosition="bottom-right" />
