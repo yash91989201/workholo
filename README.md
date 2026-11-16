@@ -127,10 +127,12 @@ Surface gates are convenience only; every procedure re-checks the membership and
 | `apps/console` | `VITE_SERVER_URL` |
 | `apps/agent` | `VITE_SERVER_URL` |
 | `apps/platform` | `VITE_SERVER_URL` |
-| `apps/server` | `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `CORS_ORIGIN` (web), `CONSOLE_ORIGIN`, `AGENT_ORIGIN`, `PLATFORM_ORIGIN` |
+| `apps/server` | `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `PORT` (default 3000), `CORS_ORIGIN` (web), `CONSOLE_ORIGIN`, `AGENT_ORIGIN`, `PLATFORM_ORIGIN` |
 | `packages/db` | `DATABASE_URL` (imported from `apps/server`) |
 
 The server's four origin variables must match the deployed frontend origins: they feed both `trustedOrigins` for auth and the CORS allow-list. Invitation emails route administrators to `CONSOLE_ORIGIN` and agents to `AGENT_ORIGIN`.
+
+If port 3000 is already in use, change `PORT` and `BETTER_AUTH_URL` in `apps/server/.env` and set the matching `VITE_SERVER_URL` in every frontend's `.env`; the browser will otherwise talk to whatever else owns 3000.
 
 ## Deployment
 
