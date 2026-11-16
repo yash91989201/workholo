@@ -48,9 +48,27 @@ Then, run the development server:
 bun run dev
 ```
 
-Open [http://localhost:3001](http://localhost:3001) in your browser to see the web application.
+Open [http://localhost:3001](http://localhost:3001) for the landing site, [http://localhost:3002](http://localhost:3002) for the organization console, [http://localhost:3003](http://localhost:3003) for the agent panel, and [http://localhost:3004](http://localhost:3004) for the platform console.
 From `apps/native`, run the `ios` script for iOS or the `android` script for Android to build and launch the app. See [Expo development builds](https://docs.expo.dev/develop/development-builds/introduction/) for device setup.
 The API is running at [http://localhost:3000](http://localhost:3000).
+
+## Platform administrators
+
+Platform staff accounts are provisioned out of band; no public endpoint grants the global role. The first `platform_admin` is created with the Better Auth CLI from `apps/server`:
+
+```bash
+cd apps/server
+bun x auth@latest create-admin \
+  --config src/services.ts \
+  --email admin@example.com \
+  --password 'change-me' \
+  --name 'Platform Admin' \
+  --role platform_admin
+```
+
+The CLI loads `src/services.ts`, so `DATABASE_URL` must point at the target database. The global role is stored on `user.role`; organization invitations and membership changes never modify it. Later role changes go through the audited admin endpoint (`/admin/set-role`).
+
+A globally exported `DATABASE_URL` takes precedence over the app's `.env`; unset it or export the app's value when the CLI or server reports an authentication failure.
 
 ## UI Customization
 
@@ -88,11 +106,37 @@ Bun's automatic env loading is disabled in `bunfig.toml`; the framework integrat
 
 Run standalone Node/Bun tools that use Varlock from the owning app directory so they load that app's schema and env files. `env:generate` only generates TypeScript files; it does not initialize environment values in a subsequent command.
 
+## Frontend surfaces
+
+Four separately deployed SPAs share one auth backend and the shared clients in `packages/auth-client` and `packages/api-client`:
+
+| App | Audience | Dev port | Gate |
+| --- | --- | --- | --- |
+| `apps/web` | Public landing site | 3001 | none |
+| `apps/console` | Organization owners and administrators | 3002 | session with `owner` or `admin` membership |
+| `apps/agent` | Call agents; also hosts the Tauri desktop shell | 3003 | session with `agent` membership |
+| `apps/platform` | Platform staff | 3004 | `user.role = platform_admin` |
+
+Surface gates are convenience only; every procedure re-checks the membership and role on the server.
+
+### Environment variables
+
+| App | Variables |
+| --- | --- |
+| `apps/web` | `VITE_SERVER_URL`, `VITE_CONSOLE_URL` |
+| `apps/console` | `VITE_SERVER_URL` |
+| `apps/agent` | `VITE_SERVER_URL` |
+| `apps/platform` | `VITE_SERVER_URL` |
+| `apps/server` | `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `CORS_ORIGIN` (web), `CONSOLE_ORIGIN`, `AGENT_ORIGIN`, `PLATFORM_ORIGIN` |
+| `packages/db` | `DATABASE_URL` (imported from `apps/server`) |
+
+The server's four origin variables must match the deployed frontend origins: they feed both `trustedOrigins` for auth and the CORS allow-list. Invitation emails route administrators to `CONSOLE_ORIGIN` and agents to `AGENT_ORIGIN`.
+
 ## Deployment
 
 ### Docker Compose
 
-- Target: web + server
+- Target: web, console, agent, platform, and server
 - Config: `docker-compose.yml` (app Dockerfiles live in `apps/*/Dockerfile`)
 - Build images: bun run docker:build
 - Start: bun run docker:up
@@ -136,8 +180,11 @@ workholo/
 - `bun run db:migrate`: Run database migrations
 - `bun run db:studio`: Open database studio UI
 - `bun run check`: Run Biome formatting and linting
-- `cd apps/web && bun run desktop:dev`: Start Tauri desktop app in development
-- `cd apps/web && bun run desktop:build`: Build Tauri desktop app
+- `bun run dev:console`: Start the owner/admin console
+- `bun run dev:agent`: Start the agent panel
+- `bun run dev:platform`: Start the platform console
+- `cd apps/agent && bun run desktop:dev`: Start Tauri desktop app in development
+- `cd apps/agent && bun run desktop:build`: Build the Tauri desktop app
 - `cd apps/docs && bun run dev`: Start documentation site
 - `cd apps/docs && bun run build`: Build documentation site
 - `bun run docker:build`: Build the Docker Compose images

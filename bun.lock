@@ -18,6 +18,79 @@
         "varlock": "catalog:",
       },
     },
+    "apps/agent": {
+      "name": "agent",
+      "version": "0.0.0",
+      "dependencies": {
+        "@tailwindcss/vite": "^4.3.5",
+        "@tanstack/react-form": "catalog:",
+        "@tanstack/react-query": "catalog:",
+        "@tanstack/react-router": "^1.170.46",
+        "@varlock/vite-integration": "1.5.6",
+        "@workholo/api-client": "workspace:*",
+        "@workholo/auth-client": "workspace:*",
+        "@workholo/ui": "workspace:*",
+        "lucide-react": "catalog:",
+        "next-themes": "catalog:",
+        "react": "^19.3.1",
+        "react-dom": "^19.3.1",
+        "sonner": "catalog:",
+        "varlock": "catalog:",
+        "zod": "catalog:",
+      },
+      "devDependencies": {
+        "@tanstack/react-query-devtools": "^5.107.1",
+        "@tanstack/react-router-devtools": "^1.167.3",
+        "@tanstack/router-plugin": "^1.169.0",
+        "@tauri-apps/cli": "^2.12.4",
+        "@types/node": "^26.6.6",
+        "@types/react": "^19.3.0",
+        "@types/react-dom": "catalog:",
+        "@vitejs/plugin-react": "^6.3.0",
+        "@workholo/config": "workspace:*",
+        "postcss": "^8.5.32",
+        "tailwindcss": "catalog:",
+        "typescript": "^6.0.3",
+        "vite": "^8.3.8",
+      },
+    },
+    "apps/console": {
+      "name": "console",
+      "version": "0.0.0",
+      "dependencies": {
+        "@orpc/client": "catalog:",
+        "@orpc/tanstack-query": "catalog:",
+        "@tailwindcss/vite": "^4.3.5",
+        "@tanstack/react-form": "catalog:",
+        "@tanstack/react-query": "catalog:",
+        "@tanstack/react-router": "^1.170.46",
+        "@varlock/vite-integration": "1.5.6",
+        "@workholo/api-client": "workspace:*",
+        "@workholo/auth-client": "workspace:*",
+        "@workholo/ui": "workspace:*",
+        "better-auth": "catalog:",
+        "lucide-react": "catalog:",
+        "next-themes": "catalog:",
+        "react": "^19.3.1",
+        "react-dom": "^19.3.1",
+        "sonner": "catalog:",
+        "varlock": "catalog:",
+        "zod": "catalog:",
+      },
+      "devDependencies": {
+        "@tanstack/react-query-devtools": "^5.107.1",
+        "@tanstack/react-router-devtools": "^1.167.3",
+        "@tanstack/router-plugin": "^1.169.0",
+        "@types/node": "^26.6.6",
+        "@types/react": "^19.3.0",
+        "@types/react-dom": "catalog:",
+        "@vitejs/plugin-react": "^6.3.0",
+        "@workholo/config": "workspace:*",
+        "tailwindcss": "catalog:",
+        "typescript": "^6.0.3",
+        "vite": "^8.3.8",
+      },
+    },
     "apps/docs": {
       "name": "docs",
       "version": "0.0.1",
@@ -76,6 +149,44 @@
         "typescript": "~6.0.3",
       },
     },
+    "apps/platform": {
+      "name": "platform",
+      "version": "0.0.0",
+      "dependencies": {
+        "@orpc/client": "catalog:",
+        "@orpc/tanstack-query": "catalog:",
+        "@tailwindcss/vite": "^4.3.5",
+        "@tanstack/react-form": "catalog:",
+        "@tanstack/react-query": "catalog:",
+        "@tanstack/react-router": "^1.170.46",
+        "@varlock/vite-integration": "1.5.6",
+        "@workholo/api-client": "workspace:*",
+        "@workholo/auth": "workspace:*",
+        "@workholo/auth-client": "workspace:*",
+        "@workholo/ui": "workspace:*",
+        "better-auth": "catalog:",
+        "lucide-react": "catalog:",
+        "next-themes": "catalog:",
+        "react": "^19.3.1",
+        "react-dom": "^19.3.1",
+        "sonner": "catalog:",
+        "varlock": "catalog:",
+        "zod": "catalog:",
+      },
+      "devDependencies": {
+        "@tanstack/react-query-devtools": "^5.107.1",
+        "@tanstack/react-router-devtools": "^1.167.3",
+        "@tanstack/router-plugin": "^1.169.0",
+        "@types/node": "^26.6.6",
+        "@types/react": "^19.3.0",
+        "@types/react-dom": "catalog:",
+        "@vitejs/plugin-react": "^6.3.0",
+        "@workholo/config": "workspace:*",
+        "tailwindcss": "catalog:",
+        "typescript": "^6.0.3",
+        "vite": "^8.3.8",
+      },
+    },
     "apps/server": {
       "name": "server",
       "dependencies": {
@@ -104,36 +215,23 @@
       "name": "web",
       "version": "0.0.0",
       "dependencies": {
-        "@orpc/client": "catalog:",
-        "@orpc/server": "catalog:",
-        "@orpc/tanstack-query": "catalog:",
         "@tailwindcss/vite": "^4.3.5",
-        "@tanstack/react-form": "catalog:",
-        "@tanstack/react-query": "catalog:",
         "@tanstack/react-router": "^1.170.46",
         "@varlock/vite-integration": "1.5.6",
-        "@workholo/api": "workspace:*",
         "@workholo/ui": "workspace:*",
-        "better-auth": "catalog:",
         "lucide-react": "catalog:",
         "next-themes": "catalog:",
         "react": "^19.3.1",
         "react-dom": "^19.3.1",
-        "shiki": "4.6.0",
-        "sonner": "catalog:",
         "varlock": "catalog:",
-        "zod": "catalog:",
       },
       "devDependencies": {
-        "@tanstack/react-query-devtools": "^5.107.1",
         "@tanstack/react-router-devtools": "^1.167.3",
         "@tanstack/router-plugin": "^1.169.0",
-        "@tauri-apps/cli": "^2.12.4",
         "@types/node": "^26.6.6",
         "@types/react": "^19.3.0",
         "@types/react-dom": "catalog:",
         "@vitejs/plugin-react": "^6.3.0",
-        "@workholo/config": "workspace:*",
         "postcss": "^8.5.32",
         "tailwindcss": "catalog:",
         "typescript": "^6.0.3",
@@ -149,7 +247,23 @@
         "@orpc/zod": "catalog:",
         "@workholo/auth": "workspace:*",
         "@workholo/db": "workspace:*",
+        "drizzle-orm": "catalog:",
         "zod": "catalog:",
+      },
+      "devDependencies": {
+        "@workholo/config": "workspace:*",
+        "typescript": "^6.0.3",
+      },
+    },
+    "packages/api-client": {
+      "name": "@workholo/api-client",
+      "dependencies": {
+        "@orpc/client": "catalog:",
+        "@orpc/server": "catalog:",
+        "@orpc/tanstack-query": "catalog:",
+        "@tanstack/react-query": "catalog:",
+        "@workholo/api": "workspace:*",
+        "sonner": "catalog:",
       },
       "devDependencies": {
         "@workholo/config": "workspace:*",
@@ -166,6 +280,17 @@
         "better-auth": "catalog:",
         "drizzle-orm": "catalog:",
         "zod": "catalog:",
+      },
+      "devDependencies": {
+        "@workholo/config": "workspace:*",
+        "typescript": "^6.0.3",
+      },
+    },
+    "packages/auth-client": {
+      "name": "@workholo/auth-client",
+      "dependencies": {
+        "@workholo/auth": "workspace:*",
+        "better-auth": "catalog:",
       },
       "devDependencies": {
         "@workholo/config": "workspace:*",
@@ -1170,7 +1295,11 @@
 
     "@workholo/api": ["@workholo/api@workspace:packages/api"],
 
+    "@workholo/api-client": ["@workholo/api-client@workspace:packages/api-client"],
+
     "@workholo/auth": ["@workholo/auth@workspace:packages/auth"],
+
+    "@workholo/auth-client": ["@workholo/auth-client@workspace:packages/auth-client"],
 
     "@workholo/config": ["@workholo/config@workspace:packages/config"],
 
@@ -1203,6 +1332,8 @@
     "accepts": ["accepts@1.3.8", "", { "dependencies": { "mime-types": "~2.1.34", "negotiator": "0.6.3" } }, "sha512-PYAthTa2m2VKxuvSD3DPC/Gy+U+sOA1LAuT8mkmRuvw+NACSaeXEQ+NHcVF7rONl6qcaxV3Uuemwawk+7+SJLw=="],
 
     "acorn": ["acorn@8.19.0", "", { "bin": { "acorn": "bin/acorn" } }, "sha512-oJlA3XiRm7Cyk6qFD2Jn8ak9B7jSy0qy00ADO3+8dpT0LSjFihQYv4C02LFCSYJV3Q37xYwwRy5m+IpIiUzqWw=="],
+
+    "agent": ["agent@workspace:apps/agent"],
 
     "agent-base": ["agent-base@7.1.4", "", {}, "sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ=="],
 
@@ -1376,13 +1507,15 @@
 
     "connect": ["connect@3.7.0", "", { "dependencies": { "debug": "2.6.9", "finalhandler": "1.1.2", "parseurl": "~1.3.3", "utils-merge": "1.0.1" } }, "sha512-ZqRXc+tZukToSNmh5C2iWMSoV3X1YUcPbqEM4DkEG5tNQXrQUZCNVGGv3IuicnkMtPfGf3Xtp8WCXs295iQ1pQ=="],
 
+    "console": ["console@workspace:apps/console"],
+
     "content-type": ["content-type@2.1.0", "", {}, "sha512-mj7UPXE0jaqaOsukNZRUEfEi2AcL7C/vwmwcHV0O97eO1E1pxBZuyjlZrx5seTaNBg1U6+o35wpa35Qfcc+7ag=="],
 
     "convert-source-map": ["convert-source-map@2.0.0", "", {}, "sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg=="],
 
     "cookie": ["cookie@1.1.1", "", {}, "sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ=="],
 
-    "cookie-es": ["cookie-es@1.2.3", "", {}, "sha512-lXVyvUvrNXblMqzIRrxHb57UUVmqsSWlxqt3XIjCkUP0wDAf6uicO6KMbEgYrMNtEvWgWHwe42CKxPu9MYAnWw=="],
+    "cookie-es": ["cookie-es@3.1.1", "", {}, "sha512-UaXxwISYJPTr9hwQxMFYZ7kNhSXboMXP+Z3TRX6f1/NyaGPfuNUZOWP1pUEb75B2HjfklIYLVRfWiFZJyC6Npg=="],
 
     "copy-anything": ["copy-anything@4.1.5", "", {}, "sha512-vePst2VLTSqPglW7Q98VwFpGiGpOHTyXIo81MO5VyLecA5zMbZw/P/V1vmwD1jksa2iJpn/YkDrJ3XhTfzUyhQ=="],
 
@@ -2204,6 +2337,8 @@
 
     "pkg-up": ["pkg-up@3.1.0", "", { "dependencies": { "find-up": "^3.0.0" } }, "sha512-nDywThFk1i4BQK4twPQ6TA4RT8bDY96yeuCVBWL3ePARCiEKDRSrNGbFIgUJpLp+XeIR65v8ra7WuJOFUBtkMA=="],
 
+    "platform": ["platform@workspace:apps/platform"],
+
     "plist": ["plist@3.1.1", "", { "dependencies": { "@xmldom/xmldom": "^0.9.10", "base64-js": "^1.5.1", "xmlbuilder": "^15.1.1" } }, "sha512-ZIfcLJC+7E7FBFnDxm9MPmt7D+DidyQ26lewieO75AdhA2ayMtsJSES0iWzqJQbcVRSrTufQoy0DR94xHue0oA=="],
 
     "pngjs": ["pngjs@3.4.0", "", {}, "sha512-NCrCHhWmnQklfH4MtJMRjZ2a8c80qXeMlQMv2uVp9ISJMTt562SbGd6n2oq0PaPgKm7Z6pL9E2UlLIhC+SHL3w=="],
@@ -2822,8 +2957,6 @@
 
     "@tailwindcss/oxide-wasm32-wasi/tslib": ["tslib@2.8.1", "", { "bundled": true }, "sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w=="],
 
-    "@tanstack/router-core/cookie-es": ["cookie-es@3.1.1", "", {}, "sha512-UaXxwISYJPTr9hwQxMFYZ7kNhSXboMXP+Z3TRX6f1/NyaGPfuNUZOWP1pUEb75B2HjfklIYLVRfWiFZJyC6Npg=="],
-
     "@tanstack/router-generator/magic-string": ["magic-string@0.30.21", "", { "dependencies": { "@jridgewell/sourcemap-codec": "^1.5.5" } }, "sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ=="],
 
     "@tanstack/router-utils/diff": ["diff@9.0.0", "", {}, "sha512-svtcdpS8CgJyqAjEQIXdb3OjhFVVYjzGAPO8WGCmRbrml64SPw/jJD4GoE98aR7r25A0XcgrK3F02yw9R/vhQw=="],
@@ -2883,6 +3016,8 @@
     "finalhandler/statuses": ["statuses@1.5.0", "", {}, "sha512-OpZ3zP+jT1PI7I8nemJX4AKmAX070ZkYPVWV/AaKTJl+tXCTGyVdC1a4SL8RUQYEwk/f34ZX8UTykN68FwrqAA=="],
 
     "find-workspaces/yaml": ["yaml@2.9.1", "", { "bin": { "yaml": "bin.mjs" } }, "sha512-3NxN8+78OdzbT7C/WjGsyfPAtJaN3FNDsWxv7Y7mcDsT/oOmgW8BpyQQFFBnvZE3j9Y2Sdz1ULFLezL7Eb2yFw=="],
+
+    "h3/cookie-es": ["cookie-es@1.2.3", "", {}, "sha512-lXVyvUvrNXblMqzIRrxHb57UUVmqsSWlxqt3XIjCkUP0wDAf6uicO6KMbEgYrMNtEvWgWHwe42CKxPu9MYAnWw=="],
 
     "hosted-git-info/lru-cache": ["lru-cache@10.4.3", "", {}, "sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ=="],
 

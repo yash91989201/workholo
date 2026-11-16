@@ -1,5 +1,4 @@
 {
-  "references": [{ "path": "../../packages/api" }],
   "compilerOptions": {
     "strict": true,
     "esModuleInterop": true,

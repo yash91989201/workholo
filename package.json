@@ -1,6 +1,7 @@
 {
   "name": "workholo",
   "private": true,
+  "type": "module",
   "workspaces": {
     "packages": [
       "apps/*",
@@ -28,31 +29,33 @@
       "drizzle-orm": "1.0.0-rc.5"
     }
   },
-  "type": "module",
   "scripts": {
-    "dev": "nx run-many -t dev",
+    "auth:generate": "cd apps/server && bun run auth:generate",
     "build": "nx run-many -t build",
+    "check": "ultracite check",
     "check-types": "nx run-many -t check-types",
-    "dev:native": "nx run-many -t dev --projects=native",
-    "dev:web": "nx run-many -t dev --projects=web",
-    "dev:server": "nx run-many -t dev --projects=server",
-    "db:push": "nx run-many -t db:push --projects=@workholo/db",
-    "db:studio": "nx run-many -t db:studio --projects=@workholo/db",
+    "db:down": "docker compose down postgres",
     "db:generate": "nx run-many -t db:generate --projects=@workholo/db",
     "db:migrate": "nx run-many -t db:migrate --projects=@workholo/db",
+    "db:push": "nx run-many -t db:push --projects=@workholo/db",
     "db:start": "docker compose up -d postgres",
-    "db:watch": "docker compose up postgres",
     "db:stop": "docker compose stop postgres",
-    "db:down": "docker compose down postgres",
+    "db:studio": "nx run-many -t db:studio --projects=@workholo/db",
+    "db:watch": "docker compose up postgres",
+    "dev": "nx run-many -t dev",
+    "dev:agent": "nx run-many -t dev --projects=agent",
+    "dev:console": "nx run-many -t dev --projects=console",
+    "dev:native": "nx run-many -t dev --projects=native",
+    "dev:platform": "nx run-many -t dev --projects=platform",
+    "dev:server": "nx run-many -t dev --projects=server",
+    "dev:web": "nx run-many -t dev --projects=web",
     "docker:build": "docker compose build",
-    "docker:up": "docker compose up -d --build",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f",
-    "env:generate": "varlock codegen --path ./apps/web/ && varlock codegen --path ./apps/server/ && varlock codegen --path ./apps/native/ && varlock codegen --path ./packages/db/",
-    "postinstall": "varlock codegen --path ./apps/web/ && varlock codegen --path ./apps/server/ && varlock codegen --path ./apps/native/ && varlock codegen --path ./packages/db/",
-    "auth:generate": "cd apps/server && bun run auth:generate",
-    "check": "ultracite check",
-    "fix": "ultracite fix"
+    "docker:up": "docker compose up -d --build",
+    "env:generate": "varlock codegen --path ./apps/web/ && varlock codegen --path ./apps/console/ && varlock codegen --path ./apps/agent/ && varlock codegen --path ./apps/platform/ && varlock codegen --path ./apps/server/ && varlock codegen --path ./apps/native/ && varlock codegen --path ./packages/db/",
+    "fix": "ultracite fix",
+    "postinstall": "varlock codegen --path ./apps/web/ && varlock codegen --path ./apps/console/ && varlock codegen --path ./apps/agent/ && varlock codegen --path ./apps/platform/ && varlock codegen --path ./apps/server/ && varlock codegen --path ./apps/native/ && varlock codegen --path ./packages/db/"
   },
   "dependencies": {
     "zod": "catalog:"

@@ -1,24 +1,12 @@
-import { createORPCClient } from "@orpc/client";
-import type { QueryClient } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { HeadContent, Outlet, createRootRouteWithContext } from "@tanstack/react-router";
+import { createRootRoute, HeadContent, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import type { AppRouterClient } from "@workholo/api/routers/index";
 import { Toaster } from "@workholo/ui/components/sonner";
 import { TooltipProvider } from "@workholo/ui/components/tooltip";
-import { useState } from "react";
 import Header from "@/components/header";
 import { ThemeProvider } from "@/components/theme-provider";
-import { link, orpc } from "@/utils/orpc";
 import "@/index.css";
-import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 
-export interface RouterAppContext {
-  orpc: typeof orpc;
-  queryClient: QueryClient;
-}
-
-export const Route = createRootRouteWithContext<RouterAppContext>()({
+export const Route = createRootRoute({
   component: RootComponent,
   head: () => ({
     meta: [
@@ -40,9 +28,6 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 });
 
 function RootComponent() {
-  const [client] = useState<AppRouterClient>(() => createORPCClient(link));
-  const [_orpcUtils] = useState(() => createTanstackQueryUtils(client));
-
   return (
     <>
       <HeadContent />
@@ -53,16 +38,14 @@ function RootComponent() {
         storageKey="vite-ui-theme"
       >
         <TooltipProvider>
-        <div className="grid grid-rows-[auto_1fr] h-svh">
-          <Header />
-          <Outlet />
-        </div>
-        <Toaster richColors />
-
+          <div className="grid h-svh grid-rows-[auto_1fr]">
+            <Header />
+            <Outlet />
+          </div>
+          <Toaster richColors />
         </TooltipProvider>
       </ThemeProvider>
       <TanStackRouterDevtools position="bottom-left" />
-      <ReactQueryDevtools position="bottom" buttonPosition="bottom-right" />
     </>
   );
 }

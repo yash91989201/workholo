@@ -5,8 +5,8 @@ WORKDIR /app
 COPY . .
 RUN --mount=type=secret,id=web_env,target=/app/apps/web/.env.local --mount=type=secret,id=server_env,target=/app/apps/server/.env.local --mount=type=cache,target=/root/.bun/install/cache bun install
 
-ARG VITE_SERVER_URL
-ENV VITE_SERVER_URL=${VITE_SERVER_URL}
+ARG VITE_CONSOLE_URL
+ENV VITE_CONSOLE_URL=${VITE_CONSOLE_URL}
 ENV NODE_ENV=production
 RUN --mount=type=secret,id=web_env,target=/app/apps/web/.env.local --mount=type=secret,id=server_env,target=/app/apps/server/.env.local cd apps/web && bun run build
 

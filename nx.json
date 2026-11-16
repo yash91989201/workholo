@@ -1,10 +1,7 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "namedInputs": {
-    "default": [
-      "{projectRoot}/**/*",
-      "sharedGlobals"
-    ],
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
     "production": [
       "default",
       "!{workspaceRoot}/apps/web/dist/**",
@@ -20,37 +17,35 @@
       "!{workspaceRoot}/packages/api/dist/**",
       "!{workspaceRoot}/packages/auth/dist/**",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
-      "!{projectRoot}/tsconfig.spec.json"
+      "!{projectRoot}/tsconfig.spec.json",
+      "!{workspaceRoot}/apps/console/dist/**",
+      "!{workspaceRoot}/apps/console/.tanstack/**",
+      "!{workspaceRoot}/apps/console/src/routeTree.gen.ts",
+      "!{workspaceRoot}/apps/agent/dist/**",
+      "!{workspaceRoot}/apps/agent/.tanstack/**",
+      "!{workspaceRoot}/apps/agent/src/routeTree.gen.ts",
+      "!{workspaceRoot}/apps/platform/dist/**",
+      "!{workspaceRoot}/apps/platform/.tanstack/**",
+      "!{workspaceRoot}/apps/platform/src/routeTree.gen.ts",
+      "!{workspaceRoot}/apps/agent/src-tauri/target/**"
     ],
     "sharedGlobals": []
   },
   "targetDefaults": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "production",
-        "^production"
-      ]
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
     },
     "check-types": {
-      "dependsOn": [
-        "^check-types"
-      ],
-      "inputs": [
-        "default",
-        "^default"
-      ]
+      "dependsOn": ["^check-types"],
+      "inputs": ["default", "^default"]
     },
     "dev": {
       "cache": false,
       "continuous": true
     },
     "start": {
-      "dependsOn": [
-        "build"
-      ],
+      "dependsOn": ["build"],
       "cache": false,
       "continuous": true
     },

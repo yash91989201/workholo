@@ -10,6 +10,9 @@ build
 
 # Generated files
 apps/web/src/routeTree.gen.ts
+apps/console/src/routeTree.gen.ts
+apps/agent/src/routeTree.gen.ts
+apps/platform/src/routeTree.gen.ts
 local.db
 local.db-*
 

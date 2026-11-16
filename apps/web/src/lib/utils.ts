@@ -1,1 +1,1 @@
-export { cn } from "@workholo/ui/lib/utils"
+export { cn } from "@workholo/ui/lib/utils";
