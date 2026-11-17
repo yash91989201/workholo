@@ -1,6 +1,7 @@
 import type { Context as ApiContext } from "@workholo/api/context";
 import type { Context as ElysiaContext } from "elysia";
 
+import { ENV } from "./env.server";
 import { audit, auth, db } from "./services";
 
 export type CreateContextOptions = {
@@ -17,6 +18,7 @@ export async function createContext({
     db,
     session,
     audit,
+    invitationOrigins: { console: ENV.CONSOLE_ORIGIN, agent: ENV.AGENT_ORIGIN },
   };
 }
 

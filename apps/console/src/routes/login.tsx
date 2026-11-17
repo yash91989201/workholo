@@ -7,8 +7,10 @@ import SignUpForm from "@/components/sign-up-form";
 import { authClient } from "@/lib/auth-client";
 import { safeRedirect } from "@/lib/redirect";
 
+const RouteSearchSchema = z.object({ redirect: z.string().optional() });
+
 export const Route = createFileRoute("/login")({
-  validateSearch: z.object({ redirect: z.string().optional() }),
+  validateSearch: RouteSearchSchema,
   // Client-only: the session check needs the browser cookie.
   ssr: false,
   beforeLoad: async ({ search }) => {

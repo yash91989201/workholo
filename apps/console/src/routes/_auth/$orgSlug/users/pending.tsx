@@ -37,6 +37,15 @@ function PendingUsersPage() {
       queryClient.invalidateQueries({ queryKey: orpc.organization.key() }),
   });
 
+  const copyInviteLink = async (inviteUrl: string) => {
+    try {
+      await navigator.clipboard.writeText(inviteUrl);
+      toast.success("Invite link copied");
+    } catch {
+      toast.error("Could not copy the invite link");
+    }
+  };
+
   const columns: ColumnDef<InvitationRow>[] = [
     { accessorKey: "email", header: "Email" },
     {
@@ -53,6 +62,19 @@ function PendingUsersPage() {
       accessorKey: "expiresAt",
       cell: ({ row }) => new Date(row.original.expiresAt).toLocaleDateString(),
       header: "Expires",
+    },
+    {
+      cell: ({ row }) => (
+        <Button
+          onClick={() => copyInviteLink(row.original.inviteUrl)}
+          size="sm"
+          variant="outline"
+        >
+          Copy link
+        </Button>
+      ),
+      header: "",
+      id: "copyLink",
     },
     {
       cell: ({ row }) => (

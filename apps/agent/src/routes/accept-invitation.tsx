@@ -9,20 +9,23 @@ import {
 } from "@workholo/ui/components/card";
 import { useState } from "react";
 import { toast } from "sonner";
+import z from "zod";
 
 import { authClient } from "@/lib/auth-client";
 
+const RouteSearchSchema = z.object({ id: z.string().optional() });
+
 export const Route = createFileRoute("/accept-invitation")({
   component: RouteComponent,
-  validateSearch: (search: Record<string, unknown>): { id?: string } => ({
-    id: typeof search.id === "string" ? search.id : undefined,
-  }),
+  validateSearch: RouteSearchSchema,
   beforeLoad: async ({ search }) => {
     const session = await authClient.getSession();
     if (!session.data) {
       throw redirect({
         to: "/login",
-        search: { redirect: `/accept-invitation?id=${search.id ?? ""}` },
+        search: {
+          redirect: `/accept-invitation?id=${encodeURIComponent(search.id ?? "")}`,
+        },
       });
     }
   },

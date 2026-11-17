@@ -1,4 +1,5 @@
 import { ORPCError } from "@orpc/server";
+import { invitationUrl } from "@workholo/auth/policy";
 import {
   invitation,
   member,
@@ -29,6 +30,7 @@ export type InvitationRow = {
   expiresAt: Date;
   createdAt: Date;
   teamName: string | null;
+  inviteUrl: string;
 };
 
 export type TeamRow = {
@@ -137,6 +139,11 @@ export const organizationRouter = {
       return rows.map(({ teamId, ...row }) => ({
         ...row,
         teamName: teamNames.get(teamId?.split(",")[0] ?? "") ?? null,
+        inviteUrl: invitationUrl(
+          row.role ?? "",
+          row.id,
+          context.invitationOrigins
+        ),
       }));
     }),
 

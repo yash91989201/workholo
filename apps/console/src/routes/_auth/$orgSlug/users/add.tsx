@@ -20,6 +20,16 @@ function AddUserPage() {
   const teams = useQuery(
     orpc.organization.teams.queryOptions({ input: { organizationId } })
   );
+  const roleItems = [
+    ...(actorRole === "owner"
+      ? [{ value: "admin", label: "Administrator" }]
+      : []),
+    { value: "agent", label: "Agent" },
+  ];
+  const teamItems = (teams.data ?? []).map((team) => ({
+    value: team.id,
+    label: team.name,
+  }));
 
   const form = useAppForm({
     defaultValues: {
@@ -90,7 +100,7 @@ function AddUserPage() {
 
         <form.AppField name="role">
           {(field) => (
-            <field.Select label="Role">
+            <field.Select items={roleItems} label="Role">
               {actorRole === "owner" ? (
                 <SelectItem value="admin">Administrator</SelectItem>
               ) : null}
@@ -104,7 +114,11 @@ function AddUserPage() {
             role === "agent" ? (
               <form.AppField name="teamId">
                 {(field) => (
-                  <field.Select label="Team" placeholder="Choose a team">
+                  <field.Select
+                    items={teamItems}
+                    label="Team"
+                    placeholder="Choose a team"
+                  >
                     {(teams.data ?? []).map((team) => (
                       <SelectItem key={team.id} value={team.id}>
                         {team.name}

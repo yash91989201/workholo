@@ -95,7 +95,17 @@ async function getSession(headers: Headers) {
 }
 
 function clientFor(session: Session | null) {
-  return createRouterClient(appRouter, { context: { db, session, audit } });
+  return createRouterClient(appRouter, {
+    context: {
+      db,
+      session,
+      audit,
+      invitationOrigins: {
+        console: env.CONSOLE_ORIGIN,
+        agent: env.AGENT_ORIGIN,
+      },
+    },
+  });
 }
 
 describe("tenant request path", () => {

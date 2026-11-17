@@ -13,8 +13,10 @@ import z from "zod";
 import { authClient } from "@/lib/auth-client";
 import { orpc, queryClient } from "@/utils/orpc";
 
+const RouteSearchSchema = z.object({ id: z.string().optional() });
+
 export const Route = createFileRoute("/accept-invitation")({
-  validateSearch: z.object({ id: z.string().optional() }),
+  validateSearch: RouteSearchSchema,
   // Client-only: the session check needs the browser cookie.
   ssr: false,
   beforeLoad: async ({ search }) => {

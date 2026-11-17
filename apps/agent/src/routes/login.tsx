@@ -1,14 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import z from "zod";
 
 import SignInForm from "@/components/sign-in-form";
 import SignUpForm from "@/components/sign-up-form";
 
+const RouteSearchSchema = z.object({ redirect: z.string().optional() });
+
 export const Route = createFileRoute("/login")({
   component: RouteComponent,
-  validateSearch: (search: Record<string, unknown>): { redirect?: string } => ({
-    redirect: typeof search.redirect === "string" ? search.redirect : undefined,
-  }),
+  validateSearch: RouteSearchSchema,
 });
 
 function RouteComponent() {
