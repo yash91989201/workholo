@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 
 import { createOrgAuthClient } from "./index";
 
-const authClient = createOrgAuthClient("http://localhost:3000");
+const authClient = createOrgAuthClient("http://localhost:8080");
 
 /** The client must carry the server's custom roles, not better-auth defaults. */
 describe("organization client role matrix", () => {

@@ -9,8 +9,8 @@ import {
 } from "./policy";
 
 const origins = {
-  console: "http://localhost:3002",
-  agent: "http://localhost:3003",
+  console: "http://localhost:3003",
+  agent: "http://localhost:3004",
 };
 
 describe("invitation chain", () => {
@@ -59,25 +59,25 @@ describe("member management", () => {
 
 describe("invitation routing", () => {
   test("admin invitations open the console", () => {
-    expect(invitationOrigin("admin", origins)).toBe("http://localhost:3002");
+    expect(invitationOrigin("admin", origins)).toBe("http://localhost:3003");
     expect(invitationUrl("admin", "inv_1", origins)).toBe(
-      "http://localhost:3002/accept-invitation?id=inv_1"
+      "http://localhost:3003/accept-invitation?id=inv_1"
     );
   });
 
   test("agent invitations open the agent panel", () => {
-    expect(invitationOrigin("agent", origins)).toBe("http://localhost:3003");
+    expect(invitationOrigin("agent", origins)).toBe("http://localhost:3004");
     expect(invitationUrl("agent", "inv_2", origins)).toBe(
-      "http://localhost:3003/accept-invitation?id=inv_2"
+      "http://localhost:3004/accept-invitation?id=inv_2"
     );
   });
 
   test("trailing slashes do not double up", () => {
     expect(
       invitationUrl("agent", "inv_3", {
-        console: "http://localhost:3002/",
-        agent: "http://localhost:3003/",
+        console: "http://localhost:3003/",
+        agent: "http://localhost:3004/",
       })
-    ).toBe("http://localhost:3003/accept-invitation?id=inv_3");
+    ).toBe("http://localhost:3004/accept-invitation?id=inv_3");
   });
 });

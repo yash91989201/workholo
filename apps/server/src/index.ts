@@ -38,7 +38,7 @@ const apiHandler = new OpenAPIHandler(appRouter, {
   ],
 });
 
-const PORT = ENV.PORT;
+const { PORT } = ENV;
 
 const drain =
   process.env.NODE_ENV === "production" ? undefined : createFsDrain();

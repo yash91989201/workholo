@@ -12,7 +12,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=builder /app /app
 
-EXPOSE 3000
+EXPOSE 8080
 
 WORKDIR /app/apps/server
 # Run as the image's unprivileged user

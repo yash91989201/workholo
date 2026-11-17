@@ -31,12 +31,12 @@ function databaseUrl(): string {
 }
 
 const env = {
-  BETTER_AUTH_URL: "http://localhost:3000",
+  BETTER_AUTH_URL: "http://localhost:8080",
   BETTER_AUTH_SECRET: "test-secret-test-secret-test-secret-12",
   CORS_ORIGIN: "http://localhost:3001",
-  CONSOLE_ORIGIN: "http://localhost:3002",
-  AGENT_ORIGIN: "http://localhost:3003",
-  PLATFORM_ORIGIN: "http://localhost:3004",
+  CONSOLE_ORIGIN: "http://localhost:3003",
+  AGENT_ORIGIN: "http://localhost:3004",
+  PLATFORM_ORIGIN: "http://localhost:3002",
 };
 
 let db: Database;
@@ -111,7 +111,7 @@ describe("organization invariants", () => {
     const last = mail.at(-1);
     expect(last?.role).toBe("admin");
     expect(
-      last?.url.startsWith("http://localhost:3002/accept-invitation?id=")
+      last?.url.startsWith("http://localhost:3003/accept-invitation?id=")
     ).toBe(true);
     await instance.api.acceptInvitation({
       body: { invitationId: created.id },
@@ -132,7 +132,7 @@ describe("organization invariants", () => {
     const last = mail.at(-1);
     expect(last?.role).toBe("agent");
     expect(
-      last?.url.startsWith("http://localhost:3003/accept-invitation?id=")
+      last?.url.startsWith("http://localhost:3004/accept-invitation?id=")
     ).toBe(true);
     await instance.api.acceptInvitation({
       body: { invitationId: created.id },
