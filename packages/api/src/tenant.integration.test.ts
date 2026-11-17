@@ -30,7 +30,7 @@ function databaseUrl(): string {
 }
 
 const env = {
-  BETTER_AUTH_URL: "http://localhost:8080",
+  BETTER_AUTH_URL: "http://localhost:8000",
   BETTER_AUTH_SECRET: "test-secret-test-secret-test-secret-12",
   CORS_ORIGIN: "http://localhost:3001",
   CONSOLE_ORIGIN: "http://localhost:3003",
