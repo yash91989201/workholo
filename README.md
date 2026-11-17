@@ -8,6 +8,7 @@ This project was created with [Better-T-Stack](https://github.com/AmanVarshney01
 - **TanStack Router** - File-based routing with full type safety
 - **React Native** - Build mobile apps using React
 - **Expo** - Tools for React Native development
+- **React Compiler** - Automatic memoization in every SPA build
 - **TailwindCSS** - Utility-first CSS for rapid UI development
 - **Shared UI package** - shadcn/ui primitives live in `packages/ui`
 - **Elysia** - Type-safe, high-performance framework

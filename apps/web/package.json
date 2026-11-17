@@ -23,12 +23,14 @@
     "varlock": "catalog:"
   },
   "devDependencies": {
+    "@rolldown/plugin-babel": "^0.3.1",
     "@tanstack/react-router-devtools": "^1.167.3",
     "@tanstack/router-plugin": "^1.169.0",
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "^6.3.0",
+    "babel-plugin-react-compiler": "^1.0.0",
     "postcss": "^8.5.32",
     "tailwindcss": "catalog:",
     "typescript": "^6.0.3",
