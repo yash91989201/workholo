@@ -173,7 +173,7 @@ workholo/
 │   ├── config/      # Shared tsconfig base
 │   └── db/          # Drizzle schema, migrations, zod models
 └── scripts/
-    ├── schema-generator/ # Drizzle tables → zod schemas/types
+    ├── model-generator/  # Drizzle tables → domain model zod schemas
     ├── type-generator/   # zod schemas → TypeScript types
     └── shared/           # Shared workspace discovery helpers
 ```

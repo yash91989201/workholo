@@ -1,5 +1,5 @@
 {
-  "name": "schema-generator",
+  "name": "model-generator",
   "private": true,
   "scripts": {
     "dev": "bun index.ts --watch",

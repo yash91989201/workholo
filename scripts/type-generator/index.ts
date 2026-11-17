@@ -7,7 +7,7 @@ import {
 } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { generateWorkspaceModels } from "../schema-generator/index";
+import { generateWorkspaceModels } from "../model-generator/index";
 import { collectTsFiles, discoverWorkspaces } from "../shared/workspaces";
 
 export interface GenerationSummary {
