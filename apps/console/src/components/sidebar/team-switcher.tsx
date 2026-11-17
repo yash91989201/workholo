@@ -1,6 +1,7 @@
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -45,15 +46,17 @@ export function TeamSwitcher({
             side="right"
             sideOffset={4}
           >
-            <DropdownMenuLabel className="text-muted-foreground text-xs">
-              Organizations
-            </DropdownMenuLabel>
-            <DropdownMenuItem className="gap-2 p-2">
-              <div className="flex size-6 items-center justify-center rounded-md border">
-                <Building2Icon className="size-3.5 shrink-0" />
-              </div>
-              {team.name}
-            </DropdownMenuItem>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className="text-muted-foreground text-xs">
+                Organizations
+              </DropdownMenuLabel>
+              <DropdownMenuItem className="gap-2 p-2">
+                <div className="flex size-6 items-center justify-center rounded-md border">
+                  <Building2Icon className="size-3.5 shrink-0" />
+                </div>
+                {team.name}
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
             <DropdownMenuSeparator />
           </DropdownMenuContent>
         </DropdownMenu>

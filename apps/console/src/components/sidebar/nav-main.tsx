@@ -69,6 +69,7 @@ export function NavMain({
                           <SidebarMenuSubButton
                             render={
                               <Link
+                                activeOptions={{ exact: true }}
                                 activeProps={activeProps}
                                 params={{ orgSlug }}
                                 to={subItem.to}
@@ -93,6 +94,7 @@ export function NavMain({
               <SidebarMenuButton
                 render={
                   <Link
+                    activeOptions={{ exact: true }}
                     activeProps={activeProps}
                     params={{ orgSlug }}
                     to={item.to}
