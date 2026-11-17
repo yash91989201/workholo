@@ -1,4 +1,4 @@
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, linkOptions, useLocation } from "@tanstack/react-router";
 import {
   Collapsible,
   CollapsibleContent,
@@ -31,9 +31,6 @@ export type NavEntry = {
   items?: { title: string; to: OrgPath }[];
 };
 
-/** Link marks itself active; forward that to the sidebar's data-active styles. */
-const activeProps = { "data-active": "" } as const;
-
 export function NavMain({
   items,
   orgSlug,
@@ -42,6 +39,14 @@ export function NavMain({
   orgSlug: string;
 }) {
   const { pathname } = useLocation();
+
+  const navLink = (to: OrgPath) =>
+    linkOptions({
+      activeOptions: { exact: true },
+      activeProps: { "data-active": "" },
+      params: { orgSlug },
+      to,
+    });
 
   return (
     <SidebarGroup>
@@ -67,14 +72,7 @@ export function NavMain({
                       {item.items.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton
-                            render={
-                              <Link
-                                activeOptions={{ exact: true }}
-                                activeProps={activeProps}
-                                params={{ orgSlug }}
-                                to={subItem.to}
-                              />
-                            }
+                            render={<Link {...navLink(subItem.to)} />}
                           >
                             <span>{subItem.title}</span>
                           </SidebarMenuSubButton>
@@ -92,14 +90,7 @@ export function NavMain({
           return (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
-                render={
-                  <Link
-                    activeOptions={{ exact: true }}
-                    activeProps={activeProps}
-                    params={{ orgSlug }}
-                    to={item.to}
-                  />
-                }
+                render={<Link {...navLink(item.to)} />}
                 tooltip={item.title}
               >
                 <item.icon />
