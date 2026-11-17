@@ -15,6 +15,17 @@ import { useState } from "react";
 import z from "zod";
 
 import { authClient } from "@/lib/auth-client";
+import { orpc } from "@/utils/orpc";
+
+/** Kebab case: lowercase words joined by single hyphens; a trailing hyphen is
+ * kept while typing so the next word can follow. */
+function toKebabCase(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9-]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-+/, "");
+}
 
 export const Route = createFileRoute("/onboarding")({
   // Client-only: the session check needs the browser cookie.
@@ -28,7 +39,10 @@ export const Route = createFileRoute("/onboarding")({
       context.orpc.organization.me.queryOptions()
     );
     if (me.membership) {
-      throw redirect({ to: "/dashboard" });
+      throw redirect({
+        to: "/$orgSlug/dashboard",
+        params: { orgSlug: me.membership.slug },
+      });
     }
   },
   component: OnboardingPage,
@@ -54,8 +68,12 @@ function OnboardingPage() {
         setFormError(error.message ?? "Could not create the organization.");
         return;
       }
-      await queryClient.invalidateQueries();
-      await navigate({ to: "/dashboard" });
+      // ensureQueryData elsewhere returns stale-null membership otherwise.
+      await queryClient.fetchQuery(orpc.organization.me.queryOptions());
+      await navigate({
+        to: "/$orgSlug/dashboard",
+        params: { orgSlug: value.slug },
+      });
     },
     validators: {
       onSubmit: z.object({
@@ -63,7 +81,10 @@ function OnboardingPage() {
         slug: z
           .string()
           .min(2, "Slug must be at least 2 characters")
-          .regex(/^[a-z0-9-]+$/, "Use lowercase letters, numbers and hyphens"),
+          .regex(
+            /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+            "Use kebab case: lowercase words joined by single hyphens"
+          ),
       }),
     },
   });
@@ -115,7 +136,9 @@ function OnboardingPage() {
                     id={field.name}
                     name={field.name}
                     onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
+                    onChange={(e) =>
+                      field.handleChange(toKebabCase(e.target.value))
+                    }
                     value={field.state.value}
                   />
                   {field.state.meta.errors.map((error) => (

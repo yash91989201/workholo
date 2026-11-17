@@ -20,6 +20,9 @@ describe("organization role matrix", () => {
     expect(admin.authorize({ organization: ["delete"] }).success).toBe(false);
     expect(admin.authorize({ member: ["update"] }).success).toBe(true);
     expect(admin.authorize({ invitation: ["create"] }).success).toBe(true);
+    expect(admin.authorize({ team: ["create"] }).success).toBe(true);
+    expect(admin.authorize({ team: ["update"] }).success).toBe(true);
+    expect(admin.authorize({ team: ["delete"] }).success).toBe(true);
     expect(admin.authorize({ call: ["monitor"] }).success).toBe(true);
     expect(admin.authorize({ call: ["whisper"] }).success).toBe(true);
     expect(admin.authorize({ call: ["barge"] }).success).toBe(true);
@@ -32,6 +35,7 @@ describe("organization role matrix", () => {
     expect(agent.authorize({ call: ["monitor"] }).success).toBe(false);
     expect(agent.authorize({ member: ["create"] }).success).toBe(false);
     expect(agent.authorize({ invitation: ["create"] }).success).toBe(false);
+    expect(agent.authorize({ team: ["create"] }).success).toBe(false);
     expect(agent.authorize({ organization: ["update"] }).success).toBe(false);
   });
 });

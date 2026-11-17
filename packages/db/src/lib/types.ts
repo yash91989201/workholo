@@ -16,6 +16,12 @@ import type {
   SessionInsertSchema,
   SessionModelSchema,
   SessionUpdateSchema,
+  TeamInsertSchema,
+  TeamMemberInsertSchema,
+  TeamMemberModelSchema,
+  TeamMemberUpdateSchema,
+  TeamModelSchema,
+  TeamUpdateSchema,
   UserInsertSchema,
   UserModelSchema,
   UserUpdateSchema,
@@ -53,6 +59,12 @@ export type RecordingUpdateType = z.infer<typeof RecordingUpdateSchema>;
 export type SessionInsertType = z.infer<typeof SessionInsertSchema>;
 export type SessionModelType = z.infer<typeof SessionModelSchema>;
 export type SessionUpdateType = z.infer<typeof SessionUpdateSchema>;
+export type TeamInsertType = z.infer<typeof TeamInsertSchema>;
+export type TeamMemberInsertType = z.infer<typeof TeamMemberInsertSchema>;
+export type TeamMemberModelType = z.infer<typeof TeamMemberModelSchema>;
+export type TeamMemberUpdateType = z.infer<typeof TeamMemberUpdateSchema>;
+export type TeamModelType = z.infer<typeof TeamModelSchema>;
+export type TeamUpdateType = z.infer<typeof TeamUpdateSchema>;
 export type UserInsertType = z.infer<typeof UserInsertSchema>;
 export type UserModelType = z.infer<typeof UserModelSchema>;
 export type UserUpdateType = z.infer<typeof UserUpdateSchema>;

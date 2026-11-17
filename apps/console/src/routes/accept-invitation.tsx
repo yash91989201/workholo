@@ -12,6 +12,7 @@ import { useState } from "react";
 import z from "zod";
 
 import { authClient } from "@/lib/auth-client";
+import { orpc } from "@/utils/orpc";
 
 export const Route = createFileRoute("/accept-invitation")({
   validateSearch: z.object({ id: z.string().optional() }),
@@ -57,8 +58,14 @@ function AcceptInvitationPage() {
       return;
     }
 
+    const me = await queryClient.fetchQuery(
+      orpc.organization.me.queryOptions()
+    );
     await queryClient.invalidateQueries();
-    await navigate({ to: "/dashboard" });
+    await navigate({
+      to: "/$orgSlug/dashboard",
+      params: { orgSlug: me.membership?.slug ?? "" },
+    });
   }
 
   return (

@@ -5,9 +5,11 @@ import {
   invitation,
   member,
   organization,
+  team,
+  teamMember,
   user,
 } from "@workholo/db/schema/auth";
-import { eq, like } from "drizzle-orm";
+import { and, eq, like } from "drizzle-orm";
 
 import { createAuth } from "./index";
 import type { InvitationEmail } from "./mailer";
@@ -72,6 +74,7 @@ describe("organization invariants", () => {
   let outsider: Awaited<ReturnType<typeof signUp>>;
   let organizationId = "";
   let secondOrganizationId = "";
+  let teamId = "";
 
   beforeAll(async () => {
     db = createDb({ DATABASE_URL: databaseUrl() });
@@ -124,9 +127,23 @@ describe("organization invariants", () => {
     expect(role[0]?.role).toBe("admin");
   });
 
+  test("admin creates a team", async () => {
+    const created = await instance.api.createTeam({
+      body: { name: "Support", organizationId },
+      headers: adminUser.headers,
+    });
+    teamId = created.id;
+    const rows = await db
+      .select({ name: team.name, organizationId: team.organizationId })
+      .from(team)
+      .where(eq(team.id, teamId));
+    expect(rows[0]?.name).toBe("Support");
+    expect(rows[0]?.organizationId).toBe(organizationId);
+  });
+
   test("admin invites agent with an agent-panel link", async () => {
     const created = await instance.api.createInvitation({
-      body: { email: agentUser.email, role: "agent", organizationId },
+      body: { email: agentUser.email, role: "agent", teamId, organizationId },
       headers: adminUser.headers,
     });
     const last = mail.at(-1);
@@ -138,6 +155,11 @@ describe("organization invariants", () => {
       body: { invitationId: created.id },
       headers: agentUser.headers,
     });
+    const teamRows = await db
+      .select({ id: teamMember.id })
+      .from(teamMember)
+      .where(eq(teamMember.userId, agentUser.userId));
+    expect(teamRows).toHaveLength(1);
   });
 
   test("admin cannot invite another admin", async () => {
@@ -224,10 +246,15 @@ describe("organization invariants", () => {
 
   test("a user with a membership cannot accept a second invitation", async () => {
     secondOrganizationId = await createOrg(outsider.headers, "second");
+    const secondTeam = await instance.api.createTeam({
+      body: { name: "Second team", organizationId: secondOrganizationId },
+      headers: outsider.headers,
+    });
     const created = await instance.api.createInvitation({
       body: {
         email: adminUser.email,
         role: "agent",
+        teamId: secondTeam.id,
         organizationId: secondOrganizationId,
       },
       headers: outsider.headers,
@@ -259,5 +286,68 @@ describe("organization invariants", () => {
       .from(invitation)
       .where(eq(invitation.organizationId, organizationId));
     expect(rows.length).toBeGreaterThan(0);
+  });
+
+  test("agent invitation without a team is rejected", async () => {
+    await expect(
+      instance.api.createInvitation({
+        body: { email: `noteam@${DOMAIN}`, role: "agent", organizationId },
+        headers: owner.headers,
+      })
+    ).rejects.toBeDefined();
+  });
+
+  test("admin invitation naming a team is rejected", async () => {
+    await expect(
+      instance.api.createInvitation({
+        body: {
+          email: `admins-team@${DOMAIN}`,
+          role: "admin",
+          teamId,
+          organizationId,
+        },
+        headers: owner.headers,
+      })
+    ).rejects.toBeDefined();
+  });
+
+  test("a team rejects a non-agent target", async () => {
+    const rows = await db
+      .select({ id: member.id })
+      .from(member)
+      .where(eq(member.userId, agentUser.userId));
+    const memberId = rows[0]?.id ?? "";
+    await instance.api.updateMemberRole({
+      body: { memberId, role: "admin", organizationId },
+      headers: owner.headers,
+    });
+    await expect(
+      instance.api.addTeamMember({
+        body: { teamId, userId: agentUser.userId, organizationId },
+        headers: owner.headers,
+      })
+    ).rejects.toBeDefined();
+    await instance.api.updateMemberRole({
+      body: { memberId, role: "agent", organizationId },
+      headers: owner.headers,
+    });
+  });
+
+  test("adding the same agent twice creates no duplicate", async () => {
+    const added = await instance.api.addTeamMember({
+      body: { teamId, userId: agentUser.userId, organizationId },
+      headers: owner.headers,
+    });
+    const rows = await db
+      .select({ id: teamMember.id })
+      .from(teamMember)
+      .where(
+        and(
+          eq(teamMember.teamId, teamId),
+          eq(teamMember.userId, agentUser.userId)
+        )
+      );
+    expect(rows).toHaveLength(1);
+    expect(added.id).toBe(rows[0]?.id ?? "");
   });
 });

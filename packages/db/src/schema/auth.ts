@@ -2,6 +2,7 @@ import { defineRelationsPart } from "drizzle-orm";
 import {
   boolean,
   index,
+  integer,
   pgTable,
   text,
   timestamp,
@@ -42,6 +43,7 @@ export const session = pgTable(
       .references(() => user.id, { onDelete: "cascade" }),
     impersonatedBy: text("impersonated_by"),
     activeOrganizationId: text("active_organization_id"),
+    activeTeamId: text("active_team_id"),
   },
   (table) => [index("session_userId_idx").on(table.userId)]
 );
@@ -136,6 +138,8 @@ export const invitation = pgTable(
     inviterId: text("inviter_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
+    // Comma-joined team ids, written and read by the plugin; display only.
+    teamId: text("team_id"),
   },
   (table) => [
     index("invitation_organizationId_idx").on(table.organizationId),
@@ -143,8 +147,52 @@ export const invitation = pgTable(
   ]
 );
 
+export const team = pgTable(
+  "team",
+  {
+    id: text("id").primaryKey(),
+    name: text("name").notNull(),
+    memberCount: integer("member_count").default(0).notNull(),
+    organizationId: text("organization_id")
+      .notNull()
+      .references(() => organization.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").notNull(),
+    updatedAt: timestamp("updated_at").notNull(),
+  },
+  (table) => [index("team_organizationId_idx").on(table.organizationId)]
+);
+
+export const teamMember = pgTable(
+  "team_member",
+  {
+    id: text("id").primaryKey(),
+    teamId: text("team_id")
+      .notNull()
+      .references(() => team.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    membershipKey: text("membership_key").unique(),
+    createdAt: timestamp("created_at").notNull(),
+  },
+  (table) => [
+    index("teamMember_teamId_idx").on(table.teamId),
+    index("teamMember_userId_idx").on(table.userId),
+  ]
+);
+
 export const authRelations = defineRelationsPart(
-  { user, session, account, verification, organization, member, invitation },
+  {
+    user,
+    session,
+    account,
+    verification,
+    organization,
+    member,
+    invitation,
+    team,
+    teamMember,
+  },
   (r) => ({
     user: {
       sessions: r.many.session({
@@ -162,6 +210,10 @@ export const authRelations = defineRelationsPart(
       invitations: r.many.invitation({
         from: r.user.id,
         to: r.invitation.inviterId,
+      }),
+      teamMemberships: r.many.teamMember({
+        from: r.user.id,
+        to: r.teamMember.userId,
       }),
     },
     session: {
@@ -185,6 +237,10 @@ export const authRelations = defineRelationsPart(
         from: r.organization.id,
         to: r.invitation.organizationId,
       }),
+      teams: r.many.team({
+        from: r.organization.id,
+        to: r.team.organizationId,
+      }),
     },
     member: {
       organization: r.one.organization({
@@ -203,6 +259,26 @@ export const authRelations = defineRelationsPart(
       }),
       user: r.one.user({
         from: r.invitation.inviterId,
+        to: r.user.id,
+      }),
+    },
+    team: {
+      organization: r.one.organization({
+        from: r.team.organizationId,
+        to: r.organization.id,
+      }),
+      members: r.many.teamMember({
+        from: r.team.id,
+        to: r.teamMember.teamId,
+      }),
+    },
+    teamMember: {
+      team: r.one.team({
+        from: r.teamMember.teamId,
+        to: r.team.id,
+      }),
+      user: r.one.user({
+        from: r.teamMember.userId,
         to: r.user.id,
       }),
     },

@@ -10,6 +10,8 @@ import {
   member,
   organization,
   session,
+  team,
+  teamMember,
   user,
   verification,
 } from "../../schema/auth";
@@ -33,6 +35,14 @@ export const OrganizationUpdateSchema = createUpdateSchema(organization);
 export const SessionModelSchema = createSelectSchema(session);
 export const SessionInsertSchema = createInsertSchema(session);
 export const SessionUpdateSchema = createUpdateSchema(session);
+
+export const TeamModelSchema = createSelectSchema(team);
+export const TeamInsertSchema = createInsertSchema(team);
+export const TeamUpdateSchema = createUpdateSchema(team);
+
+export const TeamMemberModelSchema = createSelectSchema(teamMember);
+export const TeamMemberInsertSchema = createInsertSchema(teamMember);
+export const TeamMemberUpdateSchema = createUpdateSchema(teamMember);
 
 export const UserModelSchema = createSelectSchema(user);
 export const UserInsertSchema = createInsertSchema(user);

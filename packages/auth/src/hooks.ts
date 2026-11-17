@@ -56,6 +56,25 @@ export function createOrganizationHooks(db: Database): OrganizationHooks {
           message: `You cannot invite the ${invitation.role} role`,
         });
       }
+      const hasTeam = Boolean(invitation.teamId);
+      if (invitation.role === "agent" && !hasTeam) {
+        throw new APIError("BAD_REQUEST", {
+          message: "Agent invitations must name a team",
+        });
+      }
+      if (invitation.role !== "agent" && hasTeam) {
+        throw new APIError("BAD_REQUEST", {
+          message: "Only agent invitations may name a team",
+        });
+      }
+    },
+    beforeAddTeamMember: async ({ user, organization }) => {
+      const target = await findMembership(db, user.id, organization.id);
+      if (target?.role !== "agent") {
+        throw new APIError("FORBIDDEN", {
+          message: "Only agents can join a team",
+        });
+      }
     },
     // Actor-target rules run in request-guards; these hooks only see the target.
     beforeUpdateMemberRole: async ({

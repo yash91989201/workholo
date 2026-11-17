@@ -88,6 +88,7 @@ export function createAuth(
         roles: organizationRoles,
         creatorRole: "owner",
         organizationLimit: 1,
+        teams: { enabled: true, defaultTeam: { enabled: false } },
         schema: {
           organization: {
             additionalFields: {

@@ -9,7 +9,6 @@ import {
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Toaster } from "@workholo/ui/components/sonner";
 import { TooltipProvider } from "@workholo/ui/components/tooltip";
-import Header from "@/components/header";
 import { ThemeProvider } from "@/components/theme-provider";
 import appCss from "@/index.css?url";
 import type { orpc } from "@/utils/orpc";
@@ -65,8 +64,7 @@ function RootComponent() {
           storageKey="vite-ui-theme"
         >
           <TooltipProvider>
-            <div className="grid h-svh grid-rows-[auto_1fr]">
-              <Header />
+            <div className="h-svh">
               <Outlet />
             </div>
             <Toaster richColors />

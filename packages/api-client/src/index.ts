@@ -3,6 +3,14 @@ import { RPCLink } from "@orpc/client/fetch";
 import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 import { QueryCache, QueryClient } from "@tanstack/react-query";
 import type { AppRouterClient } from "@workholo/api/routers/index";
+
+export type {
+  DirectoryRow,
+  InvitationRow,
+  TeamMemberRow,
+  TeamRow,
+} from "@workholo/api/routers/organization";
+
 import { toast } from "sonner";
 
 export type ApiClient = {

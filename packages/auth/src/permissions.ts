@@ -25,7 +25,7 @@ export const admin = ac.newRole({
   organization: [],
   member: ["create", "update", "delete"],
   invitation: ["create", "cancel"],
-  team: [],
+  team: ["create", "update", "delete"],
   ac: ["read"],
   call: ["read", "monitor", "whisper", "barge"],
   recording: ["read"],

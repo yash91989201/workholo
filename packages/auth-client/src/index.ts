@@ -19,6 +19,7 @@ const clientRoles = organizationRoles as Record<string, Role>;
 const organizationOptions = {
   ac: clientAc,
   roles: clientRoles,
+  teams: { enabled: true as const },
 };
 
 /** Console and agent clients: organization plugin only. */

@@ -4,7 +4,12 @@ import { createRouterClient } from "@orpc/server";
 import { createAuth } from "@workholo/auth";
 import type { AuditEvent } from "@workholo/auth/audit";
 import { createDb, type Database } from "@workholo/db";
-import { member, organization, user } from "@workholo/db/schema/auth";
+import {
+  invitation,
+  member,
+  organization,
+  user,
+} from "@workholo/db/schema/auth";
 import { call, recording } from "@workholo/db/schema/calls";
 import { and, eq, like } from "drizzle-orm";
 
@@ -102,6 +107,10 @@ describe("tenant request path", () => {
   let doomedUser: Awaited<ReturnType<typeof signUp>>;
   let organizationId = "";
   let otherOrganizationId = "";
+  let teamId = "";
+  let otherTeamId = "";
+  let pendingInvitationId = "";
+  let cancelledInvitationId = "";
 
   beforeAll(async () => {
     db = createDb({ DATABASE_URL: databaseUrl() });
@@ -129,8 +138,19 @@ describe("tenant request path", () => {
       headers: adminUser.headers,
     });
 
+    const createdTeam = await auth.api.createTeam({
+      body: { name: "Support", organizationId },
+      headers: owner.headers,
+    });
+    teamId = createdTeam.id;
+
     const agentInvite = await auth.api.createInvitation({
-      body: { email: agentUser.user.email, role: "agent", organizationId },
+      body: {
+        email: agentUser.user.email,
+        role: "agent",
+        teamId,
+        organizationId,
+      },
       headers: owner.headers,
     });
     await auth.api.acceptInvitation({
@@ -143,6 +163,26 @@ describe("tenant request path", () => {
       headers: outsider.headers,
     })) as { id: string };
     otherOrganizationId = otherOrg.id;
+    const otherTeam = await auth.api.createTeam({
+      body: { name: "Other team", organizationId: otherOrganizationId },
+      headers: outsider.headers,
+    });
+    otherTeamId = otherTeam.id;
+
+    const pendingInvite = await auth.api.createInvitation({
+      body: { email: `pending@${DOMAIN}`, role: "admin", organizationId },
+      headers: owner.headers,
+    });
+    pendingInvitationId = pendingInvite.id;
+    const cancelledInvite = await auth.api.createInvitation({
+      body: { email: `cancelled@${DOMAIN}`, role: "admin", organizationId },
+      headers: owner.headers,
+    });
+    cancelledInvitationId = cancelledInvite.id;
+    await auth.api.cancelInvitation({
+      body: { invitationId: cancelledInvitationId },
+      headers: owner.headers,
+    });
 
     await db
       .update(user)
@@ -203,41 +243,110 @@ describe("tenant request path", () => {
   test("unauthenticated call is unauthorized", async () => {
     const client = clientFor(null);
     await expect(
-      client.organization.members({ organizationId })
+      client.organization.directory({ organizationId })
     ).rejects.toBeDefined();
   });
 
   test("missing organization is a bad request", async () => {
     const client = clientFor(await getSession(owner.headers));
     await expect(
-      client.organization.members({ organizationId: "" })
+      client.organization.directory({ organizationId: "" })
     ).rejects.toMatchObject({ code: "BAD_REQUEST" });
   });
 
   test("non-member is forbidden", async () => {
     const client = clientFor(await getSession(outsider.headers));
     await expect(
-      client.organization.members({ organizationId })
+      client.organization.directory({ organizationId })
     ).rejects.toMatchObject({
       code: "FORBIDDEN",
     });
   });
 
-  test("owner and admin read members, agent is forbidden", async () => {
+  test("owner and admin read the directory, agent is forbidden", async () => {
     const ownerClient = clientFor(await getSession(owner.headers));
     const adminClient = clientFor(await getSession(adminUser.headers));
     const agentClient = clientFor(await getSession(agentUser.headers));
+    const rows = await ownerClient.organization.directory({ organizationId });
+    expect(rows.length).toBe(3);
+    expect(rows.map((row) => row.role).sort()).toEqual([
+      "admin",
+      "agent",
+      "owner",
+    ]);
+    const agentRow = rows.find((row) => row.userId === agentUser.user.id);
+    expect(agentRow?.teams).toEqual(["Support"]);
+    expect(agentRow?.email).toBe(agentUser.user.email);
     expect(
-      (await ownerClient.organization.members({ organizationId })).length
-    ).toBe(3);
-    expect(
-      (await adminClient.organization.members({ organizationId })).length
+      (await adminClient.organization.directory({ organizationId })).length
     ).toBe(3);
     await expect(
-      agentClient.organization.members({ organizationId })
+      agentClient.organization.directory({ organizationId })
     ).rejects.toMatchObject({
       code: "FORBIDDEN",
     });
+  });
+
+  test("directory never includes another organization's members", async () => {
+    const outsiderClient = clientFor(await getSession(outsider.headers));
+    const rows = await outsiderClient.organization.directory({
+      organizationId: otherOrganizationId,
+    });
+    expect(rows.map((row) => row.userId)).toEqual([outsider.user.id]);
+    await expect(
+      outsiderClient.organization.directory({ organizationId })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+
+  test("pending invitations carry role, team, and expiry", async () => {
+    const ownerClient = clientFor(await getSession(owner.headers));
+    const rows = await ownerClient.organization.invitations({
+      organizationId,
+    });
+    expect(rows.map((row) => row.id)).toEqual([pendingInvitationId]);
+    expect(rows[0]?.email).toBe(`pending@${DOMAIN}`);
+    expect(rows[0]?.role).toBe("admin");
+    expect(rows[0]?.teamName).toBeNull();
+    expect(rows[0]?.expiresAt).toBeInstanceOf(Date);
+    const stored = await db
+      .select({ status: invitation.status })
+      .from(invitation)
+      .where(eq(invitation.id, cancelledInvitationId));
+    expect(stored[0]?.status).toBe("canceled");
+  });
+
+  test("invitation reads reject another organization", async () => {
+    const outsiderClient = clientFor(await getSession(outsider.headers));
+    await expect(
+      outsiderClient.organization.invitations({ organizationId })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+
+  test("teams are scoped to the resolved organization", async () => {
+    const ownerClient = clientFor(await getSession(owner.headers));
+    const rows = await ownerClient.organization.teams({ organizationId });
+    expect(rows.map((row) => row.id)).toEqual([teamId]);
+    expect(rows[0]?.memberCount).toBe(1);
+    expect(rows[0]?.createdAt).toBeInstanceOf(Date);
+    const outsiderClient = clientFor(await getSession(outsider.headers));
+    await expect(
+      outsiderClient.organization.teams({ organizationId })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+
+  test("team roster returns agents and rejects a foreign team id", async () => {
+    const ownerClient = clientFor(await getSession(owner.headers));
+    const rows = await ownerClient.organization.teamMembers({
+      organizationId,
+      teamId,
+    });
+    expect(rows.map((row) => row.email)).toEqual([agentUser.user.email]);
+    await expect(
+      ownerClient.organization.teamMembers({
+        organizationId,
+        teamId: otherTeamId,
+      })
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
   });
 
   test("agent sees only its own calls; owner sees the organization's", async () => {
