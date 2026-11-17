@@ -63,7 +63,7 @@ function AcceptInvitationPage() {
     );
     await queryClient.invalidateQueries();
     await navigate({
-      to: "/$orgSlug/dashboard",
+      to: "/$orgSlug",
       params: { orgSlug: me.membership?.slug ?? "" },
     });
   }

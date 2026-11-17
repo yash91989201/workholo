@@ -18,7 +18,7 @@ export const Route = createFileRoute("/")({
       throw redirect({ to: "/onboarding" });
     }
     throw redirect({
-      to: "/$orgSlug/dashboard",
+      to: "/$orgSlug",
       params: { orgSlug: me.membership.slug },
     });
   },

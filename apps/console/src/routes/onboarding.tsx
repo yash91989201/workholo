@@ -40,7 +40,7 @@ export const Route = createFileRoute("/onboarding")({
     );
     if (me.membership) {
       throw redirect({
-        to: "/$orgSlug/dashboard",
+        to: "/$orgSlug",
         params: { orgSlug: me.membership.slug },
       });
     }
@@ -71,7 +71,7 @@ function OnboardingPage() {
       // ensureQueryData elsewhere returns stale-null membership otherwise.
       await queryClient.fetchQuery(orpc.organization.me.queryOptions());
       await navigate({
-        to: "/$orgSlug/dashboard",
+        to: "/$orgSlug",
         params: { orgSlug: value.slug },
       });
     },

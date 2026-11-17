@@ -1,25 +1,22 @@
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
   SidebarRail,
 } from "@workholo/ui/components/sidebar";
 import { LayoutDashboardIcon, UsersIcon, UsersRoundIcon } from "lucide-react";
 
 import { type NavEntry, NavMain } from "./nav-main";
-import { NavUser } from "./nav-user";
 import { TeamSwitcher } from "./team-switcher";
 
 type AppSidebarProps = {
   membership: { name: string; slug: string; role: string };
-  user: { name: string; email: string; image?: string | null };
 };
 
 const navMain: NavEntry[] = [
   {
     title: "Dashboard",
-    to: "/$orgSlug/dashboard",
+    to: "/$orgSlug",
     icon: LayoutDashboardIcon,
   },
   {
@@ -41,7 +38,7 @@ const navMain: NavEntry[] = [
   },
 ];
 
-export function AppSidebar({ membership, user }: AppSidebarProps) {
+export function AppSidebar({ membership }: AppSidebarProps) {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -50,9 +47,6 @@ export function AppSidebar({ membership, user }: AppSidebarProps) {
       <SidebarContent>
         <NavMain items={navMain} orgSlug={membership.slug} />
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={user} />
-      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );

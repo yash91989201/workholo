@@ -69,9 +69,9 @@ Extend hooks: reject adding a member whose role is not `agent`. Plugin `findOrCr
 
 ```
 /login  /accept-invitation  /onboarding  /denied      root auth routes (exists)
-/                                                      -> redirect to /:orgSlug/dashboard
+/                                                      -> redirect to /:orgSlug/
 /_auth/$orgSlug                                       guard + sidebar shell
-  /dashboard
+  /                                                    dashboard (index route)
   /users  /users/add  /users/pending
   /teams  /teams/members  /teams/$teamId
 ```

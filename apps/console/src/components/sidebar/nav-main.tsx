@@ -17,7 +17,7 @@ import {
 import { ChevronRightIcon, type LucideIcon } from "lucide-react";
 
 export type OrgPath =
-  | "/$orgSlug/dashboard"
+  | "/$orgSlug"
   | "/$orgSlug/users"
   | "/$orgSlug/users/add"
   | "/$orgSlug/users/pending"
@@ -50,7 +50,7 @@ export function NavMain({
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>Console</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => {
           if (item.items) {

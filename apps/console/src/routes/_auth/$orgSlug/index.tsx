@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@workholo/ui/components/card";
 
-export const Route = createFileRoute("/_auth/$orgSlug/dashboard")({
+export const Route = createFileRoute("/_auth/$orgSlug/")({
   component: DashboardPage,
 });
 
