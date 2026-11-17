@@ -57,7 +57,7 @@ function formatImport(moduleSpecifier: string, names: string[]): string {
   if (singleLine.length <= LINE_WIDTH) {
     return singleLine;
   }
-  return `import {\n\t${sortedNames.join(",\n\t")},\n} from "${moduleSpecifier}";`;
+  return `import {\n  ${sortedNames.join(",\n  ")},\n} from "${moduleSpecifier}";`;
 }
 
 export function buildModelSource(

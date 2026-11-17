@@ -7,7 +7,7 @@ import {
 } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { generateWorkspaceModels } from "../model-generator/index";
+import { generateWorkspaceModels } from "../schema-generator/index";
 import { collectTsFiles, discoverWorkspaces } from "../shared/workspaces";
 
 export interface GenerationSummary {
@@ -107,7 +107,7 @@ function formatImport(moduleSpecifier: string, schemaNames: string[]): string {
   if (sortedNames.length <= 1 || singleLine.length <= LINE_WIDTH) {
     return singleLine;
   }
-  return `import type {\n\t${sortedNames.join(",\n\t")},\n} from "${moduleSpecifier}";`;
+  return `import type {\n  ${sortedNames.join(",\n  ")},\n} from "${moduleSpecifier}";`;
 }
 
 interface SchemaEntry {

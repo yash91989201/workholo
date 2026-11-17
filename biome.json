@@ -149,7 +149,7 @@
       }
     },
     {
-      "includes": ["scripts/model-generator/index.ts"],
+      "includes": ["scripts/schema-generator/index.ts"],
       "linter": {
         "rules": {
           "complexity": {

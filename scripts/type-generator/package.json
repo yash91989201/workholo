@@ -1,5 +1,5 @@
 {
-  "name": "@workholo/typegen",
+  "name": "type-generator",
   "private": true,
   "scripts": {
     "dev": "bun index.ts --watch"
