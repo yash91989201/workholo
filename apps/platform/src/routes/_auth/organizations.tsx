@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Badge } from "@workholo/ui/components/badge";
 import { Button } from "@workholo/ui/components/button";
@@ -24,7 +24,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { authClient } from "@/lib/auth-client";
-import { orpc } from "@/utils/orpc";
+import { orpc, queryClient } from "@/utils/orpc";
 
 const PAGE_SIZE = 20;
 
@@ -39,7 +39,6 @@ type DialogState =
   | null;
 
 function OrganizationsPage() {
-  const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [dialog, setDialog] = useState<DialogState>(null);

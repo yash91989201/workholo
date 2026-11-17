@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { TeamMemberRow } from "@workholo/api-client";
@@ -16,7 +16,7 @@ import { toast } from "sonner";
 
 import { DataTable } from "@/components/data-table";
 import { authClient } from "@/lib/auth-client";
-import { orpc } from "@/utils/orpc";
+import { orpc, queryClient } from "@/utils/orpc";
 
 export const Route = createFileRoute("/_auth/$orgSlug/teams/$teamId")({
   component: TeamDetailPage,
@@ -26,7 +26,6 @@ function TeamDetailPage() {
   const { membership } = Route.useRouteContext();
   const { organizationId, slug } = membership;
   const { teamId } = Route.useParams();
-  const queryClient = useQueryClient();
   const [selected, setSelected] = useState<string | null>(null);
   const team = useQuery(
     orpc.organization.teams.queryOptions({ input: { organizationId } })

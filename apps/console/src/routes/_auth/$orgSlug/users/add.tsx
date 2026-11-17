@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Button } from "@workholo/ui/components/button";
 import { useAppForm } from "@workholo/ui/components/form/hooks";
@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import z from "zod";
 
 import { authClient } from "@/lib/auth-client";
-import { orpc } from "@/utils/orpc";
+import { orpc, queryClient } from "@/utils/orpc";
 
 export const Route = createFileRoute("/_auth/$orgSlug/users/add")({
   component: AddUserPage,
@@ -17,7 +17,6 @@ function AddUserPage() {
   const { membership } = Route.useRouteContext();
   const { organizationId, role: actorRole, slug } = membership;
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const teams = useQuery(
     orpc.organization.teams.queryOptions({ input: { organizationId } })
   );

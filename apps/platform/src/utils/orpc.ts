@@ -7,4 +7,4 @@ export function createApiContext() {
   return createApiClient(ENV.VITE_SERVER_URL);
 }
 
-export const { orpc } = createApiContext();
+export const { orpc, queryClient } = createApiContext();

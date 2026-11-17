@@ -1,4 +1,3 @@
-import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { Button } from "@workholo/ui/components/button";
 import {
@@ -12,7 +11,7 @@ import { useState } from "react";
 import z from "zod";
 
 import { authClient } from "@/lib/auth-client";
-import { orpc } from "@/utils/orpc";
+import { orpc, queryClient } from "@/utils/orpc";
 
 export const Route = createFileRoute("/accept-invitation")({
   validateSearch: z.object({ id: z.string().optional() }),
@@ -35,7 +34,6 @@ export const Route = createFileRoute("/accept-invitation")({
 function AcceptInvitationPage() {
   const { id } = Route.useSearch();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const [error, setError] = useState<string>();
   const [isPending, setIsPending] = useState(false);
 

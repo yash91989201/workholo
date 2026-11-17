@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@workholo/ui/components/badge";
@@ -14,7 +14,7 @@ import { toast } from "sonner";
 
 import { DataTable } from "@/components/data-table";
 import { authClient } from "@/lib/auth-client";
-import { orpc } from "@/utils/orpc";
+import { orpc, queryClient } from "@/utils/orpc";
 
 export const Route = createFileRoute("/_auth/$orgSlug/users/")({
   component: UsersPage,
@@ -27,7 +27,6 @@ type DirectoryRow = Awaited<
 function UsersPage() {
   const { membership, session } = Route.useRouteContext();
   const { organizationId } = membership;
-  const queryClient = useQueryClient();
   const directory = useQuery(
     orpc.organization.directory.queryOptions({
       input: { organizationId },
