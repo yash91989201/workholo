@@ -6,6 +6,7 @@ import SignUpForm from "@/components/sign-up-form";
 import { authClient } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/login")({
+  ssr: false,
   beforeLoad: async () => {
     const session = await authClient.getSession();
     if (session.data) {

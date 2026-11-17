@@ -15,6 +15,8 @@ import { authClient } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/accept-invitation")({
   validateSearch: z.object({ id: z.string().optional() }),
+  // Client-only: the session check needs the browser cookie.
+  ssr: false,
   beforeLoad: async ({ search }) => {
     const session = await authClient.getSession();
     if (!session.data) {

@@ -2,6 +2,9 @@ import { createApiClient } from "@workholo/api-client";
 
 import { ENV } from "../env";
 
-export const { client, orpc, queryClient } = createApiClient(
-  ENV.VITE_SERVER_URL
-);
+/** Per-router client, so SSR requests never share a query cache. */
+export function createApiContext() {
+  return createApiClient(ENV.VITE_SERVER_URL);
+}
+
+export const { orpc } = createApiContext();

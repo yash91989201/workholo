@@ -1,14 +1,15 @@
 # workholo
 
-This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines React, TanStack Router, Elysia, ORPC, and more.
+This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines React, TanStack Start, Elysia, ORPC, and more.
 
 ## Features
 
 - **TypeScript** - For type safety and improved developer experience
+- **TanStack Start** - File-based routing, SSR, and server functions
 - **TanStack Router** - File-based routing with full type safety
 - **React Native** - Build mobile apps using React
 - **Expo** - Tools for React Native development
-- **React Compiler** - Automatic memoization in every SPA build
+- **React Compiler** - Automatic memoization in every React app build
 - **TailwindCSS** - Utility-first CSS for rapid UI development
 - **Shared UI package** - shadcn/ui primitives live in `packages/ui`
 - **Elysia** - Type-safe, high-performance framework
@@ -108,7 +109,7 @@ Run standalone Node/Bun tools that use Varlock from the owning app directory so 
 
 ## Frontend surfaces
 
-Four separately deployed SPAs share one auth backend and the shared clients in `packages/auth-client` and `packages/api-client`:
+Four separately deployed frontends share one auth backend and the shared clients in `packages/auth-client` and `packages/api-client`. `web`, `console`, and `platform` run on TanStack Start with Nitro (Bun) SSR; `agent` stays a client-only Vite SPA because it ships inside Tauri:
 
 | App | Audience | Dev port | Gate |
 | --- | --- | --- | --- |
@@ -140,6 +141,7 @@ If port 8000 is already in use, change `PORT` and `BETTER_AUTH_URL` in `apps/ser
 
 - Target: web, console, agent, platform, and server
 - Config: `docker-compose.yml` (app Dockerfiles live in `apps/*/Dockerfile`)
+- Runtime: `web`, `console`, and `platform` ship Bun + Nitro SSR servers; `agent` ships nginx-served static assets
 - Build images: bun run docker:build
 - Start: bun run docker:up
 - Logs: bun run docker:logs
@@ -158,10 +160,10 @@ For more details, see the guide on [Deploying with Docker Compose](https://www.b
 ```
 workholo/
 ├── apps/
-│   ├── web/         # Public landing site (React + TanStack Router)
-│   ├── console/     # Organization console for owners/admins
-│   ├── agent/       # Agent call panel + Tauri desktop shell
-│   ├── platform/    # Platform staff console
+│   ├── web/         # Public landing site (TanStack Start SSR)
+│   ├── console/     # Organization console for owners/admins (TanStack Start SSR)
+│   ├── agent/       # Agent call panel + Tauri desktop shell (Vite SPA)
+│   ├── platform/    # Platform staff console (TanStack Start SSR)
 │   ├── native/      # Mobile application (React Native, Expo)
 │   ├── docs/        # Documentation site (Astro Starlight)
 │   └── server/      # Backend API (Elysia, ORPC)

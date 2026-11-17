@@ -7,6 +7,8 @@ import { authClient } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/_auth")({
   component: AuthLayout,
+  // Client-only: the session/role guard must not run during SSR.
+  ssr: false,
   beforeLoad: async () => {
     const session = await authClient.getSession();
     if (!session.data) {

@@ -17,6 +17,8 @@ import z from "zod";
 import { authClient } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/onboarding")({
+  // Client-only: the session check needs the browser cookie.
+  ssr: false,
   beforeLoad: async ({ context }) => {
     const session = await authClient.getSession();
     if (!session.data) {

@@ -3,6 +3,8 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { authClient } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/_auth")({
+  // Client-only: the session/membership guard must not run during SSR.
+  ssr: false,
   component: AuthLayout,
   beforeLoad: async ({ context, location }) => {
     const session = await authClient.getSession();

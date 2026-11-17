@@ -1,8 +1,9 @@
 import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
-import { tanstackRouter } from "@tanstack/router-plugin/vite";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import { varlockVitePlugin } from "@varlock/vite-integration";
-import react, { reactCompilerPreset } from "@vitejs/plugin-react";
+import viteReact, { reactCompilerPreset } from "@vitejs/plugin-react";
+import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
 
 export default defineConfig({
@@ -15,11 +16,9 @@ export default defineConfig({
   plugins: [
     varlockVitePlugin({ ssrInjectMode: "auto-load" }),
     tailwindcss(),
-    tanstackRouter({
-      target: "react",
-      autoCodeSplitting: true,
-    }),
-    react(),
+    tanstackStart(),
+    nitro({ preset: "bun" }),
+    viteReact(),
     babel({ presets: [reactCompilerPreset()] }),
   ],
 });

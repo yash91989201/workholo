@@ -9,6 +9,8 @@ import { safeRedirect } from "@/lib/redirect";
 
 export const Route = createFileRoute("/login")({
   validateSearch: z.object({ redirect: z.string().optional() }),
+  // Client-only: the session check needs the browser cookie.
+  ssr: false,
   beforeLoad: async ({ search }) => {
     const session = await authClient.getSession();
     if (session.data) {

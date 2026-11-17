@@ -8,6 +8,11 @@ dist
 build
 *.tsbuildinfo
 
+# TanStack Start outputs
+**/.output
+**/.tanstack
+**/.nitro
+
 # Generated files
 apps/web/src/routeTree.gen.ts
 apps/console/src/routeTree.gen.ts

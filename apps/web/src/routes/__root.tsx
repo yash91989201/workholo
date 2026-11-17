@@ -1,15 +1,27 @@
-import { createRootRoute, HeadContent, Outlet } from "@tanstack/react-router";
+import {
+  createRootRoute,
+  HeadContent,
+  Outlet,
+  Scripts,
+} from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Toaster } from "@workholo/ui/components/sonner";
 import { TooltipProvider } from "@workholo/ui/components/tooltip";
 import Header from "@/components/header";
 import { ThemeProvider } from "@/components/theme-provider";
-import "@/index.css";
+import appCss from "@/index.css?url";
 
 export const Route = createRootRoute({
   component: RootComponent,
   head: () => ({
     meta: [
+      {
+        charSet: "utf-8",
+      },
+      {
+        name: "viewport",
+        content: "width=device-width, initial-scale=1",
+      },
       {
         title: "workholo",
       },
@@ -23,29 +35,38 @@ export const Route = createRootRoute({
         rel: "icon",
         href: "/favicon.ico",
       },
+      {
+        rel: "stylesheet",
+        href: appCss,
+      },
     ],
   }),
 });
 
 function RootComponent() {
   return (
-    <>
-      <HeadContent />
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="dark"
-        disableTransitionOnChange
-        storageKey="vite-ui-theme"
-      >
-        <TooltipProvider>
-          <div className="grid h-svh grid-rows-[auto_1fr]">
-            <Header />
-            <Outlet />
-          </div>
-          <Toaster richColors />
-        </TooltipProvider>
-      </ThemeProvider>
-      <TanStackRouterDevtools position="bottom-left" />
-    </>
+    <html className="dark" lang="en" suppressHydrationWarning>
+      <head>
+        <HeadContent />
+      </head>
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          disableTransitionOnChange
+          storageKey="vite-ui-theme"
+        >
+          <TooltipProvider>
+            <div className="grid h-svh grid-rows-[auto_1fr]">
+              <Header />
+              <Outlet />
+            </div>
+            <Toaster richColors />
+          </TooltipProvider>
+        </ThemeProvider>
+        <TanStackRouterDevtools position="bottom-left" />
+        <Scripts />
+      </body>
+    </html>
   );
 }

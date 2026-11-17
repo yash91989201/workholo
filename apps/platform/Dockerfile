@@ -1,5 +1,4 @@
-FROM node:26-slim AS builder
-COPY --from=oven/bun:1 /usr/local/bin/bun /usr/local/bin/bun
+FROM oven/bun:1 AS builder
 WORKDIR /app
 
 COPY . .
@@ -10,8 +9,15 @@ ENV VITE_SERVER_URL=${VITE_SERVER_URL}
 ENV NODE_ENV=production
 RUN --mount=type=secret,id=platform_env,target=/app/apps/platform/.env.local --mount=type=secret,id=server_env,target=/app/apps/server/.env.local cd apps/platform && bun run build
 
-FROM nginx:alpine AS runner
-COPY --from=builder /app/apps/platform/dist /usr/share/nginx/html
-COPY apps/platform/nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+FROM oven/bun:1 AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=builder /app /app
+
+ENV HOST=0.0.0.0
+ENV PORT=3002
+EXPOSE 3002
+
+WORKDIR /app/apps/platform
+USER bun
+CMD ["bun", ".output/server/index.mjs"]
