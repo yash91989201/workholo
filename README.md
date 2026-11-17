@@ -157,15 +157,25 @@ For more details, see the guide on [Deploying with Docker Compose](https://www.b
 ```
 workholo/
 ├── apps/
-│   ├── web/         # Frontend application (React + TanStack Router)
+│   ├── web/         # Public landing site (React + TanStack Router)
+│   ├── console/     # Organization console for owners/admins
+│   ├── agent/       # Agent call panel + Tauri desktop shell
+│   ├── platform/    # Platform staff console
 │   ├── native/      # Mobile application (React Native, Expo)
 │   ├── docs/        # Documentation site (Astro Starlight)
 │   └── server/      # Backend API (Elysia, ORPC)
 ├── packages/
 │   ├── ui/          # Shared shadcn/ui components and styles
-│   ├── api/         # API layer / business logic
-│   ├── auth/        # Authentication configuration & logic
-│   └── db/          # Database schema & queries
+│   ├── api/         # oRPC routers, tenant scoping, request guards
+│   ├── api-client/  # Typed oRPC client factory
+│   ├── auth/        # Better Auth config, plugins, roles, policy
+│   ├── auth-client/ # Typed Better Auth client factories
+│   ├── config/      # Shared tsconfig base
+│   └── db/          # Drizzle schema, migrations, zod models
+└── scripts/
+    ├── model-generator/  # Drizzle tables → zod schemas/types
+    ├── type-generator/   # zod schemas → TypeScript types
+    └── shared/           # Shared workspace discovery helpers
 ```
 
 ## Available Scripts
