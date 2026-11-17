@@ -1,10 +1,10 @@
+import { IconChevronRight } from "@tabler/icons-react";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@workholo/ui/components/collapsible";
 import { cn } from "cn";
-import { ChevronRightIcon } from "lucide-react";
 import type * as React from "react";
 
 function Trace({ className, ...props }: React.ComponentProps<"div">) {
@@ -118,7 +118,7 @@ function TraceCollapsibleTrigger({
     >
       {children}
       <TraceIcon className="transition-transform group-aria-expanded/trace-collapsible-trigger:rotate-90">
-        <ChevronRightIcon />
+        <IconChevronRight />
       </TraceIcon>
     </CollapsibleTrigger>
   );

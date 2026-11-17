@@ -1,12 +1,14 @@
+"use client";
+
 import {
   MessageScroller as MessageScrollerPrimitive,
   useMessageScroller,
   useMessageScrollerScrollable,
   useMessageScrollerVisibility,
 } from "@shadcn/react/message-scroller";
+import { IconArrowDown } from "@tabler/icons-react";
 import { Button } from "@workholo/ui/components/button";
 import { cn } from "cn";
-import { ArrowDownIcon } from "lucide-react";
 import type * as React from "react";
 
 function MessageScrollerProvider(
@@ -104,7 +106,7 @@ function MessageScrollerButton({
     >
       {children ?? (
         <>
-          <ArrowDownIcon />
+          <IconArrowDown />
           <span className="sr-only">
             {direction === "end" ? "Scroll to end" : "Scroll to start"}
           </span>

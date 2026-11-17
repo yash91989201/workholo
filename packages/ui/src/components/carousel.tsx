@@ -1,9 +1,9 @@
+import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { Button } from "@workholo/ui/components/button";
 import { cn } from "cn";
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import * as React from "react";
 
 type CarouselApi = UseEmblaCarouselType[1];
@@ -198,7 +198,7 @@ function CarouselPrevious({
       variant={variant}
       {...props}
     >
-      <ChevronLeftIcon />
+      <IconChevronLeft />
       <span className="sr-only">Previous slide</span>
     </Button>
   );
@@ -228,7 +228,7 @@ function CarouselNext({
       variant={variant}
       {...props}
     >
-      <ChevronRightIcon />
+      <IconChevronRight />
       <span className="sr-only">Next slide</span>
     </Button>
   );

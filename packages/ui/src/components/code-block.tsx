@@ -1,9 +1,7 @@
-"use client";
-
+import { IconCheck, IconCopy } from "@tabler/icons-react";
 import { Button } from "@workholo/ui/components/button";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "cn";
-import { CheckIcon, CopyIcon } from "lucide-react";
 import * as React from "react";
 
 const codeBlockVariants = cva(
@@ -120,7 +118,7 @@ function CodeBlockCopyButton({
         variant={variant}
         {...props}
       >
-        {copied ? <CheckIcon /> : <CopyIcon />}
+        {copied ? <IconCheck /> : <IconCopy />}
       </Button>
       <span aria-live="polite" className="sr-only">
         {copied ? "Copied" : ""}

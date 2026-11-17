@@ -1,16 +1,14 @@
-"use client";
-
 import { Toast as ToastPrimitive } from "@base-ui/react/toast";
+import {
+  IconAlertOctagon,
+  IconAlertTriangle,
+  IconCircleCheck,
+  IconInfoCircle,
+  IconLoader,
+  IconX,
+} from "@tabler/icons-react";
 import { Button } from "@workholo/ui/components/button";
 import { cn } from "cn";
-import {
-  CircleCheckIcon,
-  InfoIcon,
-  Loader2Icon,
-  OctagonXIcon,
-  TriangleAlertIcon,
-  XIcon,
-} from "lucide-react";
 import type * as React from "react";
 
 const toast = ToastPrimitive.createToastManager();
@@ -131,7 +129,7 @@ function ToastClose({
       render={render}
       {...props}
     >
-      {children ?? <XIcon aria-hidden="true" />}
+      {children ?? <IconX aria-hidden="true" />}
     </ToastPrimitive.Close>
   );
 }
@@ -140,23 +138,23 @@ function ToastIcon({ type }: { type: string | undefined }) {
   let icon: React.ReactNode = null;
 
   if (type === "success") {
-    icon = <CircleCheckIcon aria-hidden="true" />;
+    icon = <IconCircleCheck aria-hidden="true" />;
   }
 
   if (type === "info") {
-    icon = <InfoIcon aria-hidden="true" />;
+    icon = <IconInfoCircle aria-hidden="true" />;
   }
 
   if (type === "warning") {
-    icon = <TriangleAlertIcon aria-hidden="true" />;
+    icon = <IconAlertTriangle aria-hidden="true" />;
   }
 
   if (type === "error") {
-    icon = <OctagonXIcon aria-hidden="true" className="text-destructive" />;
+    icon = <IconAlertOctagon aria-hidden="true" className="text-destructive" />;
   }
 
   if (type === "loading") {
-    icon = <Loader2Icon aria-hidden="true" className="animate-spin" />;
+    icon = <IconLoader aria-hidden="true" className="animate-spin" />;
   }
 
   if (!icon) {

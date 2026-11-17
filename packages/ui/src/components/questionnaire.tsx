@@ -1,9 +1,7 @@
-"use client";
-
 import { Questionnaire as QuestionnairePrimitive } from "@shadcn/react/questionnaire";
+import { IconCheck } from "@tabler/icons-react";
 import { type Button, buttonVariants } from "@workholo/ui/components/button";
 import { cn } from "cn";
-import { CheckIcon } from "lucide-react";
 import type * as React from "react";
 
 function Questionnaire({
@@ -124,7 +122,7 @@ function QuestionnaireChoice({
           className="hidden size-2 rounded-full bg-primary-foreground group-data-checked/questionnaire-choice:block group-data-[type=checkbox]/questionnaire-choice:hidden"
           data-slot="questionnaire-choice-indicator-dot"
         />
-        <CheckIcon
+        <IconCheck
           className="hidden size-3.5 group-data-checked/questionnaire-choice:block group-data-[type=radio]/questionnaire-choice:hidden"
           data-slot="questionnaire-choice-indicator-check"
         />

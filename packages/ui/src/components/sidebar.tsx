@@ -1,5 +1,8 @@
+"use client";
+
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
+import { IconLayoutSidebar } from "@tabler/icons-react";
 import { Button } from "@workholo/ui/components/button";
 import { Input } from "@workholo/ui/components/input";
 import { Separator } from "@workholo/ui/components/separator";
@@ -19,7 +22,6 @@ import {
 import { useIsMobile } from "@workholo/ui/hooks/use-mobile";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "cn";
-import { PanelLeftIcon } from "lucide-react";
 import * as React from "react";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
@@ -270,7 +272,7 @@ function SidebarTrigger({
       variant="ghost"
       {...props}
     >
-      <PanelLeftIcon />
+      <IconLayoutSidebar />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );

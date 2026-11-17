@@ -1,9 +1,9 @@
 "use client";
 
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
+import { IconX } from "@tabler/icons-react";
 import { Button } from "@workholo/ui/components/button";
 import { cn } from "cn";
-import { XIcon } from "lucide-react";
 import type * as React from "react";
 
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
@@ -69,7 +69,7 @@ function DialogContent({
               />
             }
           >
-            <XIcon />
+            <IconX />
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
         )}

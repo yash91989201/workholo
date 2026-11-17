@@ -1,5 +1,5 @@
+import { IconSelector } from "@tabler/icons-react";
 import { cn } from "cn";
-import { ChevronDownIcon } from "lucide-react";
 import type * as React from "react";
 
 type NativeSelectProps = Omit<React.ComponentProps<"select">, "size"> & {
@@ -26,7 +26,7 @@ function NativeSelect({
         data-slot="native-select"
         {...props}
       />
-      <ChevronDownIcon
+      <IconSelector
         aria-hidden="true"
         className="pointer-events-none absolute top-1/2 right-2.5 size-4 -translate-y-1/2 select-none text-muted-foreground"
         data-slot="native-select-icon"
