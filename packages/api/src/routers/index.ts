@@ -5,6 +5,7 @@ import {
   GetPrivateDataOutputSchema,
 } from "../lib/schemas/index";
 import { callsRouter } from "./calls";
+import { leadsRouter } from "./leads";
 import { organizationRouter } from "./organization";
 import { platformRouter } from "./platform";
 
@@ -20,6 +21,7 @@ export const appRouter = {
     })),
   organization: organizationRouter,
   calls: callsRouter,
+  leads: leadsRouter,
   platform: platformRouter,
 };
 export type AppRouter = typeof appRouter;

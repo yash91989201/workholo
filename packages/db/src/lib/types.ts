@@ -37,6 +37,14 @@ import type {
   RecordingModelSchema,
   RecordingUpdateSchema,
 } from "./models/calls";
+import type {
+  LeadInsertSchema,
+  LeadListInsertSchema,
+  LeadListModelSchema,
+  LeadListUpdateSchema,
+  LeadModelSchema,
+  LeadUpdateSchema,
+} from "./models/leads";
 
 export type AccountInsertType = z.infer<typeof AccountInsertSchema>;
 export type AccountModelType = z.infer<typeof AccountModelSchema>;
@@ -47,6 +55,12 @@ export type CallUpdateType = z.infer<typeof CallUpdateSchema>;
 export type InvitationInsertType = z.infer<typeof InvitationInsertSchema>;
 export type InvitationModelType = z.infer<typeof InvitationModelSchema>;
 export type InvitationUpdateType = z.infer<typeof InvitationUpdateSchema>;
+export type LeadInsertType = z.infer<typeof LeadInsertSchema>;
+export type LeadListInsertType = z.infer<typeof LeadListInsertSchema>;
+export type LeadListModelType = z.infer<typeof LeadListModelSchema>;
+export type LeadListUpdateType = z.infer<typeof LeadListUpdateSchema>;
+export type LeadModelType = z.infer<typeof LeadModelSchema>;
+export type LeadUpdateType = z.infer<typeof LeadUpdateSchema>;
 export type MemberInsertType = z.infer<typeof MemberInsertSchema>;
 export type MemberModelType = z.infer<typeof MemberModelSchema>;
 export type MemberUpdateType = z.infer<typeof MemberUpdateSchema>;

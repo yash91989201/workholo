@@ -5,11 +5,22 @@ export const AUDIT_ACTIONS = [
   "impersonation.start",
   "impersonation.stop",
   "user.platform_role_change",
+  "lead_list.create",
+  "lead_list.update",
+  "lead_list.archive",
+  "lead_list.lead_add",
+  "lead_list.lead_remove",
+  "lead_list.import",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 
-export type AuditTarget = { type: "organization" | "user"; id: string };
+export type AuditTarget = {
+  type: "organization" | "user" | "lead_list";
+  id: string;
+  /** Owning organization for resource targets. */
+  organizationId?: string;
+};
 
 export type AuditEvent = {
   actorId: string;

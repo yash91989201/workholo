@@ -11,6 +11,7 @@ import {
   user,
 } from "@workholo/db/schema/auth";
 import { call, recording } from "@workholo/db/schema/calls";
+import { lead } from "@workholo/db/schema/leads";
 import { and, eq, like } from "drizzle-orm";
 
 import { appRouter } from "./routers/index";
@@ -121,6 +122,7 @@ describe("tenant request path", () => {
   let otherTeamId = "";
   let pendingInvitationId = "";
   let cancelledInvitationId = "";
+  let leadListId = "";
 
   beforeAll(async () => {
     db = createDb({ DATABASE_URL: databaseUrl() });
@@ -529,5 +531,255 @@ describe("tenant request path", () => {
     const actions = auditEvents.map((event) => event.action);
     expect(actions).toContain("impersonation.start");
     expect(actions).toContain("impersonation.stop");
+  });
+
+  test("leads: owners and admins manage lists and agents are denied", async () => {
+    const ownerClient = clientFor(await getSession(owner.headers));
+    const adminClient = clientFor(await getSession(adminUser.headers));
+    const agentClient = clientFor(await getSession(agentUser.headers));
+    const outsiderClient = clientFor(await getSession(outsider.headers));
+
+    const created = await ownerClient.leads.createLeadList({
+      organizationId,
+      name: "November prospects",
+      description: "Q4 outreach",
+    });
+    leadListId = created.id;
+    const adminList = await adminClient.leads.createLeadList({
+      organizationId,
+      name: "Admin list",
+    });
+
+    const rows = await ownerClient.leads.listLeadLists({ organizationId });
+    expect(rows.map((row) => row.name)).toContain("November prospects");
+    expect(rows.find((row) => row.id === leadListId)?.leadCount).toBe(0);
+
+    await expect(
+      agentClient.leads.createLeadList({
+        organizationId,
+        name: "Denied",
+      })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(
+      agentClient.leads.listLeadLists({ organizationId })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(
+      outsiderClient.leads.getLeadList({
+        organizationId: otherOrganizationId,
+        listId: leadListId,
+      })
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
+
+    await ownerClient.leads.updateLeadList({
+      organizationId,
+      listId: leadListId,
+      name: "November prospects v2",
+      description: null,
+    });
+    const updated = (
+      await ownerClient.leads.listLeadLists({ organizationId })
+    ).find((row) => row.id === leadListId);
+    expect(updated?.name).toBe("November prospects v2");
+    expect(updated?.description).toBeNull();
+    await adminClient.leads.archiveLeadList({
+      organizationId,
+      listId: adminList.id,
+    });
+    const lists = await ownerClient.leads.listLeadLists({ organizationId });
+    expect(
+      lists.find((row) => row.id === adminList.id)?.archivedAt
+    ).not.toBeNull();
+  });
+
+  test("leads: E.164 normalization, duplicate rejection, and re-add", async () => {
+    const ownerClient = clientFor(await getSession(owner.headers));
+
+    const added = await ownerClient.leads.addLead({
+      organizationId,
+      listId: leadListId,
+      phone: "+1 (415) 555-0123",
+      name: "Alice",
+    });
+    expect(added.phone).toBe("+14155550123");
+
+    await expect(
+      ownerClient.leads.addLead({
+        organizationId,
+        listId: leadListId,
+        phone: "4155550124",
+      })
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+
+    await expect(
+      ownerClient.leads.addLead({
+        organizationId,
+        listId: leadListId,
+        phone: "+14155550123",
+      })
+    ).rejects.toMatchObject({ code: "CONFLICT" });
+
+    await ownerClient.leads.removeLead({
+      organizationId,
+      listId: leadListId,
+      leadId: added.id,
+    });
+    const readded = await ownerClient.leads.addLead({
+      organizationId,
+      listId: leadListId,
+      phone: "001 415 555 0123",
+    });
+    expect(readded.id).not.toBe(added.id);
+    expect(readded.phone).toBe("+14155550123");
+    const records = await db
+      .select()
+      .from(lead)
+      .where(eq(lead.listId, leadListId));
+    expect(records.length).toBe(2);
+    expect(records.filter((row) => row.removedAt !== null).length).toBe(1);
+  });
+
+  test("leads: CSV import reports one outcome per row and persists valid rows", async () => {
+    const ownerClient = clientFor(await getSession(owner.headers));
+    const before = auditEvents.length;
+
+    const csv = [
+      "phone,name",
+      "+14155550131,Alice",
+      "+14155550131,Bob",
+      "4155550132,No country",
+      "+14155550133,Carol",
+      '+1 (415) 555-0134,"Dana, Jr."',
+      "+14155550123,Existing",
+    ].join("\n");
+    const results = await ownerClient.leads.importLeads({
+      organizationId,
+      listId: leadListId,
+      csv,
+    });
+
+    expect(results.map((row) => row.line)).toEqual([2, 3, 4, 5, 6, 7]);
+    expect(results.map((row) => row.status)).toEqual([
+      "imported",
+      "repeated",
+      "invalid",
+      "imported",
+      "imported",
+      "existing",
+    ]);
+    expect(results[4]?.name).toBe("Dana, Jr.");
+    expect(results[2]?.reason).toContain("E.164");
+
+    const list = await ownerClient.leads.getLeadList({
+      organizationId,
+      listId: leadListId,
+    });
+    expect(list.leads.map((row) => row.phone).sort()).toEqual([
+      "+14155550123",
+      "+14155550131",
+      "+14155550133",
+      "+14155550134",
+    ]);
+
+    const events = auditEvents.slice(before);
+    const event = events.find((row) => row.action === "lead_list.import");
+    expect(event?.actorId).toBe(owner.user.id);
+    expect(event?.target).toEqual({
+      type: "lead_list",
+      id: leadListId,
+      organizationId,
+    });
+    expect(event?.reason).toBe("imported=3 invalid=1 existing=1 repeated=1");
+    expect(event?.reason).not.toContain("4155550");
+  });
+
+  test("leads: concurrent imports resolve duplicates through the database", async () => {
+    const ownerClient = clientFor(await getSession(owner.headers));
+    const csv = ["phone", "+14155550141", "+14155550142"].join("\n");
+    const [first, second] = await Promise.all([
+      ownerClient.leads.importLeads({
+        organizationId,
+        listId: leadListId,
+        csv,
+      }),
+      ownerClient.leads.importLeads({
+        organizationId,
+        listId: leadListId,
+        csv,
+      }),
+    ]);
+    const statuses = [...first, ...second].map((row) => row.status);
+    expect(statuses.filter((status) => status === "imported").length).toBe(2);
+    expect(statuses.filter((status) => status === "existing").length).toBe(2);
+
+    const list = await ownerClient.leads.getLeadList({
+      organizationId,
+      listId: leadListId,
+    });
+    expect(
+      list.leads.filter((row) => row.phone.startsWith("+1415555014")).length
+    ).toBe(2);
+  });
+
+  test("leads: archived lists and removed leads leave active setup options", async () => {
+    const ownerClient = clientFor(await getSession(owner.headers));
+    const created = await ownerClient.leads.createLeadList({
+      organizationId,
+      name: "Archive me",
+    });
+    const kept = await ownerClient.leads.addLead({
+      organizationId,
+      listId: created.id,
+      phone: "+14155550151",
+    });
+    const removed = await ownerClient.leads.addLead({
+      organizationId,
+      listId: created.id,
+      phone: "+14155550152",
+    });
+    await ownerClient.leads.removeLead({
+      organizationId,
+      listId: created.id,
+      leadId: removed.id,
+    });
+
+    const activeLeads = await ownerClient.leads.listActiveLeads({
+      organizationId,
+      listId: created.id,
+    });
+    expect(activeLeads.map((row) => row.id)).toEqual([kept.id]);
+
+    await ownerClient.leads.archiveLeadList({
+      organizationId,
+      listId: created.id,
+    });
+    const activeLists = await ownerClient.leads.listActiveLeadLists({
+      organizationId,
+    });
+    expect(activeLists.map((row) => row.id)).not.toContain(created.id);
+    await expect(
+      ownerClient.leads.listActiveLeads({
+        organizationId,
+        listId: created.id,
+      })
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    await expect(
+      ownerClient.leads.addLead({
+        organizationId,
+        listId: created.id,
+        phone: "+14155550153",
+      })
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+
+    const detail = await ownerClient.leads.getLeadList({
+      organizationId,
+      listId: created.id,
+    });
+    expect(detail.archivedAt).toBeInstanceOf(Date);
+    expect(detail.leads.map((row) => row.id)).toEqual([kept.id]);
+    const retained = await db
+      .select()
+      .from(lead)
+      .where(eq(lead.id, removed.id));
+    expect(retained[0]?.removedAt).toBeInstanceOf(Date);
   });
 });

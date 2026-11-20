@@ -22,7 +22,8 @@ export type OrgPath =
   | "/$orgSlug/users/add"
   | "/$orgSlug/users/pending"
   | "/$orgSlug/teams"
-  | "/$orgSlug/teams/members";
+  | "/$orgSlug/teams/members"
+  | "/$orgSlug/leads";
 
 export type NavEntry = {
   title: string;

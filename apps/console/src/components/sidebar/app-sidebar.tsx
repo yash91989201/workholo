@@ -1,4 +1,5 @@
 import {
+  IconAddressBook,
   IconLayoutDashboard,
   IconUsers,
   IconUsersGroup,
@@ -39,6 +40,11 @@ const navMain: NavEntry[] = [
       { title: "Teams", to: "/$orgSlug/teams" },
       { title: "Members", to: "/$orgSlug/teams/members" },
     ],
+  },
+  {
+    title: "Leads",
+    to: "/$orgSlug/leads",
+    icon: IconAddressBook,
   },
 ];
 
