@@ -11,7 +11,7 @@ import { useState } from "react";
 import z from "zod";
 
 import { authClient } from "@/lib/auth-client";
-import { orpc, queryClient } from "@/utils/orpc";
+import { orpc } from "@/utils/orpc";
 
 const RouteSearchSchema = z.object({ id: z.string().optional() });
 
@@ -34,6 +34,7 @@ export const Route = createFileRoute("/accept-invitation")({
 });
 
 function AcceptInvitationPage() {
+  const { queryClient } = Route.useRouteContext();
   const { id } = Route.useSearch();
   const navigate = useNavigate();
   const [error, setError] = useState<string>();

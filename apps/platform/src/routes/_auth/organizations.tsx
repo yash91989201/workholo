@@ -24,7 +24,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { authClient } from "@/lib/auth-client";
-import { orpc, queryClient } from "@/utils/orpc";
+import { orpc } from "@/utils/orpc";
 
 const PAGE_SIZE = 20;
 
@@ -39,6 +39,7 @@ type DialogState =
   | null;
 
 function OrganizationsPage() {
+  const { queryClient } = Route.useRouteContext();
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [dialog, setDialog] = useState<DialogState>(null);

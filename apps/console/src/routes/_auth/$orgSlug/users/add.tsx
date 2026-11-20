@@ -7,14 +7,14 @@ import { toast } from "sonner";
 import z from "zod";
 
 import { authClient } from "@/lib/auth-client";
-import { orpc, queryClient } from "@/utils/orpc";
+import { orpc } from "@/utils/orpc";
 
 export const Route = createFileRoute("/_auth/$orgSlug/users/add")({
   component: AddUserPage,
 });
 
 function AddUserPage() {
-  const { membership } = Route.useRouteContext();
+  const { membership, queryClient } = Route.useRouteContext();
   const { organizationId, role: actorRole, slug } = membership;
   const navigate = useNavigate();
   const teams = useQuery(

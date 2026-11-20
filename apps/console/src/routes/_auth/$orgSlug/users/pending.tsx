@@ -8,14 +8,14 @@ import { toast } from "sonner";
 
 import { DataTable } from "@/components/data-table";
 import { authClient } from "@/lib/auth-client";
-import { orpc, queryClient } from "@/utils/orpc";
+import { orpc } from "@/utils/orpc";
 
 export const Route = createFileRoute("/_auth/$orgSlug/users/pending")({
   component: PendingUsersPage,
 });
 
 function PendingUsersPage() {
-  const { membership } = Route.useRouteContext();
+  const { membership, queryClient } = Route.useRouteContext();
   const { organizationId } = membership;
   const invitations = useQuery(
     orpc.organization.invitations.queryOptions({

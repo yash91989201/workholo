@@ -14,7 +14,7 @@ import { useState } from "react";
 import z from "zod";
 
 import { authClient } from "@/lib/auth-client";
-import { orpc, queryClient } from "@/utils/orpc";
+import { orpc } from "@/utils/orpc";
 
 /** Kebab case: lowercase words joined by single hyphens; a trailing hyphen is
  * kept while typing so the next word can follow. */
@@ -48,6 +48,7 @@ export const Route = createFileRoute("/onboarding")({
 });
 
 function OnboardingPage() {
+  const { queryClient } = Route.useRouteContext();
   const navigate = useNavigate();
   const [formError, setFormError] = useState<string>();
 

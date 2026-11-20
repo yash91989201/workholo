@@ -16,14 +16,14 @@ import { toast } from "sonner";
 
 import { DataTable } from "@/components/data-table";
 import { authClient } from "@/lib/auth-client";
-import { orpc, queryClient } from "@/utils/orpc";
+import { orpc } from "@/utils/orpc";
 
 export const Route = createFileRoute("/_auth/$orgSlug/teams/$teamId")({
   component: TeamDetailPage,
 });
 
 function TeamDetailPage() {
-  const { membership } = Route.useRouteContext();
+  const { membership, queryClient } = Route.useRouteContext();
   const { organizationId, slug } = membership;
   const { teamId } = Route.useParams();
   const [selected, setSelected] = useState<string | null>(null);

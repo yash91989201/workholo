@@ -7,4 +7,5 @@ export function createApiContext() {
   return createApiClient(ENV.VITE_SERVER_URL);
 }
 
-export const { orpc, client, queryClient } = createApiContext();
+// Stateless query utils; the per-request query cache comes from router context.
+export const { orpc } = createApiContext();
