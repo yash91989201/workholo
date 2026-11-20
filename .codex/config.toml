@@ -21,3 +21,6 @@ url = "https://mcp.better-auth.com/mcp"
 [mcp_servers.expo-mcp]
 type = "http"
 url = "https://mcp.expo.dev/mcp"
+
+[plugins."floorplan@workholo-local"]
+enabled = true

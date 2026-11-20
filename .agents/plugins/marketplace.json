@@ -1,0 +1,21 @@
+{
+  "name": "workholo-local",
+  "interface": {
+    "displayName": "Workholo"
+  },
+  "plugins": [
+    {
+      "name": "floorplan",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/haydenschmitty/floorplan.git",
+        "sha": "94f81b463b7617e06d873ac71323ce71644c8399"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}
