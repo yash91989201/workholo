@@ -12,6 +12,7 @@ import { leadsRouter } from "./leads";
 import { numbersRouter } from "./numbers";
 import { organizationRouter } from "./organization";
 import { platformRouter } from "./platform";
+import { previewRouter } from "./preview";
 
 export const appRouter = {
   healthCheck: publicProcedure
@@ -31,6 +32,7 @@ export const appRouter = {
   dispositions: dispositionsRouter,
   doNotDial: doNotDialRouter,
   platform: platformRouter,
+  preview: previewRouter,
 };
 export type AppRouter = typeof appRouter;
 export type AppRouterClient = RouterClient<typeof appRouter>;

@@ -77,6 +77,20 @@ import type {
   OutboundNumberModelSchema,
   OutboundNumberUpdateSchema,
 } from "./models/numbers";
+import type {
+  PreviewAttemptInsertSchema,
+  PreviewAttemptModelSchema,
+  PreviewAttemptUpdateSchema,
+  PreviewClaimInsertSchema,
+  PreviewClaimModelSchema,
+  PreviewClaimUpdateSchema,
+  PreviewDestinationInsertSchema,
+  PreviewDestinationModelSchema,
+  PreviewDestinationUpdateSchema,
+  PreviewPhoneInsertSchema,
+  PreviewPhoneModelSchema,
+  PreviewPhoneUpdateSchema,
+} from "./models/preview";
 
 export type AccountInsertType = z.infer<typeof AccountInsertSchema>;
 export type AccountModelType = z.infer<typeof AccountModelSchema>;
@@ -123,6 +137,18 @@ export type OutboundNumberAssignmentUpdateType = z.infer<typeof OutboundNumberAs
 export type OutboundNumberInsertType = z.infer<typeof OutboundNumberInsertSchema>;
 export type OutboundNumberModelType = z.infer<typeof OutboundNumberModelSchema>;
 export type OutboundNumberUpdateType = z.infer<typeof OutboundNumberUpdateSchema>;
+export type PreviewAttemptInsertType = z.infer<typeof PreviewAttemptInsertSchema>;
+export type PreviewAttemptModelType = z.infer<typeof PreviewAttemptModelSchema>;
+export type PreviewAttemptUpdateType = z.infer<typeof PreviewAttemptUpdateSchema>;
+export type PreviewClaimInsertType = z.infer<typeof PreviewClaimInsertSchema>;
+export type PreviewClaimModelType = z.infer<typeof PreviewClaimModelSchema>;
+export type PreviewClaimUpdateType = z.infer<typeof PreviewClaimUpdateSchema>;
+export type PreviewDestinationInsertType = z.infer<typeof PreviewDestinationInsertSchema>;
+export type PreviewDestinationModelType = z.infer<typeof PreviewDestinationModelSchema>;
+export type PreviewDestinationUpdateType = z.infer<typeof PreviewDestinationUpdateSchema>;
+export type PreviewPhoneInsertType = z.infer<typeof PreviewPhoneInsertSchema>;
+export type PreviewPhoneModelType = z.infer<typeof PreviewPhoneModelSchema>;
+export type PreviewPhoneUpdateType = z.infer<typeof PreviewPhoneUpdateSchema>;
 export type RecordingInsertType = z.infer<typeof RecordingInsertSchema>;
 export type RecordingModelType = z.infer<typeof RecordingModelSchema>;
 export type RecordingUpdateType = z.infer<typeof RecordingUpdateSchema>;

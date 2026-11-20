@@ -114,6 +114,26 @@ import type {
   SuspendOrganizationInputSchema,
   SuspendOrganizationOutputSchema,
 } from "./schemas/platform";
+import type {
+  ClaimPreviewInputSchema,
+  ClaimPreviewOutputSchema,
+  DialPreviewInputSchema,
+  DialPreviewOutputSchema,
+  GetPreviewPresenceInputSchema,
+  GetPreviewPresenceOutputSchema,
+  GetPreviewStateInputSchema,
+  GetPreviewStateOutputSchema,
+  ListPreviewCampaignsInputSchema,
+  ListPreviewCampaignsOutputSchema,
+  PreparePreviewPhoneInputSchema,
+  PreparePreviewPhoneOutputSchema,
+  SetPreviewWorkStatusInputSchema,
+  SetPreviewWorkStatusOutputSchema,
+  SkipPreviewInputSchema,
+  SkipPreviewOutputSchema,
+  SubmitPreviewDispositionInputSchema,
+  SubmitPreviewDispositionOutputSchema,
+} from "./schemas/preview";
 import type { SessionUserSchema } from "./schemas/shared";
 
 export type ActivateCampaignInputType = z.infer<typeof ActivateCampaignInputSchema>;
@@ -135,6 +155,8 @@ export type AssignOutboundNumberOutputType = z.infer<typeof AssignOutboundNumber
 export type CheckDoNotDialNumberInputType = z.infer<typeof CheckDoNotDialNumberInputSchema>;
 export type CheckDoNotDialNumberOutputType = z.infer<typeof CheckDoNotDialNumberOutputSchema>;
 export type CheckHealthOutputType = z.infer<typeof CheckHealthOutputSchema>;
+export type ClaimPreviewInputType = z.infer<typeof ClaimPreviewInputSchema>;
+export type ClaimPreviewOutputType = z.infer<typeof ClaimPreviewOutputSchema>;
 export type CreateCampaignInputType = z.infer<typeof CreateCampaignInputSchema>;
 export type CreateCampaignOutputType = z.infer<typeof CreateCampaignOutputSchema>;
 export type CreateDispositionListInputType = z.infer<typeof CreateDispositionListInputSchema>;
@@ -143,6 +165,8 @@ export type CreateLeadListInputType = z.infer<typeof CreateLeadListInputSchema>;
 export type CreateLeadListOutputType = z.infer<typeof CreateLeadListOutputSchema>;
 export type DeleteOrganizationInputType = z.infer<typeof DeleteOrganizationInputSchema>;
 export type DeleteOrganizationOutputType = z.infer<typeof DeleteOrganizationOutputSchema>;
+export type DialPreviewInputType = z.infer<typeof DialPreviewInputSchema>;
+export type DialPreviewOutputType = z.infer<typeof DialPreviewOutputSchema>;
 export type GetCampaignInputType = z.infer<typeof GetCampaignInputSchema>;
 export type GetCampaignOutputType = z.infer<typeof GetCampaignOutputSchema>;
 export type GetDispositionEntryInputType = z.infer<typeof GetDispositionEntryInputSchema>;
@@ -152,6 +176,10 @@ export type GetDispositionListOutputType = z.infer<typeof GetDispositionListOutp
 export type GetLeadListInputType = z.infer<typeof GetLeadListInputSchema>;
 export type GetLeadListOutputType = z.infer<typeof GetLeadListOutputSchema>;
 export type GetMeOutputType = z.infer<typeof GetMeOutputSchema>;
+export type GetPreviewPresenceInputType = z.infer<typeof GetPreviewPresenceInputSchema>;
+export type GetPreviewPresenceOutputType = z.infer<typeof GetPreviewPresenceOutputSchema>;
+export type GetPreviewStateInputType = z.infer<typeof GetPreviewStateInputSchema>;
+export type GetPreviewStateOutputType = z.infer<typeof GetPreviewStateOutputSchema>;
 export type GetPrivateDataOutputType = z.infer<typeof GetPrivateDataOutputSchema>;
 export type ImportLeadsInputType = z.infer<typeof ImportLeadsInputSchema>;
 export type ImportLeadsOutputType = z.infer<typeof ImportLeadsOutputSchema>;
@@ -182,6 +210,8 @@ export type ListLeadListsOutputType = z.infer<typeof ListLeadListsOutputSchema>;
 export type ListOrganizationsInputType = z.infer<typeof ListOrganizationsInputSchema>;
 export type ListOrganizationsOutputType = z.infer<typeof ListOrganizationsOutputSchema>;
 export type ListOutboundNumbersOutputType = z.infer<typeof ListOutboundNumbersOutputSchema>;
+export type ListPreviewCampaignsInputType = z.infer<typeof ListPreviewCampaignsInputSchema>;
+export type ListPreviewCampaignsOutputType = z.infer<typeof ListPreviewCampaignsOutputSchema>;
 export type ListRecordingsInputType = z.infer<typeof ListRecordingsInputSchema>;
 export type ListRecordingsOutputType = z.infer<typeof ListRecordingsOutputSchema>;
 export type ListTeamMembersInputType = z.infer<typeof ListTeamMembersInputSchema>;
@@ -190,6 +220,8 @@ export type ListTeamsInputType = z.infer<typeof ListTeamsInputSchema>;
 export type ListTeamsOutputType = z.infer<typeof ListTeamsOutputSchema>;
 export type PauseCampaignInputType = z.infer<typeof PauseCampaignInputSchema>;
 export type PauseCampaignOutputType = z.infer<typeof PauseCampaignOutputSchema>;
+export type PreparePreviewPhoneInputType = z.infer<typeof PreparePreviewPhoneInputSchema>;
+export type PreparePreviewPhoneOutputType = z.infer<typeof PreparePreviewPhoneOutputSchema>;
 export type RegisterOutboundNumberInputType = z.infer<typeof RegisterOutboundNumberInputSchema>;
 export type RegisterOutboundNumberOutputType = z.infer<typeof RegisterOutboundNumberOutputSchema>;
 export type RemoveDoNotDialEntryInputType = z.infer<typeof RemoveDoNotDialEntryInputSchema>;
@@ -203,6 +235,12 @@ export type RetireDispositionEntryOutputType = z.infer<typeof RetireDispositionE
 export type SessionUserType = z.infer<typeof SessionUserSchema>;
 export type SetOutboundNumberEnabledInputType = z.infer<typeof SetOutboundNumberEnabledInputSchema>;
 export type SetOutboundNumberEnabledOutputType = z.infer<typeof SetOutboundNumberEnabledOutputSchema>;
+export type SetPreviewWorkStatusInputType = z.infer<typeof SetPreviewWorkStatusInputSchema>;
+export type SetPreviewWorkStatusOutputType = z.infer<typeof SetPreviewWorkStatusOutputSchema>;
+export type SkipPreviewInputType = z.infer<typeof SkipPreviewInputSchema>;
+export type SkipPreviewOutputType = z.infer<typeof SkipPreviewOutputSchema>;
+export type SubmitPreviewDispositionInputType = z.infer<typeof SubmitPreviewDispositionInputSchema>;
+export type SubmitPreviewDispositionOutputType = z.infer<typeof SubmitPreviewDispositionOutputSchema>;
 export type SuspendOrganizationInputType = z.infer<typeof SuspendOrganizationInputSchema>;
 export type SuspendOrganizationOutputType = z.infer<typeof SuspendOrganizationOutputSchema>;
 export type UnassignOutboundNumberInputType = z.infer<typeof UnassignOutboundNumberInputSchema>;

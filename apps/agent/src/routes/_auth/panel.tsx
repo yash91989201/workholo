@@ -21,6 +21,7 @@ import {
   TableRow,
 } from "@workholo/ui/components/table";
 
+import { PreviewCampaign } from "@/components/preview-campaign";
 import { orpc } from "@/utils/orpc";
 
 export const Route = createFileRoute("/_auth/panel")({
@@ -31,6 +32,10 @@ type CallRow = {
   id: string;
   direction: string;
   status: string;
+  destination: string | null;
+  callerId: string | null;
+  outcome: string | null;
+  disposition: { id: string; code: string; label: string } | null;
   startedAt: string | Date | null;
 };
 
@@ -59,7 +64,10 @@ function CallsTable({ rows }: { rows: CallRow[] }) {
       <TableHeader>
         <TableRow>
           <TableHead>Direction</TableHead>
+          <TableHead>Destination</TableHead>
           <TableHead>Status</TableHead>
+          <TableHead>Outcome</TableHead>
+          <TableHead>Disposition</TableHead>
           <TableHead>Started</TableHead>
         </TableRow>
       </TableHeader>
@@ -67,7 +75,10 @@ function CallsTable({ rows }: { rows: CallRow[] }) {
         {rows.map((call) => (
           <TableRow key={call.id}>
             <TableCell>{call.direction}</TableCell>
+            <TableCell>{call.destination ?? "—"}</TableCell>
             <TableCell>{call.status}</TableCell>
+            <TableCell>{call.outcome?.replaceAll("_", " ") ?? "—"}</TableCell>
+            <TableCell>{call.disposition?.label ?? "—"}</TableCell>
             <TableCell>
               {call.startedAt ? new Date(call.startedAt).toLocaleString() : "—"}
             </TableCell>
@@ -145,6 +156,8 @@ function RouteComponent() {
           {me.membership?.name} · {me.user?.email}
         </p>
       </div>
+
+      <PreviewCampaign organizationId={organizationId} />
 
       <Card>
         <CardHeader>

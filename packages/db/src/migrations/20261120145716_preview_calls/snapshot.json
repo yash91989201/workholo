@@ -1,0 +1,1298 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "01af4ba2-e693-4289-9ab0-d46d86c56aaf",
+  "prevIds": ["d072a840-a41b-4a95-85aa-0f7313dd0b0e"],
+  "footprints": [
+    {
+      "statementType": "create_table",
+      "statementTarget": ["table", "public", "preview_attempt"],
+      "writes": [
+        "s|tbl|public.preview_attempt",
+        "n|tbl|public.preview_attempt",
+        "e|tbl|public.preview_attempt",
+        "n|rel|public.preview_attempt",
+        "n|type|public.preview_attempt",
+        "n|rel|public.preview_attempt_pkey"
+      ],
+      "reads": ["n|sch|public"]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": ["table", "public", "preview_claim"],
+      "writes": [
+        "s|tbl|public.preview_claim",
+        "n|tbl|public.preview_claim",
+        "e|tbl|public.preview_claim",
+        "n|rel|public.preview_claim",
+        "n|type|public.preview_claim",
+        "n|rel|public.preview_claim_pkey"
+      ],
+      "reads": ["n|sch|public"]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": ["table", "public", "preview_destination"],
+      "writes": [
+        "s|tbl|public.preview_destination",
+        "n|tbl|public.preview_destination",
+        "e|tbl|public.preview_destination",
+        "n|rel|public.preview_destination",
+        "n|type|public.preview_destination",
+        "n|rel|public.preview_destination_pkey"
+      ],
+      "reads": ["n|sch|public"]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": ["table", "public", "preview_phone"],
+      "writes": [
+        "s|tbl|public.preview_phone",
+        "n|tbl|public.preview_phone",
+        "e|tbl|public.preview_phone",
+        "n|rel|public.preview_phone",
+        "n|type|public.preview_phone",
+        "n|rel|public.preview_phone_pkey"
+      ],
+      "reads": ["n|sch|public"]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "preview_attempt",
+        "preview_attempt_claim_uidx"
+      ],
+      "writes": [
+        "s|idx|public.preview_attempt_claim_uidx",
+        "n|idx|public.preview_attempt_claim_uidx",
+        "e|idx|public.preview_attempt_claim_uidx",
+        "n|rel|public.preview_attempt_claim_uidx"
+      ],
+      "reads": [
+        "n|tbl|public.preview_attempt",
+        "n|sch|public",
+        "n|col|public.preview_attempt.claim_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "preview_attempt",
+        "preview_attempt_publish_idx"
+      ],
+      "writes": [
+        "s|idx|public.preview_attempt_publish_idx",
+        "n|idx|public.preview_attempt_publish_idx",
+        "e|idx|public.preview_attempt_publish_idx",
+        "n|rel|public.preview_attempt_publish_idx"
+      ],
+      "reads": [
+        "n|tbl|public.preview_attempt",
+        "n|sch|public",
+        "n|col|public.preview_attempt.next_publish_at"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "preview_attempt",
+        "preview_attempt_read_idx"
+      ],
+      "writes": [
+        "s|idx|public.preview_attempt_read_idx",
+        "n|idx|public.preview_attempt_read_idx",
+        "e|idx|public.preview_attempt_read_idx",
+        "n|rel|public.preview_attempt_read_idx"
+      ],
+      "reads": [
+        "n|tbl|public.preview_attempt",
+        "n|sch|public",
+        "n|col|public.preview_attempt.next_read_at"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "preview_claim",
+        "preview_claim_live_agent_uidx"
+      ],
+      "writes": [
+        "s|idx|public.preview_claim_live_agent_uidx",
+        "n|idx|public.preview_claim_live_agent_uidx",
+        "e|idx|public.preview_claim_live_agent_uidx",
+        "n|rel|public.preview_claim_live_agent_uidx"
+      ],
+      "reads": [
+        "n|tbl|public.preview_claim",
+        "n|sch|public",
+        "n|col|public.preview_claim.member_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "preview_claim",
+        "preview_claim_live_destination_uidx"
+      ],
+      "writes": [
+        "s|idx|public.preview_claim_live_destination_uidx",
+        "n|idx|public.preview_claim_live_destination_uidx",
+        "e|idx|public.preview_claim_live_destination_uidx",
+        "n|rel|public.preview_claim_live_destination_uidx"
+      ],
+      "reads": [
+        "n|tbl|public.preview_claim",
+        "n|sch|public",
+        "n|col|public.preview_claim.campaign_id",
+        "n|col|public.preview_claim.phone"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "preview_claim",
+        "preview_claim_skipped_session_idx"
+      ],
+      "writes": [
+        "s|idx|public.preview_claim_skipped_session_idx",
+        "n|idx|public.preview_claim_skipped_session_idx",
+        "e|idx|public.preview_claim_skipped_session_idx",
+        "n|rel|public.preview_claim_skipped_session_idx"
+      ],
+      "reads": [
+        "n|tbl|public.preview_claim",
+        "n|sch|public",
+        "n|col|public.preview_claim.skipped_session_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "preview_claim",
+        "preview_claim_live_organization_idx"
+      ],
+      "writes": [
+        "s|idx|public.preview_claim_live_organization_idx",
+        "n|idx|public.preview_claim_live_organization_idx",
+        "e|idx|public.preview_claim_live_organization_idx",
+        "n|rel|public.preview_claim_live_organization_idx"
+      ],
+      "reads": [
+        "n|tbl|public.preview_claim",
+        "n|sch|public",
+        "n|col|public.preview_claim.organization_id",
+        "n|col|public.preview_claim.expires_at"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": ["table", "public", "preview_attempt"],
+      "writes": [
+        "s|fk|public.preview_attempt.preview_attempt_id_call_id_fkey",
+        "n|fk|public.preview_attempt.preview_attempt_id_call_id_fkey",
+        "e|fk|public.preview_attempt.preview_attempt_id_call_id_fkey",
+        "n|con|public.preview_attempt.preview_attempt_id_call_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.preview_attempt",
+        "n|sch|public",
+        "n|tbl|public.call",
+        "n|sch|public",
+        "n|col|public.preview_attempt.id",
+        "n|col|public.call.id",
+        "e|uniqueness|public.call.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": ["table", "public", "preview_attempt"],
+      "writes": [
+        "s|fk|public.preview_attempt.preview_attempt_claim_id_preview_claim_id_fkey",
+        "n|fk|public.preview_attempt.preview_attempt_claim_id_preview_claim_id_fkey",
+        "e|fk|public.preview_attempt.preview_attempt_claim_id_preview_claim_id_fkey",
+        "n|con|public.preview_attempt.preview_attempt_claim_id_preview_claim_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.preview_attempt",
+        "n|sch|public",
+        "n|tbl|public.preview_claim",
+        "n|sch|public",
+        "n|col|public.preview_attempt.claim_id",
+        "n|col|public.preview_claim.id",
+        "e|uniqueness|public.preview_claim.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": ["table", "public", "preview_claim"],
+      "writes": [
+        "s|fk|public.preview_claim.preview_claim_organization_id_organization_id_fkey",
+        "n|fk|public.preview_claim.preview_claim_organization_id_organization_id_fkey",
+        "e|fk|public.preview_claim.preview_claim_organization_id_organization_id_fkey",
+        "n|con|public.preview_claim.preview_claim_organization_id_organization_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.preview_claim",
+        "n|sch|public",
+        "n|tbl|public.organization",
+        "n|sch|public",
+        "n|col|public.preview_claim.organization_id",
+        "n|col|public.organization.id",
+        "e|uniqueness|public.organization.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": ["table", "public", "preview_claim"],
+      "writes": [
+        "s|fk|public.preview_claim.preview_claim_campaign_id_campaign_id_fkey",
+        "n|fk|public.preview_claim.preview_claim_campaign_id_campaign_id_fkey",
+        "e|fk|public.preview_claim.preview_claim_campaign_id_campaign_id_fkey",
+        "n|con|public.preview_claim.preview_claim_campaign_id_campaign_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.preview_claim",
+        "n|sch|public",
+        "n|tbl|public.campaign",
+        "n|sch|public",
+        "n|col|public.preview_claim.campaign_id",
+        "n|col|public.campaign.id",
+        "e|uniqueness|public.campaign.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": ["table", "public", "preview_destination"],
+      "writes": [
+        "s|fk|public.preview_destination.preview_destination_campaign_id_campaign_id_fkey",
+        "n|fk|public.preview_destination.preview_destination_campaign_id_campaign_id_fkey",
+        "e|fk|public.preview_destination.preview_destination_campaign_id_campaign_id_fkey",
+        "n|con|public.preview_destination.preview_destination_campaign_id_campaign_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.preview_destination",
+        "n|sch|public",
+        "n|tbl|public.campaign",
+        "n|sch|public",
+        "n|col|public.preview_destination.campaign_id",
+        "n|col|public.campaign.id",
+        "e|uniqueness|public.campaign.id"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "preview_attempt",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "preview_claim",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "preview_destination",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "preview_phone",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "claim_id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "number_id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "caller_id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "ring_timeout_seconds",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "wrap_up_seconds",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "after_call_work_seconds",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "retry_interval_minutes",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "is_retry",
+        "type": "boolean",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "disposition_options",
+        "type": "jsonb",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "disposition",
+        "type": "jsonb",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "wrapup_until",
+        "type": "timestamp",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "hold_until",
+        "type": "timestamp",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "outcome",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "hangup_cause",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "reject_reason",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "issued_at",
+        "type": "timestamp",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "expires_at",
+        "type": "timestamp",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "publish_started",
+        "type": "boolean",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "false",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "published_at",
+        "type": "timestamp",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "next_publish_at",
+        "type": "timestamp",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "next_read_at",
+        "type": "timestamp",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_claim",
+        "name": "id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_claim",
+        "name": "organization_id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_claim",
+        "name": "campaign_id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_claim",
+        "name": "member_id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_claim",
+        "name": "lead_id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_claim",
+        "name": "phone",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_claim",
+        "name": "name",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_claim",
+        "name": "revision",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_claim",
+        "name": "expires_at",
+        "type": "timestamp",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_claim",
+        "name": "released_at",
+        "type": "timestamp",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_claim",
+        "name": "skipped_session_id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_destination",
+        "name": "campaign_id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_destination",
+        "name": "phone",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_destination",
+        "name": "status",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_destination",
+        "name": "retries_used",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "0",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_destination",
+        "name": "retry_at",
+        "type": "timestamp",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_phone",
+        "name": "member_id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_phone",
+        "name": "organization_id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_phone",
+        "name": "revoked",
+        "type": "boolean",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "false",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "preview_attempt_claim_uidx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "claim_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": true,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "preview_attempt_publish_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "next_publish_at",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": "\"next_publish_at\" is not null",
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "preview_attempt_read_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "next_read_at",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": "\"next_read_at\" is not null",
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_claim",
+        "name": "preview_claim_live_agent_uidx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "member_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": true,
+        "where": "\"released_at\" is null",
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_claim",
+        "name": "preview_claim_live_destination_uidx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "campaign_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "phone",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": true,
+        "where": "\"released_at\" is null",
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_claim",
+        "name": "preview_claim_skipped_session_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "skipped_session_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_claim",
+        "name": "preview_claim_live_organization_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "organization_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "expires_at",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": "\"released_at\" is null",
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "preview_attempt_id_call_id_fkey",
+        "nameExplicit": false,
+        "columns": ["id"],
+        "schemaTo": "public",
+        "tableTo": "call",
+        "columnsTo": ["id"],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "preview_attempt_claim_id_preview_claim_id_fkey",
+        "nameExplicit": false,
+        "columns": ["claim_id"],
+        "schemaTo": "public",
+        "tableTo": "preview_claim",
+        "columnsTo": ["id"],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_claim",
+        "name": "preview_claim_organization_id_organization_id_fkey",
+        "nameExplicit": false,
+        "columns": ["organization_id"],
+        "schemaTo": "public",
+        "tableTo": "organization",
+        "columnsTo": ["id"],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_claim",
+        "name": "preview_claim_campaign_id_campaign_id_fkey",
+        "nameExplicit": false,
+        "columns": ["campaign_id"],
+        "schemaTo": "public",
+        "tableTo": "campaign",
+        "columnsTo": ["id"],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_destination",
+        "name": "preview_destination_campaign_id_campaign_id_fkey",
+        "nameExplicit": false,
+        "columns": ["campaign_id"],
+        "schemaTo": "public",
+        "tableTo": "campaign",
+        "columnsTo": ["id"],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_destination",
+        "name": "preview_destination_pkey",
+        "columns": ["campaign_id", "phone"],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_attempt",
+        "name": "preview_attempt_pkey",
+        "columns": ["id"],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_claim",
+        "name": "preview_claim_pkey",
+        "columns": ["id"],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "preview_phone",
+        "name": "preview_phone_pkey",
+        "columns": ["member_id"],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    }
+  ]
+}

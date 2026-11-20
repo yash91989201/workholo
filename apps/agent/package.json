@@ -25,6 +25,7 @@
     "@workholo/ui": "workspace:*",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
+    "sip.js": "^0.21.2",
     "sonner": "catalog:",
     "varlock": "catalog:",
     "zod": "catalog:"

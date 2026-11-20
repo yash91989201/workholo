@@ -1,5 +1,6 @@
 import { call, recording } from "@workholo/db/schema/calls";
-import { and, eq } from "drizzle-orm";
+import { previewAttempt, previewClaim } from "@workholo/db/schema/preview";
+import { and, desc, eq, getColumns } from "drizzle-orm";
 import { orgProcedure } from "../index";
 import {
   ListCallsInputSchema,
@@ -20,7 +21,22 @@ export const callsRouter = {
         context.membershipRole === "agent"
           ? and(tenant, eq(call.agentId, context.session?.user.id ?? ""))
           : tenant;
-      return context.db.select().from(call).where(where).limit(input.limit);
+      return context.db
+        .select({
+          ...getColumns(call),
+          campaignId: previewClaim.campaignId,
+          destination: previewClaim.phone,
+          callerId: previewAttempt.callerId,
+          outcome: previewAttempt.outcome,
+          hangupCause: previewAttempt.hangupCause,
+          disposition: previewAttempt.disposition,
+        })
+        .from(call)
+        .leftJoin(previewAttempt, eq(previewAttempt.id, call.id))
+        .leftJoin(previewClaim, eq(previewClaim.id, previewAttempt.claimId))
+        .where(where)
+        .orderBy(desc(call.createdAt), desc(call.id))
+        .limit(input.limit);
     }),
 
   recordings: orgProcedure

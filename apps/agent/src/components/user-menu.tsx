@@ -12,10 +12,32 @@ import {
 import { Skeleton } from "@workholo/ui/components/skeleton";
 
 import { authClient } from "@/lib/auth-client";
+import { unregisterAgentPhone } from "@/utils/agent-phone";
+import { client } from "@/utils/orpc";
 
 export default function UserMenu() {
   const navigate = useNavigate();
   const { data: session, isPending } = authClient.useSession();
+
+  const handleSignOut = async () => {
+    const me = await client.organization.me().catch(() => null);
+    if (me?.membership) {
+      await client.preview
+        .setWorkStatus({
+          organizationId: me.membership.organizationId,
+          status: "offline",
+        })
+        .catch(() => false);
+    }
+    await unregisterAgentPhone();
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          navigate({ to: "/login" });
+        },
+      },
+    });
+  };
 
   if (isPending) {
     return <Skeleton className="h-9 w-24" />;
@@ -39,20 +61,7 @@ export default function UserMenu() {
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>{session.user.email}</DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              authClient.signOut({
-                fetchOptions: {
-                  onSuccess: () => {
-                    navigate({
-                      to: "/login",
-                    });
-                  },
-                },
-              });
-            }}
-            variant="destructive"
-          >
+          <DropdownMenuItem onClick={handleSignOut} variant="destructive">
             Sign Out
           </DropdownMenuItem>
         </DropdownMenuGroup>

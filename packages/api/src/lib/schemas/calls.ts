@@ -11,6 +11,14 @@ const callRowSchema = z.object({
   agentId: z.string(),
   direction: z.string(),
   status: z.string(),
+  campaignId: z.string().nullable(),
+  destination: z.string().nullable(),
+  callerId: z.string().nullable(),
+  outcome: z.string().nullable(),
+  hangupCause: z.string().nullable(),
+  disposition: z
+    .object({ id: z.string(), code: z.string(), label: z.string() })
+    .nullable(),
   startedAt: z.date().nullable(),
   endedAt: z.date().nullable(),
   createdAt: z.date(),

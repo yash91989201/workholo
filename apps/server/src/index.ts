@@ -16,7 +16,8 @@ import { createFsDrain } from "evlog/fs";
 
 import { createContext } from "./context";
 import { desktopOrigins, ENV } from "./env.server";
-import { auth } from "./services";
+import { startPreviewRuntime } from "./preview-runtime";
+import { auth, db, previewTelephony } from "./services";
 
 const rpcHandler = new RPCHandler(appRouter, {
   interceptors: [
@@ -39,6 +40,16 @@ const apiHandler = new OpenAPIHandler(appRouter, {
 });
 
 const { PORT } = ENV;
+
+const hasKafkaConfig = Boolean(ENV.KAFKA_BROKERS);
+if (Boolean(previewTelephony) !== hasKafkaConfig) {
+  throw new Error(
+    "Configure both telephony service credentials and Kafka brokers to enable campaign calling"
+  );
+}
+const stopPreviewRuntime = previewTelephony
+  ? await startPreviewRuntime(ENV, db, previewTelephony)
+  : null;
 
 const drain =
   process.env.NODE_ENV === "production" ? undefined : createFsDrain();
@@ -110,3 +121,12 @@ new Elysia()
   .listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
   });
+
+for (const signal of ["SIGINT", "SIGTERM"] as const) {
+  process.once(signal, async () => {
+    if (stopPreviewRuntime) {
+      await stopPreviewRuntime();
+    }
+    process.exit(0);
+  });
+}
