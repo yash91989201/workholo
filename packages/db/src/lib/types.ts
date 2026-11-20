@@ -38,6 +38,17 @@ import type {
   RecordingUpdateSchema,
 } from "./models/calls";
 import type {
+  CampaignInsertSchema,
+  CampaignLeadListInsertSchema,
+  CampaignLeadListModelSchema,
+  CampaignLeadListUpdateSchema,
+  CampaignModelSchema,
+  CampaignNumberInsertSchema,
+  CampaignNumberModelSchema,
+  CampaignNumberUpdateSchema,
+  CampaignUpdateSchema,
+} from "./models/campaigns";
+import type {
   DispositionEntryInsertSchema,
   DispositionEntryModelSchema,
   DispositionEntryUpdateSchema,
@@ -73,6 +84,15 @@ export type AccountUpdateType = z.infer<typeof AccountUpdateSchema>;
 export type CallInsertType = z.infer<typeof CallInsertSchema>;
 export type CallModelType = z.infer<typeof CallModelSchema>;
 export type CallUpdateType = z.infer<typeof CallUpdateSchema>;
+export type CampaignInsertType = z.infer<typeof CampaignInsertSchema>;
+export type CampaignLeadListInsertType = z.infer<typeof CampaignLeadListInsertSchema>;
+export type CampaignLeadListModelType = z.infer<typeof CampaignLeadListModelSchema>;
+export type CampaignLeadListUpdateType = z.infer<typeof CampaignLeadListUpdateSchema>;
+export type CampaignModelType = z.infer<typeof CampaignModelSchema>;
+export type CampaignNumberInsertType = z.infer<typeof CampaignNumberInsertSchema>;
+export type CampaignNumberModelType = z.infer<typeof CampaignNumberModelSchema>;
+export type CampaignNumberUpdateType = z.infer<typeof CampaignNumberUpdateSchema>;
+export type CampaignUpdateType = z.infer<typeof CampaignUpdateSchema>;
 export type DispositionEntryInsertType = z.infer<typeof DispositionEntryInsertSchema>;
 export type DispositionEntryModelType = z.infer<typeof DispositionEntryModelSchema>;
 export type DispositionEntryUpdateType = z.infer<typeof DispositionEntryUpdateSchema>;

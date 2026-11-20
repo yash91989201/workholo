@@ -5,6 +5,7 @@ import {
   GetPrivateDataOutputSchema,
 } from "../lib/schemas/index";
 import { callsRouter } from "./calls";
+import { campaignsRouter } from "./campaigns";
 import { dispositionsRouter } from "./dispositions";
 import { doNotDialRouter } from "./do-not-dial";
 import { leadsRouter } from "./leads";
@@ -24,6 +25,7 @@ export const appRouter = {
     })),
   organization: organizationRouter,
   calls: callsRouter,
+  campaigns: campaignsRouter,
   leads: leadsRouter,
   numbers: numbersRouter,
   dispositions: dispositionsRouter,

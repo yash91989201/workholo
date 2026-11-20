@@ -1351,4 +1351,648 @@ describe("tenant request path", () => {
       })
     ).rejects.toMatchObject({ code: "NOT_FOUND" });
   });
+
+  type CampaignUpdateInput = {
+    organizationId: string;
+    campaignId: string;
+    name: string;
+    description: string | null;
+    leadListIds: string[];
+    dispositionListId: string | null;
+    callerIdMode: "fixed" | "random" | null;
+    numberIds: string[];
+    assigneeType: "agent" | "team" | null;
+    assigneeId: string | null;
+    previewSeconds: number | null;
+    ringTimeoutSeconds: number | null;
+    wrapUpSeconds: number | null;
+    afterCallWorkSeconds: number | null;
+    retryCount: number | null;
+    retryIntervalMinutes: number | null;
+    dialStatuses: ("new" | "not_answered")[];
+  };
+
+  function campaignSettings(
+    input: Pick<CampaignUpdateInput, "organizationId" | "campaignId"> &
+      Partial<CampaignUpdateInput>
+  ): CampaignUpdateInput {
+    return {
+      organizationId: input.organizationId,
+      campaignId: input.campaignId,
+      name: input.name ?? "Weekly outreach",
+      description: input.description ?? null,
+      leadListIds: input.leadListIds ?? [],
+      dispositionListId: input.dispositionListId ?? null,
+      callerIdMode: input.callerIdMode ?? null,
+      numberIds: input.numberIds ?? [],
+      assigneeType: input.assigneeType ?? null,
+      assigneeId: input.assigneeId ?? null,
+      previewSeconds: input.previewSeconds ?? null,
+      ringTimeoutSeconds: input.ringTimeoutSeconds ?? null,
+      wrapUpSeconds: input.wrapUpSeconds ?? null,
+      afterCallWorkSeconds: input.afterCallWorkSeconds ?? null,
+      retryCount: input.retryCount ?? null,
+      retryIntervalMinutes: input.retryIntervalMinutes ?? null,
+      dialStatuses: input.dialStatuses ?? [],
+    };
+  }
+
+  test("campaigns: draft lifecycle is org-scoped and validates references", async () => {
+    const ownerClient = clientFor(await getSession(owner.headers));
+    const agentClient = clientFor(await getSession(agentUser.headers));
+    const outsiderClient = clientFor(await getSession(outsider.headers));
+    const platformClient = clientFor(await getSession(platformUser.headers));
+
+    const list = await ownerClient.leads.createLeadList({
+      organizationId,
+      name: "Campaign prospects",
+    });
+    await ownerClient.leads.addLead({
+      organizationId,
+      listId: list.id,
+      phone: "+14155550201",
+    });
+    const dispositions = await ownerClient.dispositions.createDispositionList({
+      organizationId,
+      name: "Campaign outcomes",
+    });
+    await ownerClient.dispositions.addDispositionEntry({
+      organizationId,
+      listId: dispositions.id,
+      code: "CONNECTED",
+      label: "Connected",
+    });
+
+    const first = await platformClient.platform.registerOutboundNumber({
+      number: "+14155550211",
+    });
+    numberIds.push(first.id);
+    await platformClient.platform.assignOutboundNumber({
+      numberId: first.id,
+      organizationId,
+    });
+    const second = await platformClient.platform.registerOutboundNumber({
+      number: "+14155550212",
+    });
+    numberIds.push(second.id);
+    await platformClient.platform.assignOutboundNumber({
+      numberId: second.id,
+      organizationId,
+    });
+
+    const foreignList = await outsiderClient.leads.createLeadList({
+      organizationId: otherOrganizationId,
+      name: "Foreign list",
+    });
+    const foreignDispositions =
+      await outsiderClient.dispositions.createDispositionList({
+        organizationId: otherOrganizationId,
+        name: "Foreign outcomes",
+      });
+    await outsiderClient.dispositions.addDispositionEntry({
+      organizationId: otherOrganizationId,
+      listId: foreignDispositions.id,
+      code: "CONNECTED",
+      label: "Connected",
+    });
+    const foreignNumber = await platformClient.platform.registerOutboundNumber({
+      number: "+14155550213",
+    });
+    numberIds.push(foreignNumber.id);
+    await platformClient.platform.assignOutboundNumber({
+      numberId: foreignNumber.id,
+      organizationId: otherOrganizationId,
+    });
+
+    const created = await ownerClient.campaigns.createCampaign({
+      organizationId,
+      name: "Spring preview",
+      method: "preview",
+    });
+    const listed = (
+      await ownerClient.campaigns.listCampaigns({ organizationId })
+    ).find((row) => row.id === created.id);
+    expect(listed).toMatchObject({
+      status: "draft",
+      method: "preview",
+      leadListCount: 0,
+      numberCount: 0,
+    });
+
+    await expect(
+      agentClient.campaigns.createCampaign({
+        organizationId,
+        name: "Denied",
+        method: "preview",
+      })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(
+      agentClient.campaigns.listCampaigns({ organizationId })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(
+      agentClient.campaigns.getCampaign({
+        organizationId,
+        campaignId: created.id,
+      })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(
+      outsiderClient.campaigns.getCampaign({
+        organizationId: otherOrganizationId,
+        campaignId: created.id,
+      })
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
+
+    const base = {
+      organizationId,
+      campaignId: created.id,
+      name: "Spring preview",
+    };
+    await expect(
+      ownerClient.campaigns.updateCampaign(
+        campaignSettings({ ...base, leadListIds: [foreignList.id] })
+      )
+    ).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+      data: { fieldErrors: { leadListIds: expect.any(String) } },
+    });
+    await expect(
+      ownerClient.campaigns.updateCampaign(
+        campaignSettings({
+          ...base,
+          dispositionListId: foreignDispositions.id,
+        })
+      )
+    ).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+      data: { fieldErrors: { dispositionListId: expect.any(String) } },
+    });
+    await expect(
+      ownerClient.campaigns.updateCampaign(
+        campaignSettings({ ...base, numberIds: [foreignNumber.id] })
+      )
+    ).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+      data: { fieldErrors: { numberIds: expect.any(String) } },
+    });
+    await expect(
+      ownerClient.campaigns.updateCampaign(
+        campaignSettings({
+          ...base,
+          callerIdMode: "fixed",
+          numberIds: [first.id, second.id],
+        })
+      )
+    ).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+      data: { fieldErrors: { numberIds: expect.any(String) } },
+    });
+    await expect(
+      ownerClient.campaigns.updateCampaign(
+        campaignSettings({ ...base, numberIds: [first.id, first.id] })
+      )
+    ).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+      data: { fieldErrors: { numberIds: expect.any(String) } },
+    });
+
+    const draft = await ownerClient.campaigns.getCampaign({
+      organizationId,
+      campaignId: created.id,
+    });
+    expect(draft.leadLists).toEqual([]);
+    expect(draft.numbers).toEqual([]);
+    expect(draft).toMatchObject({
+      description: null,
+      dispositionList: null,
+      callerIdMode: null,
+      assigneeType: null,
+      assigneeId: null,
+      previewSeconds: null,
+      ringTimeoutSeconds: null,
+      wrapUpSeconds: null,
+      afterCallWorkSeconds: null,
+      retryCount: null,
+      retryIntervalMinutes: null,
+      dialStatuses: [],
+    });
+  });
+
+  test("campaigns: activation requires complete settings and tracks revisions", async () => {
+    const ownerClient = clientFor(await getSession(owner.headers));
+    const platformClient = clientFor(await getSession(platformUser.headers));
+
+    const list = await ownerClient.leads.createLeadList({
+      organizationId,
+      name: "Activation prospects",
+    });
+    await ownerClient.leads.addLead({
+      organizationId,
+      listId: list.id,
+      phone: "+14155550221",
+    });
+    const dispositions = await ownerClient.dispositions.createDispositionList({
+      organizationId,
+      name: "Activation outcomes",
+    });
+    await ownerClient.dispositions.addDispositionEntry({
+      organizationId,
+      listId: dispositions.id,
+      code: "CONNECTED",
+      label: "Connected",
+    });
+    const number = await platformClient.platform.registerOutboundNumber({
+      number: "+14155550222",
+    });
+    numberIds.push(number.id);
+    await platformClient.platform.assignOutboundNumber({
+      numberId: number.id,
+      organizationId,
+    });
+
+    const created = await ownerClient.campaigns.createCampaign({
+      organizationId,
+      name: "Ready preview",
+      method: "preview",
+    });
+    const settings = campaignSettings({
+      organizationId,
+      campaignId: created.id,
+      name: "Ready preview",
+      description: "Ready",
+      leadListIds: [list.id],
+      dispositionListId: dispositions.id,
+      numberIds: [number.id],
+      assigneeType: "team",
+      assigneeId: teamId,
+      previewSeconds: 20,
+      ringTimeoutSeconds: 35,
+      wrapUpSeconds: 0,
+      afterCallWorkSeconds: 0,
+      retryCount: 0,
+      retryIntervalMinutes: null,
+      dialStatuses: ["new", "not_answered"],
+    });
+    await ownerClient.campaigns.updateCampaign(settings);
+
+    const before = await ownerClient.campaigns.getCampaign({
+      organizationId,
+      campaignId: created.id,
+    });
+    const activated = await ownerClient.campaigns.activateCampaign({
+      organizationId,
+      campaignId: created.id,
+      expectedRevision: before.revision,
+    });
+    expect(activated).toEqual({
+      id: created.id,
+      status: "active",
+      revision: before.revision + 1,
+    });
+
+    const active = await ownerClient.campaigns.getCampaign({
+      organizationId,
+      campaignId: created.id,
+    });
+    expect(active).toMatchObject({
+      status: "active",
+      revision: activated.revision,
+      description: "Ready",
+      assigneeType: "team",
+      assigneeId: teamId,
+      previewSeconds: 20,
+      ringTimeoutSeconds: 35,
+      wrapUpSeconds: 0,
+      afterCallWorkSeconds: 0,
+      retryCount: 0,
+      retryIntervalMinutes: null,
+      dialStatuses: ["new", "not_answered"],
+    });
+    expect(active.leadLists.map((row) => row.id)).toEqual([list.id]);
+    expect(active.dispositionList?.id).toBe(dispositions.id);
+    expect(active.numbers).toEqual([
+      { id: number.id, number: number.number, enabled: true },
+    ]);
+    expect(
+      auditEvents.some(
+        (event) =>
+          event.action === "campaign.activate" && event.target.id === created.id
+      )
+    ).toBe(true);
+
+    await expect(
+      ownerClient.campaigns.updateCampaign({
+        ...settings,
+        name: "Edited while active",
+      })
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+
+    const paused = await ownerClient.campaigns.pauseCampaign({
+      organizationId,
+      campaignId: created.id,
+      expectedRevision: active.revision,
+    });
+    expect(paused.status).toBe("paused");
+    expect(paused.revision).toBe(active.revision + 1);
+
+    await expect(
+      ownerClient.campaigns.activateCampaign({
+        organizationId,
+        campaignId: created.id,
+        expectedRevision: active.revision,
+      })
+    ).rejects.toMatchObject({ code: "CONFLICT" });
+
+    await ownerClient.campaigns.updateCampaign({
+      ...settings,
+      name: "Edited while paused",
+    });
+    const reloaded = await ownerClient.campaigns.getCampaign({
+      organizationId,
+      campaignId: created.id,
+    });
+    expect(reloaded).toMatchObject({
+      status: "paused",
+      revision: paused.revision,
+      name: "Edited while paused",
+    });
+    const reactivated = await ownerClient.campaigns.activateCampaign({
+      organizationId,
+      campaignId: created.id,
+      expectedRevision: reloaded.revision,
+    });
+    expect(reactivated).toEqual({
+      id: created.id,
+      status: "active",
+      revision: reloaded.revision + 1,
+    });
+  });
+
+  test("campaigns: activation refusals keep the paused state", async () => {
+    const ownerClient = clientFor(await getSession(owner.headers));
+    const platformClient = clientFor(await getSession(platformUser.headers));
+
+    const list = await ownerClient.leads.createLeadList({
+      organizationId,
+      name: "Paused prospects",
+    });
+    await ownerClient.leads.addLead({
+      organizationId,
+      listId: list.id,
+      phone: "+14155550231",
+    });
+    const dispositions = await ownerClient.dispositions.createDispositionList({
+      organizationId,
+      name: "Paused outcomes",
+    });
+    await ownerClient.dispositions.addDispositionEntry({
+      organizationId,
+      listId: dispositions.id,
+      code: "CONNECTED",
+      label: "Connected",
+    });
+    const number = await platformClient.platform.registerOutboundNumber({
+      number: "+14155550232",
+    });
+    numberIds.push(number.id);
+    await platformClient.platform.assignOutboundNumber({
+      numberId: number.id,
+      organizationId,
+    });
+
+    const created = await ownerClient.campaigns.createCampaign({
+      organizationId,
+      name: "Paused preview",
+      method: "preview",
+    });
+    const settings = campaignSettings({
+      organizationId,
+      campaignId: created.id,
+      name: "Paused preview",
+      leadListIds: [list.id],
+      dispositionListId: dispositions.id,
+      numberIds: [number.id],
+      assigneeType: "team",
+      assigneeId: teamId,
+      previewSeconds: 20,
+      ringTimeoutSeconds: 35,
+      wrapUpSeconds: 0,
+      afterCallWorkSeconds: 0,
+      retryCount: 0,
+      retryIntervalMinutes: null,
+      dialStatuses: ["new", "not_answered"],
+    });
+    await ownerClient.campaigns.updateCampaign(settings);
+    const activated = await ownerClient.campaigns.activateCampaign({
+      organizationId,
+      campaignId: created.id,
+      expectedRevision: 0,
+    });
+    const paused = await ownerClient.campaigns.pauseCampaign({
+      organizationId,
+      campaignId: created.id,
+      expectedRevision: activated.revision,
+    });
+
+    await platformClient.platform.setOutboundNumberEnabled({
+      numberId: number.id,
+      enabled: false,
+    });
+    await expect(
+      ownerClient.campaigns.activateCampaign({
+        organizationId,
+        campaignId: created.id,
+        expectedRevision: paused.revision,
+      })
+    ).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+      data: { fieldErrors: { numberIds: expect.any(String) } },
+    });
+    expect(
+      (await ownerClient.campaigns.listCampaigns({ organizationId })).find(
+        (row) => row.id === created.id
+      )?.status
+    ).toBe("paused");
+    await platformClient.platform.setOutboundNumberEnabled({
+      numberId: number.id,
+      enabled: true,
+    });
+
+    await ownerClient.dispositions.archiveDispositionList({
+      organizationId,
+      listId: dispositions.id,
+    });
+    await expect(
+      ownerClient.campaigns.activateCampaign({
+        organizationId,
+        campaignId: created.id,
+        expectedRevision: paused.revision,
+      })
+    ).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+      data: { fieldErrors: { dispositionListId: expect.any(String) } },
+    });
+    const replacement = await ownerClient.dispositions.createDispositionList({
+      organizationId,
+      name: "Replacement outcomes",
+    });
+    await ownerClient.dispositions.addDispositionEntry({
+      organizationId,
+      listId: replacement.id,
+      code: "CONNECTED",
+      label: "Connected",
+    });
+    await ownerClient.campaigns.updateCampaign({
+      ...settings,
+      dispositionListId: replacement.id,
+    });
+
+    const emptyTeam = await auth.api.createTeam({
+      body: { name: "Empty campaign team", organizationId },
+      headers: owner.headers,
+    });
+    await ownerClient.campaigns.updateCampaign({
+      ...settings,
+      dispositionListId: replacement.id,
+      assigneeId: emptyTeam.id,
+    });
+    await expect(
+      ownerClient.campaigns.activateCampaign({
+        organizationId,
+        campaignId: created.id,
+        expectedRevision: paused.revision,
+      })
+    ).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+      data: { fieldErrors: { assignee: expect.any(String) } },
+    });
+
+    await ownerClient.campaigns.updateCampaign({
+      ...settings,
+      dispositionListId: replacement.id,
+    });
+    await ownerClient.campaigns.updateCampaign({
+      ...settings,
+      dispositionListId: replacement.id,
+      retryCount: 2,
+      retryIntervalMinutes: null,
+    });
+    await expect(
+      ownerClient.campaigns.activateCampaign({
+        organizationId,
+        campaignId: created.id,
+        expectedRevision: paused.revision,
+      })
+    ).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+      data: { fieldErrors: { retryIntervalMinutes: expect.any(String) } },
+    });
+    expect(
+      (await ownerClient.campaigns.listCampaigns({ organizationId })).find(
+        (row) => row.id === created.id
+      )?.status
+    ).toBe("paused");
+  });
+
+  test("campaigns: archived campaigns are terminal but remain listed", async () => {
+    const ownerClient = clientFor(await getSession(owner.headers));
+    const platformClient = clientFor(await getSession(platformUser.headers));
+
+    const list = await ownerClient.leads.createLeadList({
+      organizationId,
+      name: "Archived prospects",
+    });
+    await ownerClient.leads.addLead({
+      organizationId,
+      listId: list.id,
+      phone: "+14155550241",
+    });
+    const dispositions = await ownerClient.dispositions.createDispositionList({
+      organizationId,
+      name: "Archived outcomes",
+    });
+    await ownerClient.dispositions.addDispositionEntry({
+      organizationId,
+      listId: dispositions.id,
+      code: "CONNECTED",
+      label: "Connected",
+    });
+    const number = await platformClient.platform.registerOutboundNumber({
+      number: "+14155550242",
+    });
+    numberIds.push(number.id);
+    await platformClient.platform.assignOutboundNumber({
+      numberId: number.id,
+      organizationId,
+    });
+
+    const created = await ownerClient.campaigns.createCampaign({
+      organizationId,
+      name: "Archived preview",
+      method: "preview",
+    });
+    const settings = campaignSettings({
+      organizationId,
+      campaignId: created.id,
+      name: "Archived preview",
+      leadListIds: [list.id],
+      dispositionListId: dispositions.id,
+      numberIds: [number.id],
+      assigneeType: "team",
+      assigneeId: teamId,
+      previewSeconds: 20,
+      ringTimeoutSeconds: 35,
+      wrapUpSeconds: 0,
+      afterCallWorkSeconds: 0,
+      retryCount: 0,
+      retryIntervalMinutes: null,
+      dialStatuses: ["new", "not_answered"],
+    });
+    await ownerClient.campaigns.updateCampaign(settings);
+    const activated = await ownerClient.campaigns.activateCampaign({
+      organizationId,
+      campaignId: created.id,
+      expectedRevision: 0,
+    });
+    const paused = await ownerClient.campaigns.pauseCampaign({
+      organizationId,
+      campaignId: created.id,
+      expectedRevision: activated.revision,
+    });
+    const archived = await ownerClient.campaigns.archiveCampaign({
+      organizationId,
+      campaignId: created.id,
+      expectedRevision: paused.revision,
+    });
+    expect(archived).toEqual({
+      id: created.id,
+      status: "archived",
+      revision: paused.revision,
+    });
+
+    const stored = await ownerClient.campaigns.getCampaign({
+      organizationId,
+      campaignId: created.id,
+    });
+    expect(stored.status).toBe("archived");
+    expect(stored.revision).toBe(paused.revision);
+
+    await expect(
+      ownerClient.campaigns.activateCampaign({
+        organizationId,
+        campaignId: created.id,
+        expectedRevision: stored.revision,
+      })
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    await expect(
+      ownerClient.campaigns.updateCampaign({
+        ...settings,
+        name: "Edit an archived campaign",
+      })
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    expect(
+      (await ownerClient.campaigns.listCampaigns({ organizationId })).find(
+        (row) => row.id === created.id
+      )?.status
+    ).toBe("archived");
+  });
 });

@@ -7,6 +7,22 @@ import type {
   ListRecordingsOutputSchema,
 } from "./schemas/calls";
 import type {
+  ActivateCampaignInputSchema,
+  ActivateCampaignOutputSchema,
+  ArchiveCampaignInputSchema,
+  ArchiveCampaignOutputSchema,
+  CreateCampaignInputSchema,
+  CreateCampaignOutputSchema,
+  GetCampaignInputSchema,
+  GetCampaignOutputSchema,
+  ListCampaignsInputSchema,
+  ListCampaignsOutputSchema,
+  PauseCampaignInputSchema,
+  PauseCampaignOutputSchema,
+  UpdateCampaignInputSchema,
+  UpdateCampaignOutputSchema,
+} from "./schemas/campaigns";
+import type {
   AddDispositionEntryInputSchema,
   AddDispositionEntryOutputSchema,
   ArchiveDispositionListInputSchema,
@@ -100,12 +116,16 @@ import type {
 } from "./schemas/platform";
 import type { SessionUserSchema } from "./schemas/shared";
 
+export type ActivateCampaignInputType = z.infer<typeof ActivateCampaignInputSchema>;
+export type ActivateCampaignOutputType = z.infer<typeof ActivateCampaignOutputSchema>;
 export type AddDispositionEntryInputType = z.infer<typeof AddDispositionEntryInputSchema>;
 export type AddDispositionEntryOutputType = z.infer<typeof AddDispositionEntryOutputSchema>;
 export type AddDoNotDialEntryInputType = z.infer<typeof AddDoNotDialEntryInputSchema>;
 export type AddDoNotDialEntryOutputType = z.infer<typeof AddDoNotDialEntryOutputSchema>;
 export type AddLeadInputType = z.infer<typeof AddLeadInputSchema>;
 export type AddLeadOutputType = z.infer<typeof AddLeadOutputSchema>;
+export type ArchiveCampaignInputType = z.infer<typeof ArchiveCampaignInputSchema>;
+export type ArchiveCampaignOutputType = z.infer<typeof ArchiveCampaignOutputSchema>;
 export type ArchiveDispositionListInputType = z.infer<typeof ArchiveDispositionListInputSchema>;
 export type ArchiveDispositionListOutputType = z.infer<typeof ArchiveDispositionListOutputSchema>;
 export type ArchiveLeadListInputType = z.infer<typeof ArchiveLeadListInputSchema>;
@@ -115,12 +135,16 @@ export type AssignOutboundNumberOutputType = z.infer<typeof AssignOutboundNumber
 export type CheckDoNotDialNumberInputType = z.infer<typeof CheckDoNotDialNumberInputSchema>;
 export type CheckDoNotDialNumberOutputType = z.infer<typeof CheckDoNotDialNumberOutputSchema>;
 export type CheckHealthOutputType = z.infer<typeof CheckHealthOutputSchema>;
+export type CreateCampaignInputType = z.infer<typeof CreateCampaignInputSchema>;
+export type CreateCampaignOutputType = z.infer<typeof CreateCampaignOutputSchema>;
 export type CreateDispositionListInputType = z.infer<typeof CreateDispositionListInputSchema>;
 export type CreateDispositionListOutputType = z.infer<typeof CreateDispositionListOutputSchema>;
 export type CreateLeadListInputType = z.infer<typeof CreateLeadListInputSchema>;
 export type CreateLeadListOutputType = z.infer<typeof CreateLeadListOutputSchema>;
 export type DeleteOrganizationInputType = z.infer<typeof DeleteOrganizationInputSchema>;
 export type DeleteOrganizationOutputType = z.infer<typeof DeleteOrganizationOutputSchema>;
+export type GetCampaignInputType = z.infer<typeof GetCampaignInputSchema>;
+export type GetCampaignOutputType = z.infer<typeof GetCampaignOutputSchema>;
 export type GetDispositionEntryInputType = z.infer<typeof GetDispositionEntryInputSchema>;
 export type GetDispositionEntryOutputType = z.infer<typeof GetDispositionEntryOutputSchema>;
 export type GetDispositionListInputType = z.infer<typeof GetDispositionListInputSchema>;
@@ -141,6 +165,8 @@ export type ListActiveLeadsInputType = z.infer<typeof ListActiveLeadsInputSchema
 export type ListActiveLeadsOutputType = z.infer<typeof ListActiveLeadsOutputSchema>;
 export type ListCallsInputType = z.infer<typeof ListCallsInputSchema>;
 export type ListCallsOutputType = z.infer<typeof ListCallsOutputSchema>;
+export type ListCampaignsInputType = z.infer<typeof ListCampaignsInputSchema>;
+export type ListCampaignsOutputType = z.infer<typeof ListCampaignsOutputSchema>;
 export type ListDirectoryInputType = z.infer<typeof ListDirectoryInputSchema>;
 export type ListDirectoryOutputType = z.infer<typeof ListDirectoryOutputSchema>;
 export type ListDispositionListsInputType = z.infer<typeof ListDispositionListsInputSchema>;
@@ -162,6 +188,8 @@ export type ListTeamMembersInputType = z.infer<typeof ListTeamMembersInputSchema
 export type ListTeamMembersOutputType = z.infer<typeof ListTeamMembersOutputSchema>;
 export type ListTeamsInputType = z.infer<typeof ListTeamsInputSchema>;
 export type ListTeamsOutputType = z.infer<typeof ListTeamsOutputSchema>;
+export type PauseCampaignInputType = z.infer<typeof PauseCampaignInputSchema>;
+export type PauseCampaignOutputType = z.infer<typeof PauseCampaignOutputSchema>;
 export type RegisterOutboundNumberInputType = z.infer<typeof RegisterOutboundNumberInputSchema>;
 export type RegisterOutboundNumberOutputType = z.infer<typeof RegisterOutboundNumberOutputSchema>;
 export type RemoveDoNotDialEntryInputType = z.infer<typeof RemoveDoNotDialEntryInputSchema>;
@@ -179,6 +207,8 @@ export type SuspendOrganizationInputType = z.infer<typeof SuspendOrganizationInp
 export type SuspendOrganizationOutputType = z.infer<typeof SuspendOrganizationOutputSchema>;
 export type UnassignOutboundNumberInputType = z.infer<typeof UnassignOutboundNumberInputSchema>;
 export type UnassignOutboundNumberOutputType = z.infer<typeof UnassignOutboundNumberOutputSchema>;
+export type UpdateCampaignInputType = z.infer<typeof UpdateCampaignInputSchema>;
+export type UpdateCampaignOutputType = z.infer<typeof UpdateCampaignOutputSchema>;
 export type UpdateDispositionListInputType = z.infer<typeof UpdateDispositionListInputSchema>;
 export type UpdateDispositionListOutputType = z.infer<typeof UpdateDispositionListOutputSchema>;
 export type UpdateLeadListInputType = z.infer<typeof UpdateLeadListInputSchema>;

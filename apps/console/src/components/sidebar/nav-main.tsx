@@ -26,7 +26,8 @@ export type OrgPath =
   | "/$orgSlug/leads"
   | "/$orgSlug/dispositions"
   | "/$orgSlug/do-not-dial"
-  | "/$orgSlug/numbers";
+  | "/$orgSlug/numbers"
+  | "/$orgSlug/campaigns";
 
 export type NavEntry = {
   title: string;

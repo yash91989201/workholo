@@ -18,6 +18,11 @@ export const AUDIT_ACTIONS = [
   "disposition_list.entry_retire",
   "do_not_dial.entry_add",
   "do_not_dial.entry_remove",
+  "campaign.create",
+  "campaign.update",
+  "campaign.activate",
+  "campaign.pause",
+  "campaign.archive",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
@@ -28,7 +33,8 @@ export type AuditTarget = {
     | "user"
     | "lead_list"
     | "disposition_list"
-    | "do_not_dial";
+    | "do_not_dial"
+    | "campaign";
   id: string;
   /** Owning organization for resource targets. */
   organizationId?: string;

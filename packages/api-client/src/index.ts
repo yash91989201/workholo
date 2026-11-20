@@ -4,6 +4,7 @@ import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 import { QueryCache, QueryClient } from "@tanstack/react-query";
 import type { AppRouterClient } from "@workholo/api/routers/index";
 
+export type { CampaignRowSummary } from "@workholo/api/routers/campaigns";
 export type {
   ActiveDispositionEntryRow,
   ActiveDispositionListRow,
