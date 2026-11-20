@@ -11,6 +11,7 @@ import {
   user,
 } from "@workholo/db/schema/auth";
 import { call, recording } from "@workholo/db/schema/calls";
+import { doNotDialEntry } from "@workholo/db/schema/do-not-dial";
 import { lead } from "@workholo/db/schema/leads";
 import {
   outboundNumber,
@@ -468,6 +469,11 @@ describe("tenant request path", () => {
       direction: "inbound",
       status: "completed",
     });
+    await db.insert(doNotDialEntry).values({
+      id: `${RUN}-dnc-doomed`,
+      organizationId: created.id,
+      e164Number: "+14155550177",
+    });
 
     const before = auditEvents.length;
     await platformClient.platform.deleteOrganization({
@@ -482,6 +488,12 @@ describe("tenant request path", () => {
     ).toEqual([]);
     expect(
       await db.select().from(call).where(eq(call.organizationId, created.id))
+    ).toEqual([]);
+    expect(
+      await db
+        .select()
+        .from(doNotDialEntry)
+        .where(eq(doNotDialEntry.organizationId, created.id))
     ).toEqual([]);
     expect(
       await db
@@ -1185,5 +1197,158 @@ describe("tenant request path", () => {
     expect(
       await ownerClient.numbers.listEligibleOutboundNumbers({ organizationId })
     ).toEqual([]);
+  });
+
+  test("do-not-dial: owners and admins manage, agents are denied", async () => {
+    const ownerClient = clientFor(await getSession(owner.headers));
+    const adminClient = clientFor(await getSession(adminUser.headers));
+    const agentClient = clientFor(await getSession(agentUser.headers));
+
+    const added = await ownerClient.doNotDial.addDoNotDialEntry({
+      organizationId,
+      number: "+14155550181",
+    });
+    expect(added.number).toBe("+14155550181");
+    expect(
+      (
+        await adminClient.doNotDial.listDoNotDialEntries({ organizationId })
+      ).map((row) => row.number)
+    ).toEqual(["+14155550181"]);
+    await expect(
+      agentClient.doNotDial.listDoNotDialEntries({ organizationId })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(
+      agentClient.doNotDial.addDoNotDialEntry({
+        organizationId,
+        number: "+14155550182",
+      })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(
+      agentClient.doNotDial.removeDoNotDialEntry({
+        organizationId,
+        entryId: added.id,
+      })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+
+  test("do-not-dial: numbers are normalized and duplicates stay single rows", async () => {
+    const ownerClient = clientFor(await getSession(owner.headers));
+
+    const normalized = await ownerClient.doNotDial.addDoNotDialEntry({
+      organizationId,
+      number: "001 (415) 555-0183",
+    });
+    expect(normalized.number).toBe("+14155550183");
+    const repeated = await ownerClient.doNotDial.addDoNotDialEntry({
+      organizationId,
+      number: "+1 415 555 0183",
+    });
+    expect(repeated).toEqual(normalized);
+    const rows = await ownerClient.doNotDial.listDoNotDialEntries({
+      organizationId,
+    });
+    expect(rows.filter((row) => row.number === "+14155550183")).toHaveLength(1);
+    await expect(
+      ownerClient.doNotDial.addDoNotDialEntry({
+        organizationId,
+        number: "4155550184",
+      })
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    await expect(
+      ownerClient.doNotDial.addDoNotDialEntry({
+        organizationId,
+        number: "+04",
+      })
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+  });
+
+  test("do-not-dial: lookup is scoped to the resolved organization", async () => {
+    const ownerClient = clientFor(await getSession(owner.headers));
+    const agentClient = clientFor(await getSession(agentUser.headers));
+    const outsiderClient = clientFor(await getSession(outsider.headers));
+
+    await ownerClient.doNotDial.addDoNotDialEntry({
+      organizationId,
+      number: "+14155550185",
+    });
+    await outsiderClient.doNotDial.addDoNotDialEntry({
+      organizationId: otherOrganizationId,
+      number: "+14155550185",
+    });
+
+    expect(
+      await agentClient.doNotDial.checkDoNotDialNumber({
+        organizationId,
+        number: "+1 (415) 555-0185",
+      })
+    ).toEqual({ suppressed: true });
+    expect(
+      await ownerClient.doNotDial.checkDoNotDialNumber({
+        organizationId,
+        number: "+14155550186",
+      })
+    ).toEqual({ suppressed: false });
+    expect(
+      await outsiderClient.doNotDial.checkDoNotDialNumber({
+        organizationId: otherOrganizationId,
+        number: "+14155550181",
+      })
+    ).toEqual({ suppressed: false });
+    await expect(
+      outsiderClient.doNotDial.checkDoNotDialNumber({
+        organizationId,
+        number: "+14155550185",
+      })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(
+      ownerClient.doNotDial.checkDoNotDialNumber({
+        organizationId,
+        number: "not a number",
+      })
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+  });
+
+  test("do-not-dial: removal is tenant-owned and removes one entry", async () => {
+    const ownerClient = clientFor(await getSession(owner.headers));
+    const outsiderClient = clientFor(await getSession(outsider.headers));
+
+    const added = await ownerClient.doNotDial.addDoNotDialEntry({
+      organizationId,
+      number: "+14155550187",
+    });
+    const foreign = await outsiderClient.doNotDial.addDoNotDialEntry({
+      organizationId: otherOrganizationId,
+      number: "+14155550188",
+    });
+
+    await expect(
+      ownerClient.doNotDial.removeDoNotDialEntry({
+        organizationId,
+        entryId: foreign.id,
+      })
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
+    expect(
+      (
+        await outsiderClient.doNotDial.listDoNotDialEntries({
+          organizationId: otherOrganizationId,
+        })
+      ).map((row) => row.number)
+    ).toContain("+14155550188");
+
+    await ownerClient.doNotDial.removeDoNotDialEntry({
+      organizationId,
+      entryId: added.id,
+    });
+    expect(
+      (
+        await ownerClient.doNotDial.listDoNotDialEntries({ organizationId })
+      ).map((row) => row.number)
+    ).not.toContain("+14155550187");
+    await expect(
+      ownerClient.doNotDial.removeDoNotDialEntry({
+        organizationId,
+        entryId: added.id,
+      })
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
   });
 });

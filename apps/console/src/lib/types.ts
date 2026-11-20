@@ -6,6 +6,7 @@ import type {
   CreateDispositionListFormSchema,
   UpdateDispositionListFormSchema,
 } from "./schemas/disposition";
+import type { AddDoNotDialEntryFormSchema } from "./schemas/do-not-dial";
 import type {
   AddLeadFormSchema,
   CreateLeadListFormSchema,
@@ -20,6 +21,7 @@ import type {
 import type { InviteUserFormSchema } from "./schemas/user";
 
 export type AddDispositionEntryFormType = z.infer<typeof AddDispositionEntryFormSchema>;
+export type AddDoNotDialEntryFormType = z.infer<typeof AddDoNotDialEntryFormSchema>;
 export type AddLeadFormType = z.infer<typeof AddLeadFormSchema>;
 export type CreateDispositionListFormType = z.infer<typeof CreateDispositionListFormSchema>;
 export type CreateLeadListFormType = z.infer<typeof CreateLeadListFormSchema>;

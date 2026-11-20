@@ -25,6 +25,7 @@ export type OrgPath =
   | "/$orgSlug/teams/members"
   | "/$orgSlug/leads"
   | "/$orgSlug/dispositions"
+  | "/$orgSlug/do-not-dial"
   | "/$orgSlug/numbers";
 
 export type NavEntry = {

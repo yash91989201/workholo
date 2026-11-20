@@ -1,0 +1,195 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "1652f786-e904-4bfd-aadb-a907fedbda44",
+  "prevIds": ["0629845c-c175-4f85-8ea2-6ee84127f3f1"],
+  "footprints": [
+    {
+      "statementType": "create_table",
+      "statementTarget": ["table", "public", "do_not_dial_entry"],
+      "writes": [
+        "s|tbl|public.do_not_dial_entry",
+        "n|tbl|public.do_not_dial_entry",
+        "e|tbl|public.do_not_dial_entry",
+        "n|rel|public.do_not_dial_entry",
+        "n|type|public.do_not_dial_entry",
+        "n|rel|public.do_not_dial_entry_pkey"
+      ],
+      "reads": ["n|sch|public"]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "do_not_dial_entry",
+        "doNotDialEntry_organizationId_e164Number_uidx"
+      ],
+      "writes": [
+        "s|idx|public.doNotDialEntry_organizationId_e164Number_uidx",
+        "n|idx|public.doNotDialEntry_organizationId_e164Number_uidx",
+        "e|idx|public.doNotDialEntry_organizationId_e164Number_uidx",
+        "n|rel|public.doNotDialEntry_organizationId_e164Number_uidx"
+      ],
+      "reads": [
+        "n|tbl|public.do_not_dial_entry",
+        "n|sch|public",
+        "n|col|public.do_not_dial_entry.organization_id",
+        "n|col|public.do_not_dial_entry.e164_number"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": ["table", "public", "do_not_dial_entry"],
+      "writes": [
+        "s|fk|public.do_not_dial_entry.do_not_dial_entry_organization_id_organization_id_fkey",
+        "n|fk|public.do_not_dial_entry.do_not_dial_entry_organization_id_organization_id_fkey",
+        "e|fk|public.do_not_dial_entry.do_not_dial_entry_organization_id_organization_id_fkey",
+        "n|con|public.do_not_dial_entry.do_not_dial_entry_organization_id_organization_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.do_not_dial_entry",
+        "n|sch|public",
+        "n|tbl|public.organization",
+        "n|sch|public",
+        "n|col|public.do_not_dial_entry.organization_id",
+        "n|col|public.organization.id",
+        "e|uniqueness|public.organization.id"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "do_not_dial_entry",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "do_not_dial_entry",
+        "name": "id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "do_not_dial_entry",
+        "name": "organization_id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "do_not_dial_entry",
+        "name": "e164_number",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "do_not_dial_entry",
+        "name": "created_at",
+        "type": "timestamp",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "do_not_dial_entry",
+        "name": "doNotDialEntry_organizationId_e164Number_uidx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "organization_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "e164_number",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": true,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "do_not_dial_entry",
+        "name": "do_not_dial_entry_organization_id_organization_id_fkey",
+        "nameExplicit": false,
+        "columns": ["organization_id"],
+        "schemaTo": "public",
+        "tableTo": "organization",
+        "columnsTo": ["id"],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "do_not_dial_entry",
+        "name": "do_not_dial_entry_pkey",
+        "columns": ["id"],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    }
+  ]
+}

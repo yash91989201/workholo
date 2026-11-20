@@ -29,6 +29,16 @@ import type {
   UpdateDispositionListOutputSchema,
 } from "./schemas/dispositions";
 import type {
+  AddDoNotDialEntryInputSchema,
+  AddDoNotDialEntryOutputSchema,
+  CheckDoNotDialNumberInputSchema,
+  CheckDoNotDialNumberOutputSchema,
+  ListDoNotDialEntriesInputSchema,
+  ListDoNotDialEntriesOutputSchema,
+  RemoveDoNotDialEntryInputSchema,
+  RemoveDoNotDialEntryOutputSchema,
+} from "./schemas/do-not-dial";
+import type {
   CheckHealthOutputSchema,
   GetPrivateDataOutputSchema,
 } from "./schemas/index";
@@ -92,6 +102,8 @@ import type { SessionUserSchema } from "./schemas/shared";
 
 export type AddDispositionEntryInputType = z.infer<typeof AddDispositionEntryInputSchema>;
 export type AddDispositionEntryOutputType = z.infer<typeof AddDispositionEntryOutputSchema>;
+export type AddDoNotDialEntryInputType = z.infer<typeof AddDoNotDialEntryInputSchema>;
+export type AddDoNotDialEntryOutputType = z.infer<typeof AddDoNotDialEntryOutputSchema>;
 export type AddLeadInputType = z.infer<typeof AddLeadInputSchema>;
 export type AddLeadOutputType = z.infer<typeof AddLeadOutputSchema>;
 export type ArchiveDispositionListInputType = z.infer<typeof ArchiveDispositionListInputSchema>;
@@ -100,6 +112,8 @@ export type ArchiveLeadListInputType = z.infer<typeof ArchiveLeadListInputSchema
 export type ArchiveLeadListOutputType = z.infer<typeof ArchiveLeadListOutputSchema>;
 export type AssignOutboundNumberInputType = z.infer<typeof AssignOutboundNumberInputSchema>;
 export type AssignOutboundNumberOutputType = z.infer<typeof AssignOutboundNumberOutputSchema>;
+export type CheckDoNotDialNumberInputType = z.infer<typeof CheckDoNotDialNumberInputSchema>;
+export type CheckDoNotDialNumberOutputType = z.infer<typeof CheckDoNotDialNumberOutputSchema>;
 export type CheckHealthOutputType = z.infer<typeof CheckHealthOutputSchema>;
 export type CreateDispositionListInputType = z.infer<typeof CreateDispositionListInputSchema>;
 export type CreateDispositionListOutputType = z.infer<typeof CreateDispositionListOutputSchema>;
@@ -131,6 +145,8 @@ export type ListDirectoryInputType = z.infer<typeof ListDirectoryInputSchema>;
 export type ListDirectoryOutputType = z.infer<typeof ListDirectoryOutputSchema>;
 export type ListDispositionListsInputType = z.infer<typeof ListDispositionListsInputSchema>;
 export type ListDispositionListsOutputType = z.infer<typeof ListDispositionListsOutputSchema>;
+export type ListDoNotDialEntriesInputType = z.infer<typeof ListDoNotDialEntriesInputSchema>;
+export type ListDoNotDialEntriesOutputType = z.infer<typeof ListDoNotDialEntriesOutputSchema>;
 export type ListEligibleOutboundNumbersInputType = z.infer<typeof ListEligibleOutboundNumbersInputSchema>;
 export type ListEligibleOutboundNumbersOutputType = z.infer<typeof ListEligibleOutboundNumbersOutputSchema>;
 export type ListInvitationsInputType = z.infer<typeof ListInvitationsInputSchema>;
@@ -148,6 +164,8 @@ export type ListTeamsInputType = z.infer<typeof ListTeamsInputSchema>;
 export type ListTeamsOutputType = z.infer<typeof ListTeamsOutputSchema>;
 export type RegisterOutboundNumberInputType = z.infer<typeof RegisterOutboundNumberInputSchema>;
 export type RegisterOutboundNumberOutputType = z.infer<typeof RegisterOutboundNumberOutputSchema>;
+export type RemoveDoNotDialEntryInputType = z.infer<typeof RemoveDoNotDialEntryInputSchema>;
+export type RemoveDoNotDialEntryOutputType = z.infer<typeof RemoveDoNotDialEntryOutputSchema>;
 export type RemoveLeadInputType = z.infer<typeof RemoveLeadInputSchema>;
 export type RemoveLeadOutputType = z.infer<typeof RemoveLeadOutputSchema>;
 export type RestoreOrganizationInputType = z.infer<typeof RestoreOrganizationInputSchema>;

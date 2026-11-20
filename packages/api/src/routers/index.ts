@@ -6,6 +6,7 @@ import {
 } from "../lib/schemas/index";
 import { callsRouter } from "./calls";
 import { dispositionsRouter } from "./dispositions";
+import { doNotDialRouter } from "./do-not-dial";
 import { leadsRouter } from "./leads";
 import { numbersRouter } from "./numbers";
 import { organizationRouter } from "./organization";
@@ -26,6 +27,7 @@ export const appRouter = {
   leads: leadsRouter,
   numbers: numbersRouter,
   dispositions: dispositionsRouter,
+  doNotDial: doNotDialRouter,
   platform: platformRouter,
 };
 export type AppRouter = typeof appRouter;

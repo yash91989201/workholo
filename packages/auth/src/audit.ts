@@ -16,12 +16,19 @@ export const AUDIT_ACTIONS = [
   "disposition_list.archive",
   "disposition_list.entry_add",
   "disposition_list.entry_retire",
+  "do_not_dial.entry_add",
+  "do_not_dial.entry_remove",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 
 export type AuditTarget = {
-  type: "organization" | "user" | "lead_list" | "disposition_list";
+  type:
+    | "organization"
+    | "user"
+    | "lead_list"
+    | "disposition_list"
+    | "do_not_dial";
   id: string;
   /** Owning organization for resource targets. */
   organizationId?: string;

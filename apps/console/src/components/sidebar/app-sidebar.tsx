@@ -3,6 +3,7 @@ import {
   IconLayoutDashboard,
   IconListCheck,
   IconPhone,
+  IconPhoneOff,
   IconUsers,
   IconUsersGroup,
 } from "@tabler/icons-react";
@@ -57,6 +58,11 @@ const navMain: NavEntry[] = [
     title: "Numbers",
     to: "/$orgSlug/numbers",
     icon: IconPhone,
+  },
+  {
+    title: "Do not dial",
+    to: "/$orgSlug/do-not-dial",
+    icon: IconPhoneOff,
   },
 ];
 

@@ -46,6 +46,11 @@ import type {
   DispositionListUpdateSchema,
 } from "./models/dispositions";
 import type {
+  DoNotDialEntryInsertSchema,
+  DoNotDialEntryModelSchema,
+  DoNotDialEntryUpdateSchema,
+} from "./models/do-not-dial";
+import type {
   LeadInsertSchema,
   LeadListInsertSchema,
   LeadListModelSchema,
@@ -74,6 +79,9 @@ export type DispositionEntryUpdateType = z.infer<typeof DispositionEntryUpdateSc
 export type DispositionListInsertType = z.infer<typeof DispositionListInsertSchema>;
 export type DispositionListModelType = z.infer<typeof DispositionListModelSchema>;
 export type DispositionListUpdateType = z.infer<typeof DispositionListUpdateSchema>;
+export type DoNotDialEntryInsertType = z.infer<typeof DoNotDialEntryInsertSchema>;
+export type DoNotDialEntryModelType = z.infer<typeof DoNotDialEntryModelSchema>;
+export type DoNotDialEntryUpdateType = z.infer<typeof DoNotDialEntryUpdateSchema>;
 export type InvitationInsertType = z.infer<typeof InvitationInsertSchema>;
 export type InvitationModelType = z.infer<typeof InvitationModelSchema>;
 export type InvitationUpdateType = z.infer<typeof InvitationUpdateSchema>;

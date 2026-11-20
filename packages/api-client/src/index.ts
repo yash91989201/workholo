@@ -10,6 +10,7 @@ export type {
   DispositionEntryRow,
   DispositionListRow,
 } from "@workholo/api/routers/dispositions";
+export type { DoNotDialEntryRow } from "@workholo/api/routers/do-not-dial";
 export type {
   ActiveLeadListRow,
   ImportLeadRow,
