@@ -14,7 +14,7 @@ import { call, recording } from "@workholo/db/schema/calls";
 import { and, eq, like } from "drizzle-orm";
 
 import { appRouter } from "./routers/index";
-import { organizationScope } from "./tenant";
+import { organizationScope } from "./utils/tenant";
 
 const RUN = `api${Date.now()}`;
 const DOMAIN = `${RUN}.test`;

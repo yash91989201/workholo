@@ -1,5 +1,13 @@
 schema: spec-driven
 
+context: |
+  API procedure schemas live in packages/api/src/lib/schemas/<domain>.ts.
+  Name every schema <Action><Resource><Direction>Schema, e.g. ListRecordingsInputSchema.
+  Every oRPC procedure declares .output() and declares .input() when it accepts input.
+  No inline zod schemas in packages/api/src/routers/.
+  Keep middleware and tenant helpers in packages/api/src/utils/<concern>.ts.
+  Keep oRPC procedure builders in packages/api/src/index.ts.
+
 # Project context (optional)
 # Add only constraints that should guide OpenSpec artifacts and workflows.
 # Include constraints an agent cannot infer by reading the code.

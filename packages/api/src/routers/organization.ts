@@ -9,77 +9,57 @@ import {
   user,
 } from "@workholo/db/schema/auth";
 import { and, desc, eq } from "drizzle-orm";
-import z from "zod";
-
+import type { z } from "zod";
 import { consoleProcedure, protectedProcedure } from "../index";
+import {
+  GetMeOutputSchema,
+  ListDirectoryInputSchema,
+  ListDirectoryOutputSchema,
+  ListInvitationsInputSchema,
+  ListInvitationsOutputSchema,
+  ListTeamMembersInputSchema,
+  ListTeamMembersOutputSchema,
+  ListTeamsInputSchema,
+  ListTeamsOutputSchema,
+} from "../lib/schemas/organization";
 
-export type DirectoryRow = {
-  id: string;
-  userId: string;
-  role: string;
-  name: string;
-  email: string;
-  createdAt: Date;
-  teams: string[];
-};
+export type DirectoryRow = z.infer<typeof ListDirectoryOutputSchema>[number];
 
-export type InvitationRow = {
-  id: string;
-  email: string;
-  role: string | null;
-  expiresAt: Date;
-  createdAt: Date;
-  teamName: string | null;
-  inviteUrl: string;
-};
+export type InvitationRow = z.infer<typeof ListInvitationsOutputSchema>[number];
 
-export type TeamRow = {
-  id: string;
-  name: string;
-  memberCount: number;
-  createdAt: Date;
-};
+export type TeamRow = z.infer<typeof ListTeamsOutputSchema>[number];
 
-export type TeamMemberRow = {
-  id: string;
-  userId: string;
-  name: string;
-  email: string;
-  createdAt: Date;
-};
-
-const organizationIdInput = z.object({ organizationId: z.string() });
-const teamInput = z.object({
-  organizationId: z.string(),
-  teamId: z.string(),
-});
+export type TeamMemberRow = z.infer<typeof ListTeamMembersOutputSchema>[number];
 
 export const organizationRouter = {
   /** Current membership, used by every surface to gate entry. */
-  me: protectedProcedure.handler(async ({ context }) => {
-    const userId = context.session?.user.id ?? "";
-    const rows = await context.db
-      .select({
-        organizationId: organization.id,
-        name: organization.name,
-        slug: organization.slug,
-        suspendedAt: organization.suspendedAt,
-        role: member.role,
-      })
-      .from(member)
-      .innerJoin(organization, eq(organization.id, member.organizationId))
-      .where(eq(member.userId, userId))
-      .limit(1);
-    return {
-      user: context.session?.user,
-      membership: rows[0] ?? null,
-    };
-  }),
+  me: protectedProcedure
+    .output(GetMeOutputSchema)
+    .handler(async ({ context }) => {
+      const userId = context.session?.user.id ?? "";
+      const rows = await context.db
+        .select({
+          organizationId: organization.id,
+          name: organization.name,
+          slug: organization.slug,
+          suspendedAt: organization.suspendedAt,
+          role: member.role,
+        })
+        .from(member)
+        .innerJoin(organization, eq(organization.id, member.organizationId))
+        .where(eq(member.userId, userId))
+        .limit(1);
+      return {
+        user: context.session?.user,
+        membership: rows[0] ?? null,
+      };
+    }),
 
   /** Full roster regardless of role, with each member's team names. */
   directory: consoleProcedure
-    .input(organizationIdInput)
-    .handler(async ({ context }): Promise<DirectoryRow[]> => {
+    .input(ListDirectoryInputSchema)
+    .output(ListDirectoryOutputSchema)
+    .handler(async ({ context }) => {
       const rows = await context.db
         .select({
           id: member.id,
@@ -112,8 +92,9 @@ export const organizationRouter = {
 
   /** Pending invitations; `teamId` is comma-joined by the plugin, display the first. */
   invitations: consoleProcedure
-    .input(organizationIdInput)
-    .handler(async ({ context }): Promise<InvitationRow[]> => {
+    .input(ListInvitationsInputSchema)
+    .output(ListInvitationsOutputSchema)
+    .handler(async ({ context }) => {
       const teams = await context.db
         .select({ id: team.id, name: team.name })
         .from(team)
@@ -147,8 +128,10 @@ export const organizationRouter = {
       }));
     }),
 
-  teams: consoleProcedure.input(organizationIdInput).handler(
-    async ({ context }): Promise<TeamRow[]> =>
+  teams: consoleProcedure
+    .input(ListTeamsInputSchema)
+    .output(ListTeamsOutputSchema)
+    .handler(async ({ context }) =>
       context.db
         .select({
           id: team.id,
@@ -159,11 +142,12 @@ export const organizationRouter = {
         .from(team)
         .where(eq(team.organizationId, context.organizationId))
         .orderBy(team.name)
-  ),
+    ),
 
   teamMembers: consoleProcedure
-    .input(teamInput)
-    .handler(async ({ context, input }): Promise<TeamMemberRow[]> => {
+    .input(ListTeamMembersInputSchema)
+    .output(ListTeamMembersOutputSchema)
+    .handler(async ({ context, input }) => {
       const rows = await context.db
         .select({ id: team.id })
         .from(team)

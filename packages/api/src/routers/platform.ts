@@ -1,22 +1,23 @@
 import { createAuditEvent } from "@workholo/auth/audit";
 import { member, organization } from "@workholo/db/schema/auth";
 import { count, desc, eq, ilike, or } from "drizzle-orm";
-import z from "zod";
-
 import { platformProcedure } from "../index";
-
-const listInput = z.object({
-  search: z.string().trim().optional(),
-  page: z.number().int().min(1).default(1),
-  pageSize: z.number().int().min(1).max(100).default(20),
-});
-
-const organizationIdInput = z.object({ organizationId: z.string() });
+import {
+  DeleteOrganizationInputSchema,
+  DeleteOrganizationOutputSchema,
+  ListOrganizationsInputSchema,
+  ListOrganizationsOutputSchema,
+  RestoreOrganizationInputSchema,
+  RestoreOrganizationOutputSchema,
+  SuspendOrganizationInputSchema,
+  SuspendOrganizationOutputSchema,
+} from "../lib/schemas/platform";
 
 export const platformRouter = {
   /** Cross-tenant listing: platform staff are not members of these organizations. */
   listOrganizations: platformProcedure
-    .input(listInput)
+    .input(ListOrganizationsInputSchema)
+    .output(ListOrganizationsOutputSchema)
     .handler(async ({ context, input }) => {
       const where = input.search
         ? or(
@@ -62,7 +63,8 @@ export const platformRouter = {
     }),
 
   suspendOrganization: platformProcedure
-    .input(organizationIdInput.extend({ reason: z.string().min(1) }))
+    .input(SuspendOrganizationInputSchema)
+    .output(SuspendOrganizationOutputSchema)
     .handler(async ({ context, input }) => {
       const actorId = context.session?.user.id ?? "";
       const rows = await context.db
@@ -95,7 +97,8 @@ export const platformRouter = {
     }),
 
   restoreOrganization: platformProcedure
-    .input(organizationIdInput)
+    .input(RestoreOrganizationInputSchema)
+    .output(RestoreOrganizationOutputSchema)
     .handler(async ({ context, input }) => {
       const actorId = context.session?.user.id ?? "";
       const rows = await context.db
@@ -120,7 +123,8 @@ export const platformRouter = {
     }),
 
   deleteOrganization: platformProcedure
-    .input(organizationIdInput)
+    .input(DeleteOrganizationInputSchema)
+    .output(DeleteOrganizationOutputSchema)
     .handler(async ({ context, input }) => {
       const actorId = context.session?.user.id ?? "";
       const deleted = await context.db

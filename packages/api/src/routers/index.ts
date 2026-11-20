@@ -1,16 +1,23 @@
 import type { RouterClient } from "@orpc/server";
-
 import { protectedProcedure, publicProcedure } from "../index";
+import {
+  CheckHealthOutputSchema,
+  GetPrivateDataOutputSchema,
+} from "../lib/schemas/index";
 import { callsRouter } from "./calls";
 import { organizationRouter } from "./organization";
 import { platformRouter } from "./platform";
 
 export const appRouter = {
-  healthCheck: publicProcedure.handler(() => "OK"),
-  privateData: protectedProcedure.handler(({ context }) => ({
-    message: "This is private",
-    user: context.session?.user,
-  })),
+  healthCheck: publicProcedure
+    .output(CheckHealthOutputSchema)
+    .handler(() => "OK"),
+  privateData: protectedProcedure
+    .output(GetPrivateDataOutputSchema)
+    .handler(({ context }) => ({
+      message: "This is private",
+      user: context.session?.user,
+    })),
   organization: organizationRouter,
   calls: callsRouter,
   platform: platformRouter,
