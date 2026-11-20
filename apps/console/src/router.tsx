@@ -1,7 +1,7 @@
 import { createRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 
-import Loader from "./components/loader";
+import { Loader } from "@workholo/ui/components/loader";
 import { routeTree } from "./routeTree.gen";
 import { createApiContext } from "./utils/orpc";
 

@@ -4,9 +4,9 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { InvitationRow } from "@workholo/api-client";
 import { Badge } from "@workholo/ui/components/badge";
 import { Button } from "@workholo/ui/components/button";
+import { DataTable } from "@workholo/ui/components/data-table";
 import { toast } from "sonner";
 
-import { DataTable } from "@/components/data-table";
 import { authClient } from "@/lib/auth-client";
 import { orpc } from "@/utils/orpc";
 

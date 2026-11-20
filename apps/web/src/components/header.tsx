@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { buttonVariants } from "@workholo/ui/components/button";
+import { ModeToggle } from "@workholo/ui/components/mode-toggle";
 import { ENV } from "@/env";
-import { ModeToggle } from "./mode-toggle";
 
 export default function Header() {
   return (

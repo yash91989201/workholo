@@ -1,6 +1,6 @@
 import { createRouter } from "@tanstack/react-router";
+import { Loader } from "@workholo/ui/components/loader";
 
-import Loader from "./components/loader";
 import { routeTree } from "./routeTree.gen";
 
 export const getRouter = () => {

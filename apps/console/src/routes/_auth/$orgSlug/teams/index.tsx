@@ -4,6 +4,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { TeamRow } from "@workholo/api-client";
 import { Button } from "@workholo/ui/components/button";
+import { DataTable } from "@workholo/ui/components/data-table";
 import {
   Dialog,
   DialogContent,
@@ -24,7 +25,6 @@ import { MoreHorizontalIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { DataTable } from "@/components/data-table";
 import { authClient } from "@/lib/auth-client";
 import { CreateTeamFormSchema, RenameTeamFormSchema } from "@/lib/schemas/team";
 import type { CreateTeamFormType, RenameTeamFormType } from "@/lib/types";

@@ -3,8 +3,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { DirectoryRow } from "@workholo/api-client";
 import { Badge } from "@workholo/ui/components/badge";
+import { DataTable } from "@workholo/ui/components/data-table";
 
-import { DataTable } from "@/components/data-table";
 import { orpc } from "@/utils/orpc";
 
 export const Route = createFileRoute("/_auth/$orgSlug/teams/members")({

@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@workholo/ui/components/badge";
 import { Button } from "@workholo/ui/components/button";
+import { DataTable } from "@workholo/ui/components/data-table";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +13,6 @@ import {
 import { MoreHorizontalIcon } from "lucide-react";
 import { toast } from "sonner";
 
-import { DataTable } from "@/components/data-table";
 import { authClient } from "@/lib/auth-client";
 import { orpc } from "@/utils/orpc";
 

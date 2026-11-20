@@ -7,10 +7,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@workholo/ui/components/breadcrumb";
+import { ModeToggle } from "@workholo/ui/components/mode-toggle";
 import { Separator } from "@workholo/ui/components/separator";
 import { SidebarTrigger } from "@workholo/ui/components/sidebar";
-
-import { ModeToggle } from "./mode-toggle";
 import { NavUser } from "./sidebar/nav-user";
 
 const pageLabels: Record<string, string> = {

@@ -8,9 +8,9 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Toaster } from "@workholo/ui/components/sonner";
+import { ThemeProvider } from "@workholo/ui/components/theme-provider";
 import { TooltipProvider } from "@workholo/ui/components/tooltip";
 import Header from "@/components/header";
-import { ThemeProvider } from "@/components/theme-provider";
 import appCss from "@/index.css?url";
 import type { orpc } from "@/utils/orpc";
 

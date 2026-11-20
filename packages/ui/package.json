@@ -21,6 +21,7 @@
     "@shadcn/react": "^0.3.1",
     "@tabler/icons-react": "^3.52.0",
     "@tanstack/react-form": "catalog:",
+    "@tanstack/react-table": "catalog:",
     "class-variance-authority": "^0.7.1",
     "cmdk": "^1.1.1",
     "cn": "^0.5.2",

@@ -1,13 +1,13 @@
-import { Button } from "@workholo/ui/components/button";
+import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
+
+import { Button } from "./button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@workholo/ui/components/dropdown-menu";
-import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
-
-import { useTheme } from "@/components/theme-provider";
+} from "./dropdown-menu";
+import { useTheme } from "./theme-provider";
 
 export function ModeToggle() {
   const { setTheme } = useTheme();

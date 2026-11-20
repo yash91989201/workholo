@@ -2,13 +2,12 @@ import { formOptions } from "@tanstack/react-form";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@workholo/ui/components/button";
 import { useAppForm } from "@workholo/ui/components/form/hooks";
+import { Loader } from "@workholo/ui/components/loader";
 import { toast } from "sonner";
 
 import { authClient } from "@/lib/auth-client";
 import { SignInFormSchema } from "@/lib/schemas/auth";
 import type { SignInFormType } from "@/lib/types";
-
-import Loader from "./loader";
 
 const signInFormOpts = formOptions({
   defaultValues: {
