@@ -24,6 +24,7 @@
       "!**/.zed",
       "!**/.vscode",
       "!**/routeTree.gen.ts",
+      "!**/src/lib/types.ts",
       "!**/src/env.ts",
       "!**/src-tauri",
       "!**/.nuxt",
@@ -43,7 +44,8 @@
       "!**/coverage",
       "!**/.evlog",
       "!apps/docs/.astro",
-      "!apps/docs/public"
+      "!apps/docs/public",
+      "!temp-reference"
     ]
   },
   "formatter": {

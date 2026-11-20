@@ -1,3 +1,4 @@
+import { formOptions } from "@tanstack/react-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Badge } from "@workholo/ui/components/badge";
@@ -10,8 +11,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@workholo/ui/components/dialog";
+import { useAppForm } from "@workholo/ui/components/form/hooks";
 import { Input } from "@workholo/ui/components/input";
-import { Label } from "@workholo/ui/components/label";
 import {
   Table,
   TableBody,
@@ -24,6 +25,12 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { authClient } from "@/lib/auth-client";
+import { SuspendOrganizationFormSchema } from "@/lib/schemas/organization";
+import { ImpersonateUserFormSchema } from "@/lib/schemas/user";
+import type {
+  ImpersonateUserFormType,
+  SuspendOrganizationFormType,
+} from "@/lib/types";
 import { orpc } from "@/utils/orpc";
 
 const PAGE_SIZE = 20;
@@ -38,13 +45,150 @@ type DialogState =
   | { kind: "impersonate"; id: string; name: string }
   | null;
 
+const suspendOrganizationFormOpts = formOptions({
+  defaultValues: {
+    reason: "",
+  } satisfies SuspendOrganizationFormType as SuspendOrganizationFormType,
+});
+
+function SuspendOrganizationForm({
+  organization,
+  onDone,
+}: {
+  organization: { id: string; name: string };
+  onDone: () => void;
+}) {
+  const { queryClient } = Route.useRouteContext();
+  const suspend = useMutation({
+    ...orpc.platform.suspendOrganization.mutationOptions(),
+    onSuccess: () => {
+      toast.success(`Suspended ${organization.name}`);
+      onDone();
+      queryClient.invalidateQueries();
+    },
+    onError: (error) => toast.error(error.message),
+  });
+  const form = useAppForm({
+    ...suspendOrganizationFormOpts,
+    validators: {
+      onSubmit: SuspendOrganizationFormSchema,
+    },
+    onSubmit: async ({ value }) => {
+      try {
+        await suspend.mutateAsync({
+          organizationId: organization.id,
+          reason: value.reason,
+        });
+      } catch {
+        // Rejection is surfaced by the mutation's onError.
+      }
+    },
+  });
+
+  return (
+    <form.AppForm>
+      <form
+        className="space-y-4"
+        onSubmit={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          form.handleSubmit();
+        }}
+      >
+        <form.AppField name="reason">
+          {(field) => <field.Input label="Reason" />}
+        </form.AppField>
+        <DialogFooter>
+          <Button onClick={onDone} type="button" variant="outline">
+            Cancel
+          </Button>
+          <form.Subscribe
+            selector={(state) => ({
+              canSubmit: state.canSubmit,
+              isSubmitting: state.isSubmitting,
+            })}
+          >
+            {({ canSubmit, isSubmitting }) => (
+              <Button
+                disabled={!canSubmit || isSubmitting || suspend.isPending}
+                type="submit"
+                variant="destructive"
+              >
+                Suspend
+              </Button>
+            )}
+          </form.Subscribe>
+        </DialogFooter>
+      </form>
+    </form.AppForm>
+  );
+}
+
+const impersonateUserFormOpts = formOptions({
+  defaultValues: {
+    userId: "",
+  } satisfies ImpersonateUserFormType as ImpersonateUserFormType,
+});
+
+function ImpersonateUserForm({ onDone }: { onDone: () => void }) {
+  const form = useAppForm({
+    ...impersonateUserFormOpts,
+    validators: {
+      onSubmit: ImpersonateUserFormSchema,
+    },
+    onSubmit: async ({ value }) => {
+      authClient.admin.impersonateUser(
+        { userId: value.userId.trim() },
+        {
+          onSuccess: () => window.location.reload(),
+          onError: (error) => {
+            toast.error(error.error.message || error.error.statusText);
+          },
+        }
+      );
+    },
+  });
+
+  return (
+    <form.AppForm>
+      <form
+        className="space-y-4"
+        onSubmit={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          form.handleSubmit();
+        }}
+      >
+        <form.AppField name="userId">
+          {(field) => <field.Input label="User id" />}
+        </form.AppField>
+        <DialogFooter>
+          <Button onClick={onDone} type="button" variant="outline">
+            Cancel
+          </Button>
+          <form.Subscribe
+            selector={(state) => ({
+              canSubmit: state.canSubmit,
+              isSubmitting: state.isSubmitting,
+            })}
+          >
+            {({ canSubmit, isSubmitting }) => (
+              <Button disabled={!canSubmit || isSubmitting} type="submit">
+                Impersonate
+              </Button>
+            )}
+          </form.Subscribe>
+        </DialogFooter>
+      </form>
+    </form.AppForm>
+  );
+}
+
 function OrganizationsPage() {
   const { queryClient } = Route.useRouteContext();
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [dialog, setDialog] = useState<DialogState>(null);
-  const [reason, setReason] = useState("");
-  const [userId, setUserId] = useState("");
 
   const organizations = useQuery(
     orpc.platform.listOrganizations.queryOptions({
@@ -58,9 +202,6 @@ function OrganizationsPage() {
 
   const invalidate = () => queryClient.invalidateQueries();
 
-  const suspend = useMutation(
-    orpc.platform.suspendOrganization.mutationOptions()
-  );
   const restore = useMutation(
     orpc.platform.restoreOrganization.mutationOptions()
   );
@@ -70,8 +211,6 @@ function OrganizationsPage() {
 
   const closeDialog = () => {
     setDialog(null);
-    setReason("");
-    setUserId("");
   };
 
   const totalPages = Math.max(
@@ -154,7 +293,6 @@ function OrganizationsPage() {
                   ) : (
                     <Button
                       onClick={() => {
-                        setReason("");
                         setDialog({
                           kind: "suspend",
                           id: organization.id,
@@ -169,7 +307,6 @@ function OrganizationsPage() {
                   )}
                   <Button
                     onClick={() => {
-                      setUserId("");
                       setDialog({
                         kind: "impersonate",
                         id: organization.id,
@@ -245,41 +382,12 @@ function OrganizationsPage() {
               Suspend {dialog?.name} and record a reason.
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-2">
-            <Label htmlFor="suspend-reason">Reason</Label>
-            <Input
-              id="suspend-reason"
-              onChange={(event) => setReason(event.target.value)}
-              value={reason}
+          {dialog?.kind === "suspend" ? (
+            <SuspendOrganizationForm
+              onDone={closeDialog}
+              organization={{ id: dialog.id, name: dialog.name }}
             />
-          </div>
-          <DialogFooter>
-            <Button onClick={closeDialog} variant="outline">
-              Cancel
-            </Button>
-            <Button
-              disabled={!reason.trim() || suspend.isPending}
-              onClick={() => {
-                if (!dialog) {
-                  return;
-                }
-                suspend.mutate(
-                  { organizationId: dialog.id, reason },
-                  {
-                    onSuccess: () => {
-                      toast.success(`Suspended ${dialog.name}`);
-                      closeDialog();
-                      invalidate();
-                    },
-                    onError: (error) => toast.error(error.message),
-                  }
-                );
-              }}
-              variant="destructive"
-            >
-              Suspend
-            </Button>
-          </DialogFooter>
+          ) : null}
         </DialogContent>
       </Dialog>
 
@@ -335,37 +443,9 @@ function OrganizationsPage() {
               Enter the id of the user to impersonate.
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-2">
-            <Label htmlFor="impersonate-user">User id</Label>
-            <Input
-              id="impersonate-user"
-              onChange={(event) => setUserId(event.target.value)}
-              value={userId}
-            />
-          </div>
-          <DialogFooter>
-            <Button onClick={closeDialog} variant="outline">
-              Cancel
-            </Button>
-            <Button
-              disabled={!userId.trim()}
-              onClick={() => {
-                authClient.admin.impersonateUser(
-                  { userId: userId.trim() },
-                  {
-                    onSuccess: () => window.location.reload(),
-                    onError: (error) => {
-                      toast.error(
-                        error.error.message || error.error.statusText
-                      );
-                    },
-                  }
-                );
-              }}
-            >
-              Impersonate
-            </Button>
-          </DialogFooter>
+          {dialog?.kind === "impersonate" ? (
+            <ImpersonateUserForm onDone={closeDialog} />
+          ) : null}
         </DialogContent>
       </Dialog>
     </div>

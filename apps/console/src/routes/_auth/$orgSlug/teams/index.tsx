@@ -1,3 +1,4 @@
+import { formOptions } from "@tanstack/react-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -18,18 +19,161 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@workholo/ui/components/dropdown-menu";
-import { Input } from "@workholo/ui/components/input";
+import { useAppForm } from "@workholo/ui/components/form/hooks";
 import { MoreHorizontalIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
 import { DataTable } from "@/components/data-table";
 import { authClient } from "@/lib/auth-client";
+import { CreateTeamFormSchema, RenameTeamFormSchema } from "@/lib/schemas/team";
+import type { CreateTeamFormType, RenameTeamFormType } from "@/lib/types";
 import { orpc } from "@/utils/orpc";
 
 export const Route = createFileRoute("/_auth/$orgSlug/teams/")({
   component: TeamsPage,
 });
+
+const createTeamFormOpts = formOptions({
+  defaultValues: {
+    name: "",
+  } satisfies CreateTeamFormType as CreateTeamFormType,
+});
+
+function CreateTeamForm({
+  organizationId,
+  onDone,
+}: {
+  organizationId: string;
+  onDone: () => void;
+}) {
+  const { queryClient } = Route.useRouteContext();
+  const form = useAppForm({
+    ...createTeamFormOpts,
+    validators: {
+      onSubmit: CreateTeamFormSchema,
+    },
+    onSubmit: async ({ value }) => {
+      const { error } = await authClient.organization.createTeam({
+        name: value.name,
+        organizationId,
+      });
+      if (error) {
+        toast.error(error.message ?? "Could not create the team");
+        return;
+      }
+      onDone();
+      await queryClient.invalidateQueries({
+        queryKey: orpc.organization.key(),
+      });
+    },
+  });
+
+  return (
+    <form.AppForm>
+      <form
+        className="space-y-4"
+        onSubmit={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          form.handleSubmit();
+        }}
+      >
+        <form.AppField name="name">
+          {(field) => <field.Input label="Team name" placeholder="Support" />}
+        </form.AppField>
+        <DialogFooter>
+          <Button onClick={onDone} type="button" variant="outline">
+            Cancel
+          </Button>
+          <form.Subscribe
+            selector={(state) => ({
+              canSubmit: state.canSubmit,
+              isSubmitting: state.isSubmitting,
+            })}
+          >
+            {({ canSubmit, isSubmitting }) => (
+              <Button disabled={!canSubmit || isSubmitting} type="submit">
+                Create team
+              </Button>
+            )}
+          </form.Subscribe>
+        </DialogFooter>
+      </form>
+    </form.AppForm>
+  );
+}
+
+function RenameTeamForm({
+  organizationId,
+  team,
+  onDone,
+}: {
+  organizationId: string;
+  team: TeamRow;
+  onDone: () => void;
+}) {
+  const { queryClient } = Route.useRouteContext();
+  const renameTeamFormOpts = formOptions({
+    defaultValues: {
+      name: team.name,
+    } satisfies RenameTeamFormType as RenameTeamFormType,
+  });
+  const form = useAppForm({
+    ...renameTeamFormOpts,
+    validators: {
+      onSubmit: RenameTeamFormSchema,
+    },
+    onSubmit: async ({ value }) => {
+      const { error } = await authClient.organization.updateTeam({
+        teamId: team.id,
+        data: { name: value.name, organizationId },
+      });
+      if (error) {
+        toast.error(error.message ?? "Could not rename the team");
+        return;
+      }
+      onDone();
+      await queryClient.invalidateQueries({
+        queryKey: orpc.organization.key(),
+      });
+    },
+  });
+
+  return (
+    <form.AppForm>
+      <form
+        className="space-y-4"
+        onSubmit={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          form.handleSubmit();
+        }}
+      >
+        <form.AppField name="name">
+          {(field) => <field.Input label="Team name" />}
+        </form.AppField>
+        <DialogFooter>
+          <Button onClick={onDone} type="button" variant="outline">
+            Cancel
+          </Button>
+          <form.Subscribe
+            selector={(state) => ({
+              canSubmit: state.canSubmit,
+              isSubmitting: state.isSubmitting,
+            })}
+          >
+            {({ canSubmit, isSubmitting }) => (
+              <Button disabled={!canSubmit || isSubmitting} type="submit">
+                Save
+              </Button>
+            )}
+          </form.Subscribe>
+        </DialogFooter>
+      </form>
+    </form.AppForm>
+  );
+}
 
 function TeamsPage() {
   const { membership, queryClient } = Route.useRouteContext();
@@ -38,48 +182,11 @@ function TeamsPage() {
     orpc.organization.teams.queryOptions({ input: { organizationId } })
   );
   const [createOpen, setCreateOpen] = useState(false);
-  const [name, setName] = useState("");
   const [renaming, setRenaming] = useState<TeamRow | null>(null);
   const [removing, setRemoving] = useState<TeamRow | null>(null);
 
   const invalidate = () =>
     queryClient.invalidateQueries({ queryKey: orpc.organization.key() });
-
-  const createTeam = useMutation({
-    mutationFn: async (teamName: string) => {
-      const { error } = await authClient.organization.createTeam({
-        name: teamName,
-        organizationId,
-      });
-      if (error) {
-        throw new Error(error.message ?? "Could not create the team");
-      }
-    },
-    onError: (error) => toast.error(error.message),
-    onSuccess: async () => {
-      setCreateOpen(false);
-      setName("");
-      await invalidate();
-    },
-  });
-
-  const renameTeam = useMutation({
-    mutationFn: async (vars: { teamId: string; name: string }) => {
-      const { error } = await authClient.organization.updateTeam({
-        teamId: vars.teamId,
-        data: { name: vars.name, organizationId },
-      });
-      if (error) {
-        throw new Error(error.message ?? "Could not rename the team");
-      }
-    },
-    onError: (error) => toast.error(error.message),
-    onSuccess: async () => {
-      setRenaming(null);
-      setName("");
-      await invalidate();
-    },
-  });
 
   const removeTeam = useMutation({
     mutationFn: async (teamId: string) => {
@@ -126,12 +233,7 @@ function TeamsPage() {
             >
               Open team
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => {
-                setName(row.original.name);
-                setRenaming(row.original);
-              }}
-            >
+            <DropdownMenuItem onClick={() => setRenaming(row.original)}>
               Rename
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -167,28 +269,10 @@ function TeamsPage() {
                 teams.
               </DialogDescription>
             </DialogHeader>
-            <form
-              className="space-y-4"
-              onSubmit={(event) => {
-                event.preventDefault();
-                createTeam.mutate(name);
-              }}
-            >
-              <Input
-                aria-label="Team name"
-                onChange={(event) => setName(event.target.value)}
-                placeholder="Support"
-                value={name}
-              />
-              <DialogFooter>
-                <Button
-                  disabled={name.trim().length === 0 || createTeam.isPending}
-                  type="submit"
-                >
-                  Create team
-                </Button>
-              </DialogFooter>
-            </form>
+            <CreateTeamForm
+              onDone={() => setCreateOpen(false)}
+              organizationId={organizationId}
+            />
           </DialogContent>
         </Dialog>
       </div>
@@ -207,29 +291,13 @@ function TeamsPage() {
           <DialogHeader>
             <DialogTitle>Rename team</DialogTitle>
           </DialogHeader>
-          <form
-            className="space-y-4"
-            onSubmit={(event) => {
-              event.preventDefault();
-              if (renaming) {
-                renameTeam.mutate({ teamId: renaming.id, name });
-              }
-            }}
-          >
-            <Input
-              aria-label="Team name"
-              onChange={(event) => setName(event.target.value)}
-              value={name}
+          {renaming ? (
+            <RenameTeamForm
+              onDone={() => setRenaming(null)}
+              organizationId={organizationId}
+              team={renaming}
             />
-            <DialogFooter>
-              <Button
-                disabled={name.trim().length === 0 || renameTeam.isPending}
-                type="submit"
-              >
-                Save
-              </Button>
-            </DialogFooter>
-          </form>
+          ) : null}
         </DialogContent>
       </Dialog>
 
