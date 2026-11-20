@@ -1,4 +1,4 @@
-import { useForm } from "@tanstack/react-form";
+import { formOptions } from "@tanstack/react-form";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { Button } from "@workholo/ui/components/button";
 import {
@@ -8,23 +8,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@workholo/ui/components/card";
-import { Input } from "@workholo/ui/components/input";
-import { Label } from "@workholo/ui/components/label";
+import {
+  InputGroupAddon,
+  InputGroupButton,
+} from "@workholo/ui/components/form/form-input-group";
+import { useAppForm } from "@workholo/ui/components/form/hooks";
+import { LockIcon, LockOpenIcon } from "lucide-react";
 import { useState } from "react";
-import z from "zod";
 
 import { authClient } from "@/lib/auth-client";
+import { CreateOrganizationFormSchema } from "@/lib/schemas/organization";
+import type { CreateOrganizationFormType } from "@/lib/types";
 import { orpc } from "@/utils/orpc";
-
-/** Kebab case: lowercase words joined by single hyphens; a trailing hyphen is
- * kept while typing so the next word can follow. */
-function toKebabCase(value: string): string {
-  return value
-    .toLowerCase()
-    .replace(/[^a-z0-9-]+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-+/, "");
-}
+import { generateSlug, normalizeSlugInput } from "@/utils/slug";
 
 export const Route = createFileRoute("/onboarding")({
   // Client-only: the session check needs the browser cookie.
@@ -47,15 +43,23 @@ export const Route = createFileRoute("/onboarding")({
   component: OnboardingPage,
 });
 
+const onboardingFormOpts = formOptions({
+  defaultValues: {
+    name: "",
+    slug: "",
+    slugLocked: true,
+  } satisfies CreateOrganizationFormType as CreateOrganizationFormType,
+});
+
 function OnboardingPage() {
   const { queryClient } = Route.useRouteContext();
   const navigate = useNavigate();
   const [formError, setFormError] = useState<string>();
 
-  const form = useForm({
-    defaultValues: {
-      name: "",
-      slug: "",
+  const form = useAppForm({
+    ...onboardingFormOpts,
+    validators: {
+      onSubmit: CreateOrganizationFormSchema,
     },
     onSubmit: async ({ value }) => {
       setFormError(undefined);
@@ -74,18 +78,6 @@ function OnboardingPage() {
         params: { orgSlug: value.slug },
       });
     },
-    validators: {
-      onSubmit: z.object({
-        name: z.string().min(2, "Name must be at least 2 characters"),
-        slug: z
-          .string()
-          .min(2, "Slug must be at least 2 characters")
-          .regex(
-            /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-            "Use kebab case: lowercase words joined by single hyphens"
-          ),
-      }),
-    },
   });
 
   return (
@@ -99,77 +91,93 @@ function OnboardingPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form
-            className="space-y-4"
-            onSubmit={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              form.handleSubmit();
-            }}
-          >
-            <form.Field name="name">
-              {(field) => (
-                <div className="space-y-2">
-                  <Label htmlFor={field.name}>Organization name</Label>
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    value={field.state.value}
-                  />
-                  {field.state.meta.errors.map((error) => (
-                    <p className="text-red-500" key={error?.message}>
-                      {error?.message}
-                    </p>
-                  ))}
-                </div>
-              )}
-            </form.Field>
-
-            <form.Field name="slug">
-              {(field) => (
-                <div className="space-y-2">
-                  <Label htmlFor={field.name}>Slug</Label>
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    onBlur={field.handleBlur}
-                    onChange={(e) =>
-                      field.handleChange(toKebabCase(e.target.value))
-                    }
-                    value={field.state.value}
-                  />
-                  {field.state.meta.errors.map((error) => (
-                    <p className="text-red-500" key={error?.message}>
-                      {error?.message}
-                    </p>
-                  ))}
-                </div>
-              )}
-            </form.Field>
-
-            {formError ? (
-              <p className="text-red-500 text-sm">{formError}</p>
-            ) : null}
-
-            <form.Subscribe
-              selector={(state) => ({
-                canSubmit: state.canSubmit,
-                isSubmitting: state.isSubmitting,
-              })}
+          <form.AppForm>
+            <form
+              className="space-y-4"
+              onSubmit={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                form.handleSubmit();
+              }}
             >
-              {({ canSubmit, isSubmitting }) => (
-                <Button
-                  className="w-full"
-                  disabled={!canSubmit || isSubmitting}
-                  type="submit"
-                >
-                  {isSubmitting ? "Creating..." : "Create organization"}
-                </Button>
-              )}
-            </form.Subscribe>
-          </form>
+              <form.AppField
+                listeners={{
+                  onChange: ({ value }) => {
+                    if (form.getFieldValue("slugLocked")) {
+                      form.setFieldValue("slug", generateSlug(value));
+                    }
+                  },
+                }}
+                name="name"
+              >
+                {(field) => <field.Input label="Organization name" />}
+              </form.AppField>
+
+              <form.Subscribe selector={(state) => state.values.slugLocked}>
+                {(slugLocked) => (
+                  <form.AppField
+                    listeners={{
+                      onChange: ({ value }) => {
+                        const next = normalizeSlugInput(value);
+                        if (next !== value) {
+                          form.setFieldValue("slug", next);
+                        }
+                      },
+                    }}
+                    name="slug"
+                  >
+                    {(field) => (
+                      <field.InputGroup
+                        description="Only a-z, 0-9 and hyphens are allowed."
+                        label="Slug"
+                      >
+                        <field.InputGroupInput
+                          disabled={slugLocked}
+                          placeholder="acme-inc"
+                        />
+                        <InputGroupAddon align="inline-end">
+                          <InputGroupButton
+                            aria-label={
+                              slugLocked ? "Unlock slug" : "Lock slug"
+                            }
+                            onClick={() => {
+                              form.setFieldValue("slugLocked", !slugLocked);
+                            }}
+                            size="icon-xs"
+                            title={slugLocked ? "Unlock slug" : "Lock slug"}
+                            type="button"
+                          >
+                            {slugLocked ? <LockIcon /> : <LockOpenIcon />}
+                          </InputGroupButton>
+                        </InputGroupAddon>
+                      </field.InputGroup>
+                    )}
+                  </form.AppField>
+                )}
+              </form.Subscribe>
+
+              {formError ? (
+                <p className="text-red-500 text-sm">{formError}</p>
+              ) : null}
+
+              <form.Subscribe
+                selector={(state) => ({
+                  canSubmit: state.canSubmit,
+                  isSubmitting: state.isSubmitting,
+                })}
+              >
+                {({ canSubmit, isSubmitting }) => (
+                  <Button
+                    className="w-full"
+                    disabled={!canSubmit || isSubmitting}
+                    type="submit"
+                  >
+                    {isSubmitting ? "Creating..." : "Create organization"}
+                  </Button>
+                )}
+              </form.Subscribe>
+            </form>
+          </form.AppForm>
         </CardContent>
       </Card>
     </div>
