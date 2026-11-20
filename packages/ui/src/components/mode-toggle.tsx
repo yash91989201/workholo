@@ -1,4 +1,4 @@
-import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
+import { IconDeviceDesktop, IconMoon, IconSun } from "@tabler/icons-react";
 
 import { Button } from "./button";
 import {
@@ -15,21 +15,21 @@ export function ModeToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger render={<Button size="icon" variant="ghost" />}>
-        <SunIcon className="dark:hidden" />
-        <MoonIcon className="hidden dark:block" />
+        <IconSun className="dark:hidden" />
+        <IconMoon className="hidden dark:block" />
         <span className="sr-only">Toggle theme</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" sideOffset={8}>
         <DropdownMenuItem onClick={() => setTheme("light")}>
-          <SunIcon />
+          <IconSun />
           Light
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("dark")}>
-          <MoonIcon />
+          <IconMoon />
           Dark
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")}>
-          <MonitorIcon />
+          <IconDeviceDesktop />
           System
         </DropdownMenuItem>
       </DropdownMenuContent>

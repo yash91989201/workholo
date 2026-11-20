@@ -1,3 +1,4 @@
+import { IconChevronRight, type TablerIcon } from "@tabler/icons-react";
 import { Link, linkOptions, useLocation } from "@tanstack/react-router";
 import {
   Collapsible,
@@ -14,7 +15,6 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@workholo/ui/components/sidebar";
-import { ChevronRightIcon, type LucideIcon } from "lucide-react";
 
 export type OrgPath =
   | "/$orgSlug"
@@ -26,7 +26,7 @@ export type OrgPath =
 
 export type NavEntry = {
   title: string;
-  icon: LucideIcon;
+  icon: TablerIcon;
   to?: OrgPath;
   items?: { title: string; to: OrgPath }[];
 };
@@ -65,7 +65,7 @@ export function NavMain({
                   >
                     <item.icon />
                     <span>{item.title}</span>
-                    <ChevronRightIcon className="ml-auto transition-transform duration-200 [[data-panel-open]_&]:rotate-90" />
+                    <IconChevronRight className="ml-auto transition-transform duration-200 [[data-panel-open]_&]:rotate-90" />
                   </CollapsibleTrigger>
                   <CollapsibleContent>
                     <SidebarMenuSub>

@@ -1,3 +1,4 @@
+import { IconBuilding, IconLogout } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import {
   Avatar,
@@ -14,7 +15,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@workholo/ui/components/dropdown-menu";
-import { Building2Icon, LogOutIcon } from "lucide-react";
 
 import { authClient } from "@/lib/auth-client";
 
@@ -68,7 +68,7 @@ export function NavUser({ user, org }: NavUserProps) {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <div className="flex items-center gap-2 px-2 py-1.5 text-sm">
-            <Building2Icon className="size-4 text-muted-foreground" />
+            <IconBuilding className="size-4 text-muted-foreground" />
             <span className="flex-1 truncate">{org.name}</span>
             <Badge className="capitalize" variant="secondary">
               {org.role}
@@ -87,7 +87,7 @@ export function NavUser({ user, org }: NavUserProps) {
             });
           }}
         >
-          <LogOutIcon />
+          <IconLogout />
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>

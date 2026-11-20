@@ -1,3 +1,4 @@
+import { IconBuilding, IconSelector } from "@tabler/icons-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +13,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@workholo/ui/components/sidebar";
-import { Building2Icon, ChevronsUpDownIcon } from "lucide-react";
 
 export function TeamSwitcher({
   team,
@@ -32,13 +32,13 @@ export function TeamSwitcher({
             }
           >
             <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-              <Building2Icon className="size-4" />
+              <IconBuilding className="size-4" />
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium">{team.name}</span>
               <span className="truncate text-xs">{team.slug}</span>
             </div>
-            <ChevronsUpDownIcon className="ml-auto" />
+            <IconSelector className="ml-auto" />
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="start"
@@ -52,7 +52,7 @@ export function TeamSwitcher({
               </DropdownMenuLabel>
               <DropdownMenuItem className="gap-2 p-2">
                 <div className="flex size-6 items-center justify-center rounded-md border">
-                  <Building2Icon className="size-3.5 shrink-0" />
+                  <IconBuilding className="size-3.5 shrink-0" />
                 </div>
                 {team.name}
               </DropdownMenuItem>

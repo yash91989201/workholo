@@ -1,10 +1,14 @@
 import {
+  IconLayoutDashboard,
+  IconUsers,
+  IconUsersGroup,
+} from "@tabler/icons-react";
+import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
   SidebarRail,
 } from "@workholo/ui/components/sidebar";
-import { LayoutDashboardIcon, UsersIcon, UsersRoundIcon } from "lucide-react";
 
 import { type NavEntry, NavMain } from "./nav-main";
 import { TeamSwitcher } from "./team-switcher";
@@ -17,11 +21,11 @@ const navMain: NavEntry[] = [
   {
     title: "Dashboard",
     to: "/$orgSlug",
-    icon: LayoutDashboardIcon,
+    icon: IconLayoutDashboard,
   },
   {
     title: "Users",
-    icon: UsersIcon,
+    icon: IconUsers,
     items: [
       { title: "All users", to: "/$orgSlug/users" },
       { title: "Add user", to: "/$orgSlug/users/add" },
@@ -30,7 +34,7 @@ const navMain: NavEntry[] = [
   },
   {
     title: "Teams",
-    icon: UsersRoundIcon,
+    icon: IconUsersGroup,
     items: [
       { title: "Teams", to: "/$orgSlug/teams" },
       { title: "Members", to: "/$orgSlug/teams/members" },

@@ -1,3 +1,4 @@
+import { IconDots } from "@tabler/icons-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -10,7 +11,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@workholo/ui/components/dropdown-menu";
-import { MoreHorizontalIcon } from "lucide-react";
 import { toast } from "sonner";
 
 import { authClient } from "@/lib/auth-client";
@@ -106,7 +106,7 @@ function UsersPage() {
             <DropdownMenuTrigger
               render={<Button size="icon-sm" variant="ghost" />}
             >
-              <MoreHorizontalIcon />
+              <IconDots />
               <span className="sr-only">Open actions</span>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

@@ -1,3 +1,4 @@
+import { IconLock, IconLockOpen } from "@tabler/icons-react";
 import { formOptions } from "@tanstack/react-form";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { Button } from "@workholo/ui/components/button";
@@ -13,7 +14,6 @@ import {
   InputGroupButton,
 } from "@workholo/ui/components/form/form-input-group";
 import { useAppForm } from "@workholo/ui/components/form/hooks";
-import { LockIcon, LockOpenIcon } from "lucide-react";
 import { useState } from "react";
 
 import { authClient } from "@/lib/auth-client";
@@ -147,7 +147,7 @@ function OnboardingPage() {
                             title={slugLocked ? "Unlock slug" : "Lock slug"}
                             type="button"
                           >
-                            {slugLocked ? <LockIcon /> : <LockOpenIcon />}
+                            {slugLocked ? <IconLock /> : <IconLockOpen />}
                           </InputGroupButton>
                         </InputGroupAddon>
                       </field.InputGroup>

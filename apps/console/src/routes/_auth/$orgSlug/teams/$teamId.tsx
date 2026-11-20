@@ -1,3 +1,4 @@
+import { IconArrowLeft } from "@tabler/icons-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -11,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@workholo/ui/components/select";
-import { ArrowLeftIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -84,7 +84,7 @@ function TeamDetailPage() {
         size="sm"
         variant="ghost"
       >
-        <ArrowLeftIcon /> All teams
+        <IconArrowLeft /> All teams
       </Button>
       <div className="flex items-end justify-between gap-4">
         <div>

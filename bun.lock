@@ -60,6 +60,7 @@
       "dependencies": {
         "@orpc/client": "catalog:",
         "@orpc/tanstack-query": "catalog:",
+        "@tabler/icons-react": "catalog:",
         "@tailwindcss/vite": "^4.3.5",
         "@tanstack/react-form": "catalog:",
         "@tanstack/react-query": "catalog:",
@@ -72,7 +73,6 @@
         "@workholo/auth-client": "workspace:*",
         "@workholo/ui": "workspace:*",
         "better-auth": "catalog:",
-        "lucide-react": "catalog:",
         "nitro": "3.0.261103-rc",
         "react": "^19.3.1",
         "react-dom": "^19.3.1",
@@ -333,7 +333,7 @@
         "@fontsource-variable/geist": "^5.3.0",
         "@fontsource-variable/public-sans": "^5.3.0",
         "@shadcn/react": "^0.3.1",
-        "@tabler/icons-react": "^3.52.0",
+        "@tabler/icons-react": "catalog:",
         "@tanstack/react-form": "catalog:",
         "@tanstack/react-table": "catalog:",
         "class-variance-authority": "^0.7.1",
@@ -342,7 +342,6 @@
         "date-fns": "^4.4.0",
         "embla-carousel-react": "^8.6.0",
         "input-otp": "^1.5.0",
-        "lucide-react": "catalog:",
         "next-themes": "catalog:",
         "react": "^19.3.1",
         "react-day-picker": "^10.0.2",
@@ -377,6 +376,7 @@
     "@orpc/server": "^1.16.2",
     "@orpc/tanstack-query": "^1.16.2",
     "@orpc/zod": "^1.16.2",
+    "@tabler/icons-react": "^3.52.0",
     "@tanstack/react-form": "^1.33.5",
     "@tanstack/react-query": "^5.107.1",
     "@tanstack/react-table": "^8.21.3",
@@ -384,7 +384,6 @@
     "@types/react-dom": "^19.3.0",
     "better-auth": "1.7.22",
     "drizzle-orm": "1.0.0-rc.5",
-    "lucide-react": "^1.72.0",
     "next-themes": "^0.4.6",
     "sonner": "^2.0.8",
     "tailwindcss": "^4.3.5",
@@ -2135,8 +2134,6 @@
     "loose-envify": ["loose-envify@1.4.0", "", { "dependencies": { "js-tokens": "^3.0.0 || ^4.0.0" }, "bin": { "loose-envify": "cli.js" } }, "sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q=="],
 
     "lru-cache": ["lru-cache@11.5.3", "", {}, "sha512-U4N8FgzmWxc8k1VH8Kr6lQg18U7Fjvby6wXHVRX/ZZ7IwWbRMgrRbP0Wrb5q5NVinryp4SQampHKdvtecItxUg=="],
-
-    "lucide-react": ["lucide-react@1.73.0", "", { "peerDependencies": { "@types/react": "*", "react": "^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0" }, "optionalPeers": ["@types/react"] }, "sha512-fVOzGviL9mTfHenG1PbCfIceavyGlnpYNSYr+aGZHLRymAJ7DTP6KHuqt0uBkCKAoenr1UVkwSbDIYt2xIesEQ=="],
 
     "magic-string": ["magic-string@1.4.5", "", { "dependencies": { "@jridgewell/sourcemap-codec": "^1.6.0" } }, "sha512-oLLC2+YvQUfAa+vxoufE/yc1icb87M9iXIRqAoR/2EhE/8cb3SF/+Gi0c2By1B+5Vz2e2vQtUvHiu1+63Znh+w=="],
 
