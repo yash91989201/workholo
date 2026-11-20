@@ -1,6 +1,7 @@
 import {
   IconAddressBook,
   IconLayoutDashboard,
+  IconListCheck,
   IconUsers,
   IconUsersGroup,
 } from "@tabler/icons-react";
@@ -45,6 +46,11 @@ const navMain: NavEntry[] = [
     title: "Leads",
     to: "/$orgSlug/leads",
     icon: IconAddressBook,
+  },
+  {
+    title: "Dispositions",
+    to: "/$orgSlug/dispositions",
+    icon: IconListCheck,
   },
 ];
 

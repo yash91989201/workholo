@@ -5,6 +5,12 @@ import { QueryCache, QueryClient } from "@tanstack/react-query";
 import type { AppRouterClient } from "@workholo/api/routers/index";
 
 export type {
+  ActiveDispositionEntryRow,
+  ActiveDispositionListRow,
+  DispositionEntryRow,
+  DispositionListRow,
+} from "@workholo/api/routers/dispositions";
+export type {
   ActiveLeadListRow,
   ImportLeadRow,
   LeadListRow,

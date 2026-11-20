@@ -7,6 +7,28 @@ import type {
   ListRecordingsOutputSchema,
 } from "./schemas/calls";
 import type {
+  AddDispositionEntryInputSchema,
+  AddDispositionEntryOutputSchema,
+  ArchiveDispositionListInputSchema,
+  ArchiveDispositionListOutputSchema,
+  CreateDispositionListInputSchema,
+  CreateDispositionListOutputSchema,
+  GetDispositionEntryInputSchema,
+  GetDispositionEntryOutputSchema,
+  GetDispositionListInputSchema,
+  GetDispositionListOutputSchema,
+  ListActiveDispositionEntriesInputSchema,
+  ListActiveDispositionEntriesOutputSchema,
+  ListActiveDispositionListsInputSchema,
+  ListActiveDispositionListsOutputSchema,
+  ListDispositionListsInputSchema,
+  ListDispositionListsOutputSchema,
+  RetireDispositionEntryInputSchema,
+  RetireDispositionEntryOutputSchema,
+  UpdateDispositionListInputSchema,
+  UpdateDispositionListOutputSchema,
+} from "./schemas/dispositions";
+import type {
   CheckHealthOutputSchema,
   GetPrivateDataOutputSchema,
 } from "./schemas/index";
@@ -55,21 +77,35 @@ import type {
 } from "./schemas/platform";
 import type { SessionUserSchema } from "./schemas/shared";
 
+export type AddDispositionEntryInputType = z.infer<typeof AddDispositionEntryInputSchema>;
+export type AddDispositionEntryOutputType = z.infer<typeof AddDispositionEntryOutputSchema>;
 export type AddLeadInputType = z.infer<typeof AddLeadInputSchema>;
 export type AddLeadOutputType = z.infer<typeof AddLeadOutputSchema>;
+export type ArchiveDispositionListInputType = z.infer<typeof ArchiveDispositionListInputSchema>;
+export type ArchiveDispositionListOutputType = z.infer<typeof ArchiveDispositionListOutputSchema>;
 export type ArchiveLeadListInputType = z.infer<typeof ArchiveLeadListInputSchema>;
 export type ArchiveLeadListOutputType = z.infer<typeof ArchiveLeadListOutputSchema>;
 export type CheckHealthOutputType = z.infer<typeof CheckHealthOutputSchema>;
+export type CreateDispositionListInputType = z.infer<typeof CreateDispositionListInputSchema>;
+export type CreateDispositionListOutputType = z.infer<typeof CreateDispositionListOutputSchema>;
 export type CreateLeadListInputType = z.infer<typeof CreateLeadListInputSchema>;
 export type CreateLeadListOutputType = z.infer<typeof CreateLeadListOutputSchema>;
 export type DeleteOrganizationInputType = z.infer<typeof DeleteOrganizationInputSchema>;
 export type DeleteOrganizationOutputType = z.infer<typeof DeleteOrganizationOutputSchema>;
+export type GetDispositionEntryInputType = z.infer<typeof GetDispositionEntryInputSchema>;
+export type GetDispositionEntryOutputType = z.infer<typeof GetDispositionEntryOutputSchema>;
+export type GetDispositionListInputType = z.infer<typeof GetDispositionListInputSchema>;
+export type GetDispositionListOutputType = z.infer<typeof GetDispositionListOutputSchema>;
 export type GetLeadListInputType = z.infer<typeof GetLeadListInputSchema>;
 export type GetLeadListOutputType = z.infer<typeof GetLeadListOutputSchema>;
 export type GetMeOutputType = z.infer<typeof GetMeOutputSchema>;
 export type GetPrivateDataOutputType = z.infer<typeof GetPrivateDataOutputSchema>;
 export type ImportLeadsInputType = z.infer<typeof ImportLeadsInputSchema>;
 export type ImportLeadsOutputType = z.infer<typeof ImportLeadsOutputSchema>;
+export type ListActiveDispositionEntriesInputType = z.infer<typeof ListActiveDispositionEntriesInputSchema>;
+export type ListActiveDispositionEntriesOutputType = z.infer<typeof ListActiveDispositionEntriesOutputSchema>;
+export type ListActiveDispositionListsInputType = z.infer<typeof ListActiveDispositionListsInputSchema>;
+export type ListActiveDispositionListsOutputType = z.infer<typeof ListActiveDispositionListsOutputSchema>;
 export type ListActiveLeadListsInputType = z.infer<typeof ListActiveLeadListsInputSchema>;
 export type ListActiveLeadListsOutputType = z.infer<typeof ListActiveLeadListsOutputSchema>;
 export type ListActiveLeadsInputType = z.infer<typeof ListActiveLeadsInputSchema>;
@@ -78,6 +114,8 @@ export type ListCallsInputType = z.infer<typeof ListCallsInputSchema>;
 export type ListCallsOutputType = z.infer<typeof ListCallsOutputSchema>;
 export type ListDirectoryInputType = z.infer<typeof ListDirectoryInputSchema>;
 export type ListDirectoryOutputType = z.infer<typeof ListDirectoryOutputSchema>;
+export type ListDispositionListsInputType = z.infer<typeof ListDispositionListsInputSchema>;
+export type ListDispositionListsOutputType = z.infer<typeof ListDispositionListsOutputSchema>;
 export type ListInvitationsInputType = z.infer<typeof ListInvitationsInputSchema>;
 export type ListInvitationsOutputType = z.infer<typeof ListInvitationsOutputSchema>;
 export type ListLeadListsInputType = z.infer<typeof ListLeadListsInputSchema>;
@@ -94,8 +132,12 @@ export type RemoveLeadInputType = z.infer<typeof RemoveLeadInputSchema>;
 export type RemoveLeadOutputType = z.infer<typeof RemoveLeadOutputSchema>;
 export type RestoreOrganizationInputType = z.infer<typeof RestoreOrganizationInputSchema>;
 export type RestoreOrganizationOutputType = z.infer<typeof RestoreOrganizationOutputSchema>;
+export type RetireDispositionEntryInputType = z.infer<typeof RetireDispositionEntryInputSchema>;
+export type RetireDispositionEntryOutputType = z.infer<typeof RetireDispositionEntryOutputSchema>;
 export type SessionUserType = z.infer<typeof SessionUserSchema>;
 export type SuspendOrganizationInputType = z.infer<typeof SuspendOrganizationInputSchema>;
 export type SuspendOrganizationOutputType = z.infer<typeof SuspendOrganizationOutputSchema>;
+export type UpdateDispositionListInputType = z.infer<typeof UpdateDispositionListInputSchema>;
+export type UpdateDispositionListOutputType = z.infer<typeof UpdateDispositionListOutputSchema>;
 export type UpdateLeadListInputType = z.infer<typeof UpdateLeadListInputSchema>;
 export type UpdateLeadListOutputType = z.infer<typeof UpdateLeadListOutputSchema>;

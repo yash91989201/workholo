@@ -1,0 +1,547 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "923e5915-620a-4dfa-88e6-9ccd68d42ad7",
+  "prevIds": ["42c3bbbb-eec1-44ec-8440-801fe7805ecb"],
+  "footprints": [
+    {
+      "statementType": "create_table",
+      "statementTarget": ["table", "public", "disposition_entry"],
+      "writes": [
+        "s|tbl|public.disposition_entry",
+        "n|tbl|public.disposition_entry",
+        "e|tbl|public.disposition_entry",
+        "n|rel|public.disposition_entry",
+        "n|type|public.disposition_entry",
+        "n|rel|public.disposition_entry_pkey"
+      ],
+      "reads": ["n|sch|public"]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": ["table", "public", "disposition_list"],
+      "writes": [
+        "s|tbl|public.disposition_list",
+        "n|tbl|public.disposition_list",
+        "e|tbl|public.disposition_list",
+        "n|rel|public.disposition_list",
+        "n|type|public.disposition_list",
+        "n|rel|public.disposition_list_pkey"
+      ],
+      "reads": ["n|sch|public"]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "disposition_entry",
+        "dispositionEntry_listId_idx"
+      ],
+      "writes": [
+        "s|idx|public.dispositionEntry_listId_idx",
+        "n|idx|public.dispositionEntry_listId_idx",
+        "e|idx|public.dispositionEntry_listId_idx",
+        "n|rel|public.dispositionEntry_listId_idx"
+      ],
+      "reads": [
+        "n|tbl|public.disposition_entry",
+        "n|sch|public",
+        "n|col|public.disposition_entry.list_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "disposition_entry",
+        "dispositionEntry_code_uidx"
+      ],
+      "writes": [
+        "s|idx|public.dispositionEntry_code_uidx",
+        "n|idx|public.dispositionEntry_code_uidx",
+        "e|idx|public.dispositionEntry_code_uidx",
+        "n|rel|public.dispositionEntry_code_uidx"
+      ],
+      "reads": [
+        "n|tbl|public.disposition_entry",
+        "n|sch|public",
+        "n|col|public.disposition_entry.list_id",
+        "n|col|public.disposition_entry.code"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "disposition_entry",
+        "dispositionEntry_label_uidx"
+      ],
+      "writes": [
+        "s|idx|public.dispositionEntry_label_uidx",
+        "n|idx|public.dispositionEntry_label_uidx",
+        "e|idx|public.dispositionEntry_label_uidx",
+        "n|rel|public.dispositionEntry_label_uidx"
+      ],
+      "reads": [
+        "n|tbl|public.disposition_entry",
+        "n|sch|public",
+        "n|col|public.disposition_entry.list_id",
+        "n|col|public.disposition_entry.label"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "disposition_list",
+        "dispositionList_organizationId_idx"
+      ],
+      "writes": [
+        "s|idx|public.dispositionList_organizationId_idx",
+        "n|idx|public.dispositionList_organizationId_idx",
+        "e|idx|public.dispositionList_organizationId_idx",
+        "n|rel|public.dispositionList_organizationId_idx"
+      ],
+      "reads": [
+        "n|tbl|public.disposition_list",
+        "n|sch|public",
+        "n|col|public.disposition_list.organization_id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": ["table", "public", "disposition_entry"],
+      "writes": [
+        "s|fk|public.disposition_entry.disposition_entry_list_id_disposition_list_id_fkey",
+        "n|fk|public.disposition_entry.disposition_entry_list_id_disposition_list_id_fkey",
+        "e|fk|public.disposition_entry.disposition_entry_list_id_disposition_list_id_fkey",
+        "n|con|public.disposition_entry.disposition_entry_list_id_disposition_list_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.disposition_entry",
+        "n|sch|public",
+        "n|tbl|public.disposition_list",
+        "n|sch|public",
+        "n|col|public.disposition_entry.list_id",
+        "n|col|public.disposition_list.id",
+        "e|uniqueness|public.disposition_list.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": ["table", "public", "disposition_list"],
+      "writes": [
+        "s|fk|public.disposition_list.disposition_list_organization_id_organization_id_fkey",
+        "n|fk|public.disposition_list.disposition_list_organization_id_organization_id_fkey",
+        "e|fk|public.disposition_list.disposition_list_organization_id_organization_id_fkey",
+        "n|con|public.disposition_list.disposition_list_organization_id_organization_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.disposition_list",
+        "n|sch|public",
+        "n|tbl|public.organization",
+        "n|sch|public",
+        "n|col|public.disposition_list.organization_id",
+        "n|col|public.organization.id",
+        "e|uniqueness|public.organization.id"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "disposition_entry",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "disposition_list",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "disposition_entry",
+        "name": "id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "disposition_entry",
+        "name": "list_id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "disposition_entry",
+        "name": "code",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "disposition_entry",
+        "name": "label",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "disposition_entry",
+        "name": "retired_at",
+        "type": "timestamp",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "disposition_entry",
+        "name": "created_at",
+        "type": "timestamp",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "disposition_list",
+        "name": "id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "disposition_list",
+        "name": "organization_id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "disposition_list",
+        "name": "name",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "disposition_list",
+        "name": "description",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "disposition_list",
+        "name": "archived_at",
+        "type": "timestamp",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "disposition_list",
+        "name": "created_at",
+        "type": "timestamp",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "disposition_list",
+        "name": "updated_at",
+        "type": "timestamp",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "disposition_entry",
+        "name": "dispositionEntry_listId_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "list_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "disposition_entry",
+        "name": "dispositionEntry_code_uidx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "list_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "code",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": true,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "disposition_entry",
+        "name": "dispositionEntry_label_uidx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "list_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "label",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": true,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "disposition_list",
+        "name": "dispositionList_organizationId_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "organization_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "disposition_entry",
+        "name": "disposition_entry_list_id_disposition_list_id_fkey",
+        "nameExplicit": false,
+        "columns": ["list_id"],
+        "schemaTo": "public",
+        "tableTo": "disposition_list",
+        "columnsTo": ["id"],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "disposition_list",
+        "name": "disposition_list_organization_id_organization_id_fkey",
+        "nameExplicit": false,
+        "columns": ["organization_id"],
+        "schemaTo": "public",
+        "tableTo": "organization",
+        "columnsTo": ["id"],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "disposition_entry",
+        "name": "disposition_entry_pkey",
+        "columns": ["id"],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "disposition_list",
+        "name": "disposition_list_pkey",
+        "columns": ["id"],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    }
+  ]
+}

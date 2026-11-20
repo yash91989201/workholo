@@ -11,12 +11,17 @@ export const AUDIT_ACTIONS = [
   "lead_list.lead_add",
   "lead_list.lead_remove",
   "lead_list.import",
+  "disposition_list.create",
+  "disposition_list.update",
+  "disposition_list.archive",
+  "disposition_list.entry_add",
+  "disposition_list.entry_retire",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 
 export type AuditTarget = {
-  type: "organization" | "user" | "lead_list";
+  type: "organization" | "user" | "lead_list" | "disposition_list";
   id: string;
   /** Owning organization for resource targets. */
   organizationId?: string;

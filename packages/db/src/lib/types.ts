@@ -38,6 +38,14 @@ import type {
   RecordingUpdateSchema,
 } from "./models/calls";
 import type {
+  DispositionEntryInsertSchema,
+  DispositionEntryModelSchema,
+  DispositionEntryUpdateSchema,
+  DispositionListInsertSchema,
+  DispositionListModelSchema,
+  DispositionListUpdateSchema,
+} from "./models/dispositions";
+import type {
   LeadInsertSchema,
   LeadListInsertSchema,
   LeadListModelSchema,
@@ -52,6 +60,12 @@ export type AccountUpdateType = z.infer<typeof AccountUpdateSchema>;
 export type CallInsertType = z.infer<typeof CallInsertSchema>;
 export type CallModelType = z.infer<typeof CallModelSchema>;
 export type CallUpdateType = z.infer<typeof CallUpdateSchema>;
+export type DispositionEntryInsertType = z.infer<typeof DispositionEntryInsertSchema>;
+export type DispositionEntryModelType = z.infer<typeof DispositionEntryModelSchema>;
+export type DispositionEntryUpdateType = z.infer<typeof DispositionEntryUpdateSchema>;
+export type DispositionListInsertType = z.infer<typeof DispositionListInsertSchema>;
+export type DispositionListModelType = z.infer<typeof DispositionListModelSchema>;
+export type DispositionListUpdateType = z.infer<typeof DispositionListUpdateSchema>;
 export type InvitationInsertType = z.infer<typeof InvitationInsertSchema>;
 export type InvitationModelType = z.infer<typeof InvitationModelSchema>;
 export type InvitationUpdateType = z.infer<typeof InvitationUpdateSchema>;

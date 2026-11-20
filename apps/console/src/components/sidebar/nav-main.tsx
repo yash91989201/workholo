@@ -23,7 +23,8 @@ export type OrgPath =
   | "/$orgSlug/users/pending"
   | "/$orgSlug/teams"
   | "/$orgSlug/teams/members"
-  | "/$orgSlug/leads";
+  | "/$orgSlug/leads"
+  | "/$orgSlug/dispositions";
 
 export type NavEntry = {
   title: string;

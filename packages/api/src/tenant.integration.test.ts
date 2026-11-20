@@ -123,6 +123,9 @@ describe("tenant request path", () => {
   let pendingInvitationId = "";
   let cancelledInvitationId = "";
   let leadListId = "";
+  let dispositionListId = "";
+  let dispositionEntryId = "";
+  let dispositionCallbackId = "";
 
   beforeAll(async () => {
     db = createDb({ DATABASE_URL: databaseUrl() });
@@ -781,5 +784,239 @@ describe("tenant request path", () => {
       .from(lead)
       .where(eq(lead.id, removed.id));
     expect(retained[0]?.removedAt).toBeInstanceOf(Date);
+  });
+
+  test("dispositions: owners and admins manage, agents denied", async () => {
+    const ownerClient = clientFor(await getSession(owner.headers));
+    const adminClient = clientFor(await getSession(adminUser.headers));
+    const agentClient = clientFor(await getSession(agentUser.headers));
+    const outsiderClient = clientFor(await getSession(outsider.headers));
+
+    const created = await ownerClient.dispositions.createDispositionList({
+      organizationId,
+      name: "Call outcomes",
+      description: "Initial set",
+    });
+    dispositionListId = created.id;
+
+    const read = await adminClient.dispositions.getDispositionList({
+      organizationId,
+      listId: dispositionListId,
+    });
+    expect(read.name).toBe("Call outcomes");
+    expect(read.entries).toEqual([]);
+
+    await adminClient.dispositions.updateDispositionList({
+      organizationId,
+      listId: dispositionListId,
+      name: "Call outcomes v2",
+      description: null,
+    });
+    const updated = await ownerClient.dispositions.getDispositionList({
+      organizationId,
+      listId: dispositionListId,
+    });
+    expect(updated.name).toBe("Call outcomes v2");
+    expect(updated.description).toBeNull();
+
+    const rows = await ownerClient.dispositions.listDispositionLists({
+      organizationId,
+    });
+    expect(rows.map((row) => row.id)).toContain(dispositionListId);
+
+    await expect(
+      agentClient.dispositions.createDispositionList({
+        organizationId,
+        name: "Denied",
+      })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(
+      agentClient.dispositions.listDispositionLists({ organizationId })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    const outsiderCode = await outsiderClient.dispositions
+      .getDispositionList({
+        organizationId: otherOrganizationId,
+        listId: dispositionListId,
+      })
+      .then(
+        () => "allowed",
+        (error: { code?: string }) => error.code ?? "unknown"
+      );
+    expect(["FORBIDDEN", "NOT_FOUND"]).toContain(outsiderCode);
+  });
+
+  test("dispositions: codes are validated and unique within a list", async () => {
+    const ownerClient = clientFor(await getSession(owner.headers));
+
+    const added = await ownerClient.dispositions.addDispositionEntry({
+      organizationId,
+      listId: dispositionListId,
+      code: "NOT_INTERESTED",
+      label: "Not interested",
+    });
+    dispositionEntryId = added.id;
+    expect(added).toEqual({
+      id: dispositionEntryId,
+      code: "NOT_INTERESTED",
+      label: "Not interested",
+    });
+
+    await expect(
+      ownerClient.dispositions.addDispositionEntry({
+        organizationId,
+        listId: dispositionListId,
+        code: "not_interested",
+        label: "Lowercase",
+      })
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    await expect(
+      ownerClient.dispositions.addDispositionEntry({
+        organizationId,
+        listId: dispositionListId,
+        code: "NOT_INTERESTED",
+        label: "Duplicate code",
+      })
+    ).rejects.toMatchObject({ code: "CONFLICT" });
+    await expect(
+      ownerClient.dispositions.addDispositionEntry({
+        organizationId,
+        listId: dispositionListId,
+        code: "CALLBACK",
+        label: "Not interested",
+      })
+    ).rejects.toMatchObject({ code: "CONFLICT" });
+
+    const callback = await ownerClient.dispositions.addDispositionEntry({
+      organizationId,
+      listId: dispositionListId,
+      code: "CALLBACK",
+      label: "Callback later",
+    });
+    dispositionCallbackId = callback.id;
+
+    expect("updateDispositionEntry" in ownerClient.dispositions).toBe(false);
+    expect("deleteDispositionEntry" in ownerClient.dispositions).toBe(false);
+  });
+
+  test("dispositions: retirement is historical, archive hides", async () => {
+    const ownerClient = clientFor(await getSession(owner.headers));
+
+    const before = await ownerClient.dispositions.listActiveDispositionEntries({
+      organizationId,
+      listId: dispositionListId,
+    });
+    expect(before.map((row) => row.id).sort()).toEqual(
+      [dispositionEntryId, dispositionCallbackId].sort()
+    );
+
+    await ownerClient.dispositions.retireDispositionEntry({
+      organizationId,
+      listId: dispositionListId,
+      entryId: dispositionEntryId,
+    });
+
+    const active = await ownerClient.dispositions.listActiveDispositionEntries({
+      organizationId,
+      listId: dispositionListId,
+    });
+    expect(active.map((row) => row.id)).toEqual([dispositionCallbackId]);
+
+    const lists = await ownerClient.dispositions.listDispositionLists({
+      organizationId,
+    });
+    expect(lists.find((row) => row.id === dispositionListId)?.entryCount).toBe(
+      1
+    );
+
+    const detail = await ownerClient.dispositions.getDispositionList({
+      organizationId,
+      listId: dispositionListId,
+    });
+    const retired = detail.entries.find(
+      (entry) => entry.id === dispositionEntryId
+    );
+    expect(retired?.retiredAt).toBeInstanceOf(Date);
+    expect(retired?.code).toBe("NOT_INTERESTED");
+    expect(retired?.label).toBe("Not interested");
+
+    const historical = await ownerClient.dispositions.getDispositionEntry({
+      organizationId,
+      entryId: dispositionEntryId,
+    });
+    expect(historical).toMatchObject({
+      id: dispositionEntryId,
+      listId: dispositionListId,
+      code: "NOT_INTERESTED",
+      label: "Not interested",
+      listArchivedAt: null,
+    });
+    expect(historical.retiredAt).toBeInstanceOf(Date);
+    expect(historical.createdAt).toBeInstanceOf(Date);
+
+    await expect(
+      ownerClient.dispositions.addDispositionEntry({
+        organizationId,
+        listId: dispositionListId,
+        code: "NOT_INTERESTED",
+        label: "Reusing a retired code",
+      })
+    ).rejects.toMatchObject({ code: "CONFLICT" });
+
+    await ownerClient.dispositions.archiveDispositionList({
+      organizationId,
+      listId: dispositionListId,
+    });
+    const activeLists =
+      await ownerClient.dispositions.listActiveDispositionLists({
+        organizationId,
+      });
+    expect(activeLists.map((row) => row.id)).not.toContain(dispositionListId);
+    const noActiveEntries =
+      await ownerClient.dispositions.listActiveDispositionEntries({
+        organizationId,
+        listId: dispositionListId,
+      });
+    expect(noActiveEntries).toEqual([]);
+    await expect(
+      ownerClient.dispositions.addDispositionEntry({
+        organizationId,
+        listId: dispositionListId,
+        code: "AFTER_ARCHIVE",
+        label: "Too late",
+      })
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+
+    const archivedDetail = await ownerClient.dispositions.getDispositionList({
+      organizationId,
+      listId: dispositionListId,
+    });
+    expect(archivedDetail.archivedAt).toBeInstanceOf(Date);
+    const archivedHistorical =
+      await ownerClient.dispositions.getDispositionEntry({
+        organizationId,
+        entryId: dispositionEntryId,
+      });
+    expect(archivedHistorical.listArchivedAt).toBeInstanceOf(Date);
+  });
+
+  test("dispositions: every change is audited against the list", async () => {
+    const expected = [
+      { action: "disposition_list.create", actorId: owner.user.id },
+      { action: "disposition_list.update", actorId: adminUser.user.id },
+      { action: "disposition_list.entry_add", actorId: owner.user.id },
+      { action: "disposition_list.entry_retire", actorId: owner.user.id },
+      { action: "disposition_list.archive", actorId: owner.user.id },
+    ] as const;
+    for (const { action, actorId } of expected) {
+      const event = auditEvents.find(
+        (row) =>
+          row.action === action &&
+          row.target.id === dispositionListId &&
+          row.target.organizationId === organizationId
+      );
+      expect(event).toBeDefined();
+      expect(event?.actorId).toBe(actorId);
+      expect(event?.target.type).toBe("disposition_list");
+    }
   });
 });
