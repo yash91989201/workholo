@@ -1,0 +1,407 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "0629845c-c175-4f85-8ea2-6ee84127f3f1",
+  "prevIds": ["923e5915-620a-4dfa-88e6-9ccd68d42ad7"],
+  "footprints": [
+    {
+      "statementType": "create_table",
+      "statementTarget": ["table", "public", "outbound_number"],
+      "writes": [
+        "s|tbl|public.outbound_number",
+        "n|tbl|public.outbound_number",
+        "e|tbl|public.outbound_number",
+        "n|rel|public.outbound_number",
+        "n|type|public.outbound_number",
+        "n|rel|public.outbound_number_pkey"
+      ],
+      "reads": ["n|sch|public"]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": ["table", "public", "outbound_number_assignment"],
+      "writes": [
+        "s|tbl|public.outbound_number_assignment",
+        "n|tbl|public.outbound_number_assignment",
+        "e|tbl|public.outbound_number_assignment",
+        "n|rel|public.outbound_number_assignment",
+        "n|type|public.outbound_number_assignment",
+        "n|rel|public.outbound_number_assignment_pkey"
+      ],
+      "reads": ["n|sch|public"]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "outbound_number",
+        "outboundNumber_number_uidx"
+      ],
+      "writes": [
+        "s|idx|public.outboundNumber_number_uidx",
+        "n|idx|public.outboundNumber_number_uidx",
+        "e|idx|public.outboundNumber_number_uidx",
+        "n|rel|public.outboundNumber_number_uidx"
+      ],
+      "reads": [
+        "n|tbl|public.outbound_number",
+        "n|sch|public",
+        "n|col|public.outbound_number.number"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "outbound_number_assignment",
+        "outboundNumberAssignment_numberId_uidx"
+      ],
+      "writes": [
+        "s|idx|public.outboundNumberAssignment_numberId_uidx",
+        "n|idx|public.outboundNumberAssignment_numberId_uidx",
+        "e|idx|public.outboundNumberAssignment_numberId_uidx",
+        "n|rel|public.outboundNumberAssignment_numberId_uidx"
+      ],
+      "reads": [
+        "n|tbl|public.outbound_number_assignment",
+        "n|sch|public",
+        "n|col|public.outbound_number_assignment.number_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "outbound_number_assignment",
+        "outboundNumberAssignment_organizationId_idx"
+      ],
+      "writes": [
+        "s|idx|public.outboundNumberAssignment_organizationId_idx",
+        "n|idx|public.outboundNumberAssignment_organizationId_idx",
+        "e|idx|public.outboundNumberAssignment_organizationId_idx",
+        "n|rel|public.outboundNumberAssignment_organizationId_idx"
+      ],
+      "reads": [
+        "n|tbl|public.outbound_number_assignment",
+        "n|sch|public",
+        "n|col|public.outbound_number_assignment.organization_id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": ["table", "public", "outbound_number_assignment"],
+      "writes": [
+        "s|fk|public.outbound_number_assignment.outbound_number_assignment_number_id_outbound_number_id_fkey",
+        "n|fk|public.outbound_number_assignment.outbound_number_assignment_number_id_outbound_number_id_fkey",
+        "e|fk|public.outbound_number_assignment.outbound_number_assignment_number_id_outbound_number_id_fkey",
+        "n|con|public.outbound_number_assignment.outbound_number_assignment_number_id_outbound_number_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.outbound_number_assignment",
+        "n|sch|public",
+        "n|tbl|public.outbound_number",
+        "n|sch|public",
+        "n|col|public.outbound_number_assignment.number_id",
+        "n|col|public.outbound_number.id",
+        "e|uniqueness|public.outbound_number.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": ["table", "public", "outbound_number_assignment"],
+      "writes": [
+        "s|fk|public.outbound_number_assignment.outbound_number_assignment_organization_id_organization_id_fkey",
+        "n|fk|public.outbound_number_assignment.outbound_number_assignment_organization_id_organization_id_fkey",
+        "e|fk|public.outbound_number_assignment.outbound_number_assignment_organization_id_organization_id_fkey",
+        "n|con|public.outbound_number_assignment.outbound_number_assignment_organization_id_organization_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.outbound_number_assignment",
+        "n|sch|public",
+        "n|tbl|public.organization",
+        "n|sch|public",
+        "n|col|public.outbound_number_assignment.organization_id",
+        "n|col|public.organization.id",
+        "e|uniqueness|public.organization.id"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "outbound_number",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "outbound_number_assignment",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "outbound_number",
+        "name": "id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "outbound_number",
+        "name": "number",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "outbound_number",
+        "name": "enabled",
+        "type": "boolean",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "true",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "outbound_number",
+        "name": "created_at",
+        "type": "timestamp",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "outbound_number_assignment",
+        "name": "id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "outbound_number_assignment",
+        "name": "number_id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "outbound_number_assignment",
+        "name": "organization_id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "outbound_number_assignment",
+        "name": "assigned_at",
+        "type": "timestamp",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "outbound_number",
+        "name": "outboundNumber_number_uidx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "number",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": true,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "outbound_number_assignment",
+        "name": "outboundNumberAssignment_numberId_uidx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "number_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": true,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "outbound_number_assignment",
+        "name": "outboundNumberAssignment_organizationId_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "organization_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "outbound_number_assignment",
+        "name": "outbound_number_assignment_number_id_outbound_number_id_fkey",
+        "nameExplicit": false,
+        "columns": ["number_id"],
+        "schemaTo": "public",
+        "tableTo": "outbound_number",
+        "columnsTo": ["id"],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "outbound_number_assignment",
+        "name": "outbound_number_assignment_organization_id_organization_id_fkey",
+        "nameExplicit": false,
+        "columns": ["organization_id"],
+        "schemaTo": "public",
+        "tableTo": "organization",
+        "columnsTo": ["id"],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "outbound_number",
+        "name": "outbound_number_pkey",
+        "columns": ["id"],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "outbound_number_assignment",
+        "name": "outbound_number_assignment_pkey",
+        "columns": ["id"],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    }
+  ]
+}

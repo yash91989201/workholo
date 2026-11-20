@@ -53,6 +53,14 @@ import type {
   LeadModelSchema,
   LeadUpdateSchema,
 } from "./models/leads";
+import type {
+  OutboundNumberAssignmentInsertSchema,
+  OutboundNumberAssignmentModelSchema,
+  OutboundNumberAssignmentUpdateSchema,
+  OutboundNumberInsertSchema,
+  OutboundNumberModelSchema,
+  OutboundNumberUpdateSchema,
+} from "./models/numbers";
 
 export type AccountInsertType = z.infer<typeof AccountInsertSchema>;
 export type AccountModelType = z.infer<typeof AccountModelSchema>;
@@ -81,6 +89,12 @@ export type MemberUpdateType = z.infer<typeof MemberUpdateSchema>;
 export type OrganizationInsertType = z.infer<typeof OrganizationInsertSchema>;
 export type OrganizationModelType = z.infer<typeof OrganizationModelSchema>;
 export type OrganizationUpdateType = z.infer<typeof OrganizationUpdateSchema>;
+export type OutboundNumberAssignmentInsertType = z.infer<typeof OutboundNumberAssignmentInsertSchema>;
+export type OutboundNumberAssignmentModelType = z.infer<typeof OutboundNumberAssignmentModelSchema>;
+export type OutboundNumberAssignmentUpdateType = z.infer<typeof OutboundNumberAssignmentUpdateSchema>;
+export type OutboundNumberInsertType = z.infer<typeof OutboundNumberInsertSchema>;
+export type OutboundNumberModelType = z.infer<typeof OutboundNumberModelSchema>;
+export type OutboundNumberUpdateType = z.infer<typeof OutboundNumberUpdateSchema>;
 export type RecordingInsertType = z.infer<typeof RecordingInsertSchema>;
 export type RecordingModelType = z.infer<typeof RecordingModelSchema>;
 export type RecordingUpdateType = z.infer<typeof RecordingUpdateSchema>;

@@ -55,6 +55,19 @@ import type {
   UpdateLeadListOutputSchema,
 } from "./schemas/leads";
 import type {
+  AssignOutboundNumberInputSchema,
+  AssignOutboundNumberOutputSchema,
+  ListEligibleOutboundNumbersInputSchema,
+  ListEligibleOutboundNumbersOutputSchema,
+  ListOutboundNumbersOutputSchema,
+  RegisterOutboundNumberInputSchema,
+  RegisterOutboundNumberOutputSchema,
+  SetOutboundNumberEnabledInputSchema,
+  SetOutboundNumberEnabledOutputSchema,
+  UnassignOutboundNumberInputSchema,
+  UnassignOutboundNumberOutputSchema,
+} from "./schemas/numbers";
+import type {
   GetMeOutputSchema,
   ListDirectoryInputSchema,
   ListDirectoryOutputSchema,
@@ -85,6 +98,8 @@ export type ArchiveDispositionListInputType = z.infer<typeof ArchiveDispositionL
 export type ArchiveDispositionListOutputType = z.infer<typeof ArchiveDispositionListOutputSchema>;
 export type ArchiveLeadListInputType = z.infer<typeof ArchiveLeadListInputSchema>;
 export type ArchiveLeadListOutputType = z.infer<typeof ArchiveLeadListOutputSchema>;
+export type AssignOutboundNumberInputType = z.infer<typeof AssignOutboundNumberInputSchema>;
+export type AssignOutboundNumberOutputType = z.infer<typeof AssignOutboundNumberOutputSchema>;
 export type CheckHealthOutputType = z.infer<typeof CheckHealthOutputSchema>;
 export type CreateDispositionListInputType = z.infer<typeof CreateDispositionListInputSchema>;
 export type CreateDispositionListOutputType = z.infer<typeof CreateDispositionListOutputSchema>;
@@ -116,18 +131,23 @@ export type ListDirectoryInputType = z.infer<typeof ListDirectoryInputSchema>;
 export type ListDirectoryOutputType = z.infer<typeof ListDirectoryOutputSchema>;
 export type ListDispositionListsInputType = z.infer<typeof ListDispositionListsInputSchema>;
 export type ListDispositionListsOutputType = z.infer<typeof ListDispositionListsOutputSchema>;
+export type ListEligibleOutboundNumbersInputType = z.infer<typeof ListEligibleOutboundNumbersInputSchema>;
+export type ListEligibleOutboundNumbersOutputType = z.infer<typeof ListEligibleOutboundNumbersOutputSchema>;
 export type ListInvitationsInputType = z.infer<typeof ListInvitationsInputSchema>;
 export type ListInvitationsOutputType = z.infer<typeof ListInvitationsOutputSchema>;
 export type ListLeadListsInputType = z.infer<typeof ListLeadListsInputSchema>;
 export type ListLeadListsOutputType = z.infer<typeof ListLeadListsOutputSchema>;
 export type ListOrganizationsInputType = z.infer<typeof ListOrganizationsInputSchema>;
 export type ListOrganizationsOutputType = z.infer<typeof ListOrganizationsOutputSchema>;
+export type ListOutboundNumbersOutputType = z.infer<typeof ListOutboundNumbersOutputSchema>;
 export type ListRecordingsInputType = z.infer<typeof ListRecordingsInputSchema>;
 export type ListRecordingsOutputType = z.infer<typeof ListRecordingsOutputSchema>;
 export type ListTeamMembersInputType = z.infer<typeof ListTeamMembersInputSchema>;
 export type ListTeamMembersOutputType = z.infer<typeof ListTeamMembersOutputSchema>;
 export type ListTeamsInputType = z.infer<typeof ListTeamsInputSchema>;
 export type ListTeamsOutputType = z.infer<typeof ListTeamsOutputSchema>;
+export type RegisterOutboundNumberInputType = z.infer<typeof RegisterOutboundNumberInputSchema>;
+export type RegisterOutboundNumberOutputType = z.infer<typeof RegisterOutboundNumberOutputSchema>;
 export type RemoveLeadInputType = z.infer<typeof RemoveLeadInputSchema>;
 export type RemoveLeadOutputType = z.infer<typeof RemoveLeadOutputSchema>;
 export type RestoreOrganizationInputType = z.infer<typeof RestoreOrganizationInputSchema>;
@@ -135,8 +155,12 @@ export type RestoreOrganizationOutputType = z.infer<typeof RestoreOrganizationOu
 export type RetireDispositionEntryInputType = z.infer<typeof RetireDispositionEntryInputSchema>;
 export type RetireDispositionEntryOutputType = z.infer<typeof RetireDispositionEntryOutputSchema>;
 export type SessionUserType = z.infer<typeof SessionUserSchema>;
+export type SetOutboundNumberEnabledInputType = z.infer<typeof SetOutboundNumberEnabledInputSchema>;
+export type SetOutboundNumberEnabledOutputType = z.infer<typeof SetOutboundNumberEnabledOutputSchema>;
 export type SuspendOrganizationInputType = z.infer<typeof SuspendOrganizationInputSchema>;
 export type SuspendOrganizationOutputType = z.infer<typeof SuspendOrganizationOutputSchema>;
+export type UnassignOutboundNumberInputType = z.infer<typeof UnassignOutboundNumberInputSchema>;
+export type UnassignOutboundNumberOutputType = z.infer<typeof UnassignOutboundNumberOutputSchema>;
 export type UpdateDispositionListInputType = z.infer<typeof UpdateDispositionListInputSchema>;
 export type UpdateDispositionListOutputType = z.infer<typeof UpdateDispositionListOutputSchema>;
 export type UpdateLeadListInputType = z.infer<typeof UpdateLeadListInputSchema>;

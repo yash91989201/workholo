@@ -24,7 +24,8 @@ export type OrgPath =
   | "/$orgSlug/teams"
   | "/$orgSlug/teams/members"
   | "/$orgSlug/leads"
-  | "/$orgSlug/dispositions";
+  | "/$orgSlug/dispositions"
+  | "/$orgSlug/numbers";
 
 export type NavEntry = {
   title: string;

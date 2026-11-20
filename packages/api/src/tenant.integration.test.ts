@@ -12,7 +12,11 @@ import {
 } from "@workholo/db/schema/auth";
 import { call, recording } from "@workholo/db/schema/calls";
 import { lead } from "@workholo/db/schema/leads";
-import { and, eq, like } from "drizzle-orm";
+import {
+  outboundNumber,
+  outboundNumberAssignment,
+} from "@workholo/db/schema/numbers";
+import { and, eq, inArray, like } from "drizzle-orm";
 
 import { appRouter } from "./routers/index";
 import { organizationScope } from "./utils/tenant";
@@ -126,6 +130,8 @@ describe("tenant request path", () => {
   let dispositionListId = "";
   let dispositionEntryId = "";
   let dispositionCallbackId = "";
+  let numberId = "";
+  const numberIds: string[] = [];
 
   beforeAll(async () => {
     db = createDb({ DATABASE_URL: databaseUrl() });
@@ -252,6 +258,11 @@ describe("tenant request path", () => {
   afterAll(async () => {
     await db.delete(organization).where(like(organization.slug, `${RUN}-%`));
     await db.delete(user).where(like(user.email, `%@${DOMAIN}`));
+    if (numberIds.length > 0) {
+      await db
+        .delete(outboundNumber)
+        .where(inArray(outboundNumber.id, numberIds));
+    }
     await db.$client.end();
   });
 
@@ -1018,5 +1029,161 @@ describe("tenant request path", () => {
       expect(event?.actorId).toBe(actorId);
       expect(event?.target.type).toBe("disposition_list");
     }
+  });
+
+  test("numbers: platform registers inventory, duplicates rejected", async () => {
+    const platformClient = clientFor(await getSession(platformUser.headers));
+    const ownerClient = clientFor(await getSession(owner.headers));
+
+    const created = await platformClient.platform.registerOutboundNumber({
+      number: "+1 (415) 555-0191",
+    });
+    numberId = created.id;
+    numberIds.push(created.id);
+    expect(created.number).toBe("+14155550191");
+
+    await expect(
+      platformClient.platform.registerOutboundNumber({
+        number: "+14155550191",
+      })
+    ).rejects.toMatchObject({ code: "CONFLICT" });
+
+    await expect(
+      platformClient.platform.registerOutboundNumber({ number: "4155550192" })
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+
+    await expect(
+      ownerClient.platform.listOutboundNumbers()
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+
+    await platformClient.platform.setOutboundNumberEnabled({
+      numberId,
+      enabled: false,
+    });
+    const listed = await platformClient.platform.listOutboundNumbers();
+    expect(listed.find((row) => row.id === numberId)?.enabled).toBe(false);
+    await platformClient.platform.setOutboundNumberEnabled({
+      numberId,
+      enabled: true,
+    });
+  });
+
+  test("numbers: assignment is exclusive and org deletion keeps inventory", async () => {
+    const platformClient = clientFor(await getSession(platformUser.headers));
+
+    const assigned = await platformClient.platform.assignOutboundNumber({
+      numberId,
+      organizationId,
+    });
+    expect(assigned?.organizationId).toBe(organizationId);
+    await expect(
+      platformClient.platform.assignOutboundNumber({
+        numberId,
+        organizationId: otherOrganizationId,
+      })
+    ).rejects.toMatchObject({ code: "CONFLICT" });
+    const listed = await platformClient.platform.listOutboundNumbers();
+    expect(
+      listed.find((row) => row.id === numberId)?.assignedOrganizationId
+    ).toBe(organizationId);
+    expect(
+      listed.find((row) => row.id === numberId)?.assignedOrganizationName
+    ).toBe("Acme");
+
+    const tempOrg = (await auth.api.createOrganization({
+      body: { name: "Numbers doomed", slug: `${RUN}-numbers-doomed` },
+      headers: doomedUser.headers,
+    })) as { id: string };
+    const second = await platformClient.platform.registerOutboundNumber({
+      number: "+14155550192",
+    });
+    numberIds.push(second.id);
+    await platformClient.platform.assignOutboundNumber({
+      numberId: second.id,
+      organizationId: tempOrg.id,
+    });
+    await platformClient.platform.deleteOrganization({
+      organizationId: tempOrg.id,
+    });
+    expect(
+      await db
+        .select()
+        .from(outboundNumberAssignment)
+        .where(eq(outboundNumberAssignment.organizationId, tempOrg.id))
+    ).toEqual([]);
+    expect(
+      await db
+        .select()
+        .from(outboundNumber)
+        .where(eq(outboundNumber.id, second.id))
+    ).toHaveLength(1);
+
+    await platformClient.platform.unassignOutboundNumber({ numberId });
+    const afterUnassign = await platformClient.platform.listOutboundNumbers();
+    expect(
+      afterUnassign.find((row) => row.id === numberId)?.assignedOrganizationId
+    ).toBeNull();
+  });
+
+  test("numbers: eligible read filters and denies agents", async () => {
+    const platformClient = clientFor(await getSession(platformUser.headers));
+    const ownerClient = clientFor(await getSession(owner.headers));
+    const adminClient = clientFor(await getSession(adminUser.headers));
+    const agentClient = clientFor(await getSession(agentUser.headers));
+    const outsiderClient = clientFor(await getSession(outsider.headers));
+
+    await platformClient.platform.assignOutboundNumber({
+      numberId,
+      organizationId,
+    });
+    const disabled = await platformClient.platform.registerOutboundNumber({
+      number: "+14155550193",
+    });
+    numberIds.push(disabled.id);
+    await platformClient.platform.assignOutboundNumber({
+      numberId: disabled.id,
+      organizationId,
+    });
+    await platformClient.platform.setOutboundNumberEnabled({
+      numberId: disabled.id,
+      enabled: false,
+    });
+    const foreign = await platformClient.platform.registerOutboundNumber({
+      number: "+14155550194",
+    });
+    numberIds.push(foreign.id);
+    await platformClient.platform.assignOutboundNumber({
+      numberId: foreign.id,
+      organizationId: otherOrganizationId,
+    });
+
+    expect(
+      (
+        await ownerClient.numbers.listEligibleOutboundNumbers({
+          organizationId,
+        })
+      ).map((row) => row.number)
+    ).toEqual(["+14155550191"]);
+    expect(
+      (
+        await adminClient.numbers.listEligibleOutboundNumbers({
+          organizationId,
+        })
+      ).length
+    ).toBe(1);
+    await expect(
+      agentClient.numbers.listEligibleOutboundNumbers({ organizationId })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(
+      outsiderClient.numbers.listEligibleOutboundNumbers({ organizationId })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+
+    await platformClient.platform.setOutboundNumberEnabled({
+      numberId,
+      enabled: false,
+    });
+    expect(
+      await ownerClient.numbers.listEligibleOutboundNumbers({ organizationId })
+    ).toEqual([]);
   });
 });

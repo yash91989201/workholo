@@ -7,6 +7,7 @@ import {
 import { callsRouter } from "./calls";
 import { dispositionsRouter } from "./dispositions";
 import { leadsRouter } from "./leads";
+import { numbersRouter } from "./numbers";
 import { organizationRouter } from "./organization";
 import { platformRouter } from "./platform";
 
@@ -23,6 +24,7 @@ export const appRouter = {
   organization: organizationRouter,
   calls: callsRouter,
   leads: leadsRouter,
+  numbers: numbersRouter,
   dispositions: dispositionsRouter,
   platform: platformRouter,
 };
