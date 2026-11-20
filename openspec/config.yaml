@@ -1,12 +1,25 @@
 schema: spec-driven
 
 context: |
-  API procedure schemas live in packages/api/src/lib/schemas/<domain>.ts.
-  Name every schema <Action><Resource><Direction>Schema, e.g. ListRecordingsInputSchema.
-  Every oRPC procedure declares .output() and declares .input() when it accepts input.
-  No inline zod schemas in packages/api/src/routers/.
-  Keep middleware and tenant helpers in packages/api/src/utils/<concern>.ts.
-  Keep oRPC procedure builders in packages/api/src/index.ts.
+  Project skills live in .agents/skills. Read the matching skill before implementation:
+  - workholo-orpc-api: oRPC procedures, API schemas, middleware, generated API types.
+  - workholo-forms: TanStack Form schemas and form UI patterns.
+  - workholo-ui: shared UI package, generic components, Tabler icons.
+  - workholo-utils: reusable helper placement and grouping.
+
+rules:
+  proposal:
+    - Name every project skill that governs the change.
+  tasks:
+    - Break tasks by the owning project skill.
+
+operations:
+  apply:
+    guidance:
+      - Read the matching .agents/skills/*/SKILL.md files before editing.
+  archive:
+    guidance:
+      - Confirm the matching project skills were followed before archiving.
 
 # Project context (optional)
 # Add only constraints that should guide OpenSpec artifacts and workflows.
